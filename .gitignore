@@ -11,3 +11,4 @@ test-results/
 .DS_Store
 .impeccable/questions/*.log
 .impeccable/questions/*.state.json
+.vercel
