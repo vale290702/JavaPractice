@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+coverage/
+playwright-report/
+test-results/
+.impeccable/review/
+*.tsbuildinfo
+.DS_Store
+.impeccable/questions/*.log
+.impeccable/questions/*.state.json
