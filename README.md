@@ -4,7 +4,7 @@ A bilingual Java learning workspace for tutoring a tenth-grade student. Built wi
 
 ## Run locally
 
-Use Node.js 22.12 or newer (Node 24 is pinned in `.nvmrc`).
+Use Node.js 24, pinned in `.nvmrc` and the package engine for consistent local and Vercel builds.
 
 ```sh
 nvm use
