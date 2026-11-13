@@ -32,41 +32,80 @@
   --brand: #234d40;
   --action-hover: #193e32;
   --account-note: #52645a;
+  --brand-ink: #d8e898;
+  --brand-dot: #73924b;
+  --tiny-dot: #7e934b;
+  --selection-ink: #213b35;
+  --code-body: #e0e9de;
+  --code-header: #253630;
+  --code-header-ink: #c2cdbd;
+  --code-language: #b2c396;
+  --code-text: #e2e6c5;
+  --code-line-number: #93a097;
+  --code-active: #bad57916;
+  --code-console: #192723;
+  --code-console-label: #a8b6a7;
+  --code-console-text: #e1ebd2;
+  --code-controls: #b9c6b3;
+  --code-icon: #dce8d2;
+  --code-reset: #d6e0cc;
+  --code-note: #adbea9;
   --serif: 'Newsreader', Georgia, serif;
   --sans: 'DM Sans', sans-serif;
   color-scheme: light;
 }
 html[data-theme='dark'] {
-  --paper: #141c19;
-  --surface: #1d2923;
-  --ink: #e4eade;
-  --muted: #abb9aa;
-  --line: #394b40;
-  --green: #b1d59c;
-  --focus: #d8e898;
-  --rail: #18221f;
-  --selected: #2d3f2e;
-  --subtle: #253128;
-  --track: #354338;
-  --accent-ink: #bad39f;
-  --soft-border: #63765b;
-  --index-ink: #bad39f;
-  --success-ink: #b5d69d;
-  --body-copy: #bcc8b8;
-  --callout: #223426;
-  --callout-ink: #d3e1c6;
-  --completed: #2c4030;
-  --control-border: #72836a;
-  --warning: #413323;
-  --success: #263d2a;
-  --chosen: #2c4030;
-  --chosen-border: #89a875;
-  --hint: #263329;
-  --checklist-ink: #bdcfb3;
-  --step: #2e3a2e;
-  --on-action: #152313;
-  --action-hover: #c4e4b2;
-  --account-note: #abb9aa;
+  --paper: #101a2c;
+  --surface: #19283e;
+  --ink: #edf2fa;
+  --muted: #b2c0d4;
+  --line: #34465f;
+  --green: #d6e1f0;
+  --lime: #e8edf4;
+  --editor: #142137;
+  --focus: #f0f4fa;
+  --rail: #121f33;
+  --selected: #2b3d58;
+  --subtle: #23344c;
+  --track: #354761;
+  --accent-ink: #d2deee;
+  --soft-border: #657c9a;
+  --index-ink: #d2deee;
+  --success-ink: #d5e4f3;
+  --body-copy: #c4cfdc;
+  --callout: #21324b;
+  --callout-ink: #dce5f1;
+  --completed: #293d56;
+  --control-border: #7a8ea9;
+  --warning: #443826;
+  --success: #263a4c;
+  --chosen: #2a3c56;
+  --chosen-border: #9baec7;
+  --hint: #21324b;
+  --checklist-ink: #c4d2e3;
+  --step: #2b3d58;
+  --on-action: #142238;
+  --brand: #d6e1f0;
+  --brand-ink: #142238;
+  --brand-dot: #b4c2d4;
+  --tiny-dot: #b4c2d4;
+  --selection-ink: #101a2c;
+  --action-hover: #e8eff8;
+  --account-note: #b2c0d4;
+  --code-body: #e4ebf5;
+  --code-header: #20314a;
+  --code-header-ink: #b7c6db;
+  --code-language: #c4d1e3;
+  --code-text: #e4eaf2;
+  --code-line-number: #95a7bf;
+  --code-active: #d6e1f014;
+  --code-console: #111d30;
+  --code-console-label: #aebed4;
+  --code-console-text: #e4ebf5;
+  --code-controls: #b7c5d8;
+  --code-icon: #dce6f4;
+  --code-reset: #d0ddee;
+  --code-note: #b6c6db;
   color-scheme: dark;
 }
 * {
@@ -124,7 +163,7 @@ button {
 }
 ::selection {
   background: var(--lime);
-  color: #213b35;
+  color: var(--selection-ink);
 }
 textarea,
 input {
@@ -186,7 +225,7 @@ button:hover:not(:disabled) {
   width: 33px;
   height: 37px;
   background: var(--brand);
-  color: var(--lime);
+  color: var(--brand-ink);
   display: grid;
   place-items: center;
   border-radius: 9px;
@@ -194,7 +233,7 @@ button:hover:not(:disabled) {
 .brand-dot {
   width: 6px;
   height: 6px;
-  background: #73924b;
+  background: var(--brand-dot);
   border-radius: 50%;
   align-self: flex-start;
   margin-top: 8px;
@@ -323,7 +362,7 @@ button:hover:not(:disabled) {
 .tiny-dot {
   height: 5px;
   width: 5px;
-  background: #7e934b;
+  background: var(--tiny-dot);
   border-radius: 50%;
   display: inline-block;
   flex-shrink: 0;
@@ -533,7 +572,7 @@ main {
   border-radius: 12px;
   overflow: hidden;
   background: var(--editor);
-  color: #e0e9de;
+  color: var(--code-body);
   box-shadow: 0 12px 28px #20372812;
 }
 .editor-top {
@@ -543,8 +582,8 @@ main {
   align-items: center;
   justify-content: space-between;
   padding: 0 17px;
-  color: #c2cdbd;
-  background: #253630;
+  color: var(--code-header-ink);
+  background: var(--code-header);
   font-size: 11px;
 }
 .file-tab {
@@ -556,7 +595,7 @@ main {
 }
 .file-type {
   font-size: 10px;
-  color: #b2c396;
+  color: var(--code-language);
 }
 .code-lines {
   padding: 27px 0;
@@ -573,20 +612,20 @@ main {
 }
 .code-line code {
   white-space: pre;
-  color: #e2e6c5;
+  color: var(--code-text);
 }
 .line-number {
   width: 41px;
   flex-shrink: 0;
   text-align: right;
   padding-right: 17px;
-  color: #93a097;
+  color: var(--code-line-number);
   font:
     11px ui-monospace,
     monospace;
 }
 .active-line {
-  background: #bad57916;
+  background: var(--code-active);
   box-shadow: inset 2px 0 var(--lime);
 }
 .variable-watch {
@@ -607,19 +646,19 @@ main {
   border-top: 1px solid #ffffff16;
   padding: 16px 18px 18px;
   min-height: 102px;
-  background: #192723;
+  background: var(--code-console);
 }
 .console-title {
   display: flex;
   gap: 8px;
-  color: #a8b6a7;
+  color: var(--code-console-label);
   font-size: 10px;
 }
 .console pre {
   font:
     11px/1.7 ui-monospace,
     monospace;
-  color: #e1ebd2;
+  color: var(--code-console-text);
   white-space: pre-wrap;
   margin: 12px 0 0;
 }
@@ -630,13 +669,13 @@ main {
   padding: 12px 16px;
   border-top: 1px solid #ffffff16;
   font-size: 10px;
-  color: #b9c6b3;
+  color: var(--code-controls);
 }
 .icon-button {
   border: 1px solid #ffffff25;
   border-radius: 5px;
   background: transparent;
-  color: #dce8d2;
+  color: var(--code-icon);
   display: grid;
   place-items: center;
   width: 27px;
@@ -804,7 +843,7 @@ main {
 }
 .solution {
   background: var(--editor);
-  color: #e2e6c5;
+  color: var(--code-text);
   padding: 22px;
   border-radius: 9px;
   white-space: pre-wrap;
@@ -845,7 +884,7 @@ main {
   border-radius: 10px;
   overflow: hidden;
   background: var(--editor);
-  color: #e0e9de;
+  color: var(--code-body);
   align-self: start;
 }
 .editor-top button {
@@ -854,7 +893,7 @@ main {
   gap: 6px;
   border: 0;
   background: transparent;
-  color: #d6e0cc;
+  color: var(--code-reset);
   font-size: 10px;
   padding: 4px;
 }
@@ -864,7 +903,7 @@ main {
   resize: vertical;
   border: 0;
   background: var(--editor);
-  color: #e2e6c5;
+  color: var(--code-text);
   font:
     12px/1.9 ui-monospace,
     monospace;
@@ -877,7 +916,7 @@ main {
   font-size: 10px;
   line-height: 1.6;
   padding: 0 16px 16px;
-  color: #adbea9;
+  color: var(--code-note);
 }
 .walkthrough-list {
   list-style: none;

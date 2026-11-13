@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-13T03:59:04.055999+00:00",
+  "generatedAt": "2026-11-13T04:03:19.971760+00:00",
   "title": "Design System: JavaPractice",
   "extensions": {
     "shadows": [
@@ -254,166 +254,211 @@
       "dark-paper": {
         "role": "neutral",
         "displayName": "Dark Paper",
-        "canonical": "#141c19",
+        "canonical": "#101a2c",
         "tonalRamp": [
-          "oklch(15% 0.01 95)",
-          "oklch(26% 0.01 95)",
-          "oklch(38% 0.01 95)",
-          "oklch(49% 0.01 95)",
-          "oklch(61% 0.01 95)",
-          "oklch(72% 0.01 95)",
-          "oklch(84% 0.01 95)",
-          "oklch(95% 0.01 95)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-surface": {
         "role": "neutral",
         "displayName": "Dark Surface",
-        "canonical": "#1d2923",
+        "canonical": "#19283e",
         "tonalRamp": [
-          "oklch(15% 0.008 95)",
-          "oklch(26% 0.008 95)",
-          "oklch(38% 0.008 95)",
-          "oklch(49% 0.008 95)",
-          "oklch(61% 0.008 95)",
-          "oklch(72% 0.008 95)",
-          "oklch(84% 0.008 95)",
-          "oklch(95% 0.008 95)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-ink": {
         "role": "neutral",
         "displayName": "Dark Ink",
-        "canonical": "#e4eade",
+        "canonical": "#edf2fa",
         "tonalRamp": [
-          "oklch(15% 0.035 165)",
-          "oklch(26% 0.035 165)",
-          "oklch(38% 0.035 165)",
-          "oklch(49% 0.035 165)",
-          "oklch(61% 0.035 165)",
-          "oklch(72% 0.035 165)",
-          "oklch(84% 0.035 165)",
-          "oklch(95% 0.035 165)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-muted": {
         "role": "neutral",
         "displayName": "Dark Muted",
-        "canonical": "#abb9aa",
+        "canonical": "#b2c0d4",
         "tonalRamp": [
-          "oklch(15% 0.025 150)",
-          "oklch(26% 0.025 150)",
-          "oklch(38% 0.025 150)",
-          "oklch(49% 0.025 150)",
-          "oklch(61% 0.025 150)",
-          "oklch(72% 0.025 150)",
-          "oklch(84% 0.025 150)",
-          "oklch(95% 0.025 150)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-line": {
         "role": "neutral",
         "displayName": "Dark Line",
-        "canonical": "#394b40",
+        "canonical": "#34465f",
         "tonalRamp": [
-          "oklch(15% 0.015 110)",
-          "oklch(26% 0.015 110)",
-          "oklch(38% 0.015 110)",
-          "oklch(49% 0.015 110)",
-          "oklch(61% 0.015 110)",
-          "oklch(72% 0.015 110)",
-          "oklch(84% 0.015 110)",
-          "oklch(95% 0.015 110)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-green": {
         "role": "primary",
-        "displayName": "Dark Green",
-        "canonical": "#b1d59c",
+        "displayName": "Dark action accent",
+        "canonical": "#d6e1f0",
         "tonalRamp": [
-          "oklch(15% 0.06 165)",
-          "oklch(26% 0.06 165)",
-          "oklch(38% 0.06 165)",
-          "oklch(49% 0.06 165)",
-          "oklch(61% 0.06 165)",
-          "oklch(72% 0.06 165)",
-          "oklch(84% 0.06 165)",
-          "oklch(95% 0.06 165)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-focus": {
         "role": "primary",
         "displayName": "Dark Focus",
-        "canonical": "#d8e898",
+        "canonical": "#f0f4fa",
         "tonalRamp": [
-          "oklch(15% 0.09 140)",
-          "oklch(26% 0.09 140)",
-          "oklch(38% 0.09 140)",
-          "oklch(49% 0.09 140)",
-          "oklch(61% 0.09 140)",
-          "oklch(72% 0.09 140)",
-          "oklch(84% 0.09 140)",
-          "oklch(95% 0.09 140)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-selected": {
         "role": "neutral",
         "displayName": "Dark Selected",
-        "canonical": "#2d3f2e",
+        "canonical": "#2b3d58",
         "tonalRamp": [
-          "oklch(15% 0.03 115)",
-          "oklch(26% 0.03 115)",
-          "oklch(38% 0.03 115)",
-          "oklch(49% 0.03 115)",
-          "oklch(61% 0.03 115)",
-          "oklch(72% 0.03 115)",
-          "oklch(84% 0.03 115)",
-          "oklch(95% 0.03 115)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-chosen": {
         "role": "neutral",
         "displayName": "Dark Chosen",
-        "canonical": "#2c4030",
+        "canonical": "#2a3c56",
         "tonalRamp": [
-          "oklch(15% 0.03 115)",
-          "oklch(26% 0.03 115)",
-          "oklch(38% 0.03 115)",
-          "oklch(49% 0.03 115)",
-          "oklch(61% 0.03 115)",
-          "oklch(72% 0.03 115)",
-          "oklch(84% 0.03 115)",
-          "oklch(95% 0.03 115)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-on-action": {
         "role": "neutral",
         "displayName": "Dark On Action",
-        "canonical": "#152313",
+        "canonical": "#142238",
         "tonalRamp": [
-          "oklch(15% 0.06 165)",
-          "oklch(26% 0.06 165)",
-          "oklch(38% 0.06 165)",
-          "oklch(49% 0.06 165)",
-          "oklch(61% 0.06 165)",
-          "oklch(72% 0.06 165)",
-          "oklch(84% 0.06 165)",
-          "oklch(95% 0.06 165)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       },
       "dark-control-border": {
         "role": "neutral",
         "displayName": "Dark Control Border",
-        "canonical": "#72836a",
+        "canonical": "#7a8ea9",
         "tonalRamp": [
-          "oklch(15% 0.025 150)",
-          "oklch(26% 0.025 150)",
-          "oklch(38% 0.025 150)",
-          "oklch(49% 0.025 150)",
-          "oklch(61% 0.025 150)",
-          "oklch(72% 0.025 150)",
-          "oklch(84% 0.025 150)",
-          "oklch(95% 0.025 150)"
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
+        ]
+      },
+      "dark-editor": {
+        "role": "neutral",
+        "displayName": "Dark Editor",
+        "canonical": "#142137",
+        "tonalRamp": [
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
+        ]
+      },
+      "dark-lime": {
+        "role": "primary",
+        "displayName": "Dark code accent",
+        "canonical": "#e8edf4",
+        "tonalRamp": [
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
+        ]
+      },
+      "dark-code-text": {
+        "role": "neutral",
+        "displayName": "Dark Code Text",
+        "canonical": "#e4eaf2",
+        "tonalRamp": [
+          "oklch(15% 0.025 255)",
+          "oklch(26% 0.025 255)",
+          "oklch(38% 0.025 255)",
+          "oklch(49% 0.025 255)",
+          "oklch(61% 0.025 255)",
+          "oklch(72% 0.025 255)",
+          "oklch(84% 0.025 255)",
+          "oklch(95% 0.025 255)"
         ]
       }
     }
@@ -471,7 +516,7 @@
       "kind": "custom",
       "description": "Coordinated source, variable watch, output, and explanation. Watch prose follows the selected locale; Java identifiers and code tokens remain unchanged.",
       "html": "<section class=\"ds-code\"><div class=\"ds-file\">Main.java</div><pre><code>int age = 16;\nSystem.out.println(age);</code></pre><div class=\"ds-value\">age = 16</div><div class=\"ds-console\">Output<pre>16</pre></div></section>",
-      "css": ".ds-code{background:var(--editor,#1d2c29);color:var(--code-text,#e2e6c5);border-radius:12px;overflow:hidden;box-shadow:0 12px 28px #20372812}.ds-file{font-family:var(--sans, \"DM Sans\", sans-serif);font-size:12px;padding:12px 17px;background:#253630;border-bottom:1px solid #ffffff16;color:#c2cdbd}.ds-code pre{font:12px/2.1 ui-monospace,monospace;padding:15px 18px;overflow-x:auto}.ds-value{font:11px ui-monospace,monospace;color:var(--lime,#d8e898);padding:7px 18px 19px}.ds-console{font-family:var(--sans, \"DM Sans\", sans-serif);font-size:12px;border-top:1px solid #ffffff16;background:#192723;padding:16px 18px;color:#a8b6a7}.ds-console pre{padding:0;color:#e1ebd2}.ds-control:hover:not(:disabled){filter:brightness(.96)}.ds-control:focus-visible{outline:2px solid var(--focus,#406b30);outline-offset:4px}.ds-control:disabled{opacity:.5;cursor:default}"
+      "css": ".ds-code{background:var(--editor,#1d2c29);color:var(--code-text,#e2e6c5);border-radius:12px;overflow:hidden;box-shadow:0 12px 28px #20372812}.ds-file{font-family:var(--sans, \"DM Sans\", sans-serif);font-size:12px;padding:12px 17px;background:var(--code-header,#253630);border-bottom:1px solid #ffffff16;color:var(--code-header-ink,#c2cdbd)}.ds-code pre{font:12px/2.1 ui-monospace,monospace;padding:15px 18px;overflow-x:auto}.ds-value{font:11px ui-monospace,monospace;color:var(--lime,#d8e898);padding:7px 18px 19px}.ds-console{font-family:var(--sans, \"DM Sans\", sans-serif);font-size:12px;border-top:1px solid #ffffff16;background:var(--code-console,#192723);padding:16px 18px;color:var(--code-console-label,#a8b6a7)}.ds-console pre{padding:0;color:var(--code-console-text,#e1ebd2)}.ds-control:hover:not(:disabled){filter:brightness(.96)}.ds-control:focus-visible{outline:2px solid var(--focus,#406b30);outline-offset:4px}.ds-control:disabled{opacity:.5;cursor:default}"
     },
     {
       "name": "Topic picker",
@@ -513,9 +558,9 @@
   ],
   "narrative": {
     "northStar": "Learning lab",
-    "overview": "Warm paper and green ink frame a quiet learning lab, with a deep green night palette for dark appearance. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.\n\nThis is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The teacher overview and account-saved progress extension are evidenced by `src/app/teacher.css`, `src/app/progress.css`, `teacher-overview.tsx`, and `use-progress.ts`. The persisted appearance and native-textarea indentation extension is evidenced by `theme.ts`, `theme-toggle.tsx`, `java-editor.tsx`, and `editor-indentation.ts`. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.",
+    "overview": "Warm paper and green ink frame a quiet learning lab, with navy surfaces and light gray and white accents for dark appearance. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.\n\nThis is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The teacher overview and account-saved progress extension are evidenced by `src/app/teacher.css`, `src/app/progress.css`, `teacher-overview.tsx`, and `use-progress.ts`. The persisted appearance and native-textarea indentation extension is evidenced by `theme.ts`, `theme-toggle.tsx`, `java-editor.tsx`, and `editor-indentation.ts`. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.",
     "keyCharacteristics": [
-      "Warm paper or deep green canvas with coordinated green ink and lime emphasis",
+      "Warm paper with green ink in light appearance; navy with light gray and white accents in dark appearance",
       "Serif lesson hierarchy with compact sans-serif controls",
       "Ruled separation and restrained soft corners",
       "Coordinated source, variable, output, and explanation states"
