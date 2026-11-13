@@ -8,9 +8,66 @@
   --lime: #d8e898;
   --editor: #1d2c29;
   --focus: #406b30;
+  --rail: #eeefe6;
+  --selected: #dfe6d6;
+  --subtle: #f8f8f1;
+  --track: #d9ddcf;
+  --accent-ink: #607347;
+  --soft-border: #cfd8b6;
+  --index-ink: #6d8053;
+  --success-ink: #46753d;
+  --body-copy: #54655c;
+  --callout: #eaf0dc;
+  --callout-ink: #40573e;
+  --completed: #e2ead4;
+  --control-border: #9da99c;
+  --warning: #f5e8d5;
+  --success: #e6edd9;
+  --chosen: #e7edda;
+  --chosen-border: #7f9767;
+  --hint: #edf0e1;
+  --checklist-ink: #52644f;
+  --step: #e7ebde;
+  --on-action: #fffefa;
+  --brand: #234d40;
+  --action-hover: #193e32;
+  --account-note: #52645a;
   --serif: 'Newsreader', Georgia, serif;
   --sans: 'DM Sans', sans-serif;
   color-scheme: light;
+}
+html[data-theme='dark'] {
+  --paper: #141c19;
+  --surface: #1d2923;
+  --ink: #e4eade;
+  --muted: #abb9aa;
+  --line: #394b40;
+  --green: #b1d59c;
+  --focus: #d8e898;
+  --rail: #18221f;
+  --selected: #2d3f2e;
+  --subtle: #253128;
+  --track: #354338;
+  --accent-ink: #bad39f;
+  --soft-border: #63765b;
+  --index-ink: #bad39f;
+  --success-ink: #b5d69d;
+  --body-copy: #bcc8b8;
+  --callout: #223426;
+  --callout-ink: #d3e1c6;
+  --completed: #2c4030;
+  --control-border: #72836a;
+  --warning: #413323;
+  --success: #263d2a;
+  --chosen: #2c4030;
+  --chosen-border: #89a875;
+  --hint: #263329;
+  --checklist-ink: #bdcfb3;
+  --step: #2e3a2e;
+  --on-action: #152313;
+  --action-hover: #c4e4b2;
+  --account-note: #abb9aa;
+  color-scheme: dark;
 }
 * {
   box-sizing: border-box;
@@ -67,14 +124,14 @@ button {
 }
 ::selection {
   background: var(--lime);
-  color: var(--ink);
+  color: #213b35;
 }
 textarea,
 input {
   caret-color: var(--green);
 }
 * {
-  scrollbar-color: #9da99c var(--paper);
+  scrollbar-color: var(--control-border) var(--paper);
   scrollbar-width: thin;
 }
 h1,
@@ -107,7 +164,7 @@ button:hover:not(:disabled) {
 .sidebar {
   width: 272px;
   flex-shrink: 0;
-  background: #eeefe6;
+  background: var(--rail);
   border-right: 1px solid var(--line);
   padding: 35px 23px 24px;
   display: flex;
@@ -128,7 +185,7 @@ button:hover:not(:disabled) {
 .brand-symbol {
   width: 33px;
   height: 37px;
-  background: var(--green);
+  background: var(--brand);
   color: var(--lime);
   display: grid;
   place-items: center;
@@ -184,7 +241,7 @@ button:hover:not(:disabled) {
   border-radius: 8px;
 }
 .topic-button.selected {
-  background: #dfe6d6;
+  background: var(--selected);
 }
 .topic-button strong {
   font-size: 13px;
@@ -207,7 +264,7 @@ button:hover:not(:disabled) {
   display: grid;
   place-items: center;
   font-size: 12px;
-  background: #f8f8f1;
+  background: var(--subtle);
   border: 1px solid var(--line);
   border-radius: 50%;
   flex-shrink: 0;
@@ -215,7 +272,7 @@ button:hover:not(:disabled) {
 .selected .topic-number,
 .topic-number.done {
   background: var(--green);
-  color: white;
+  color: var(--on-action);
   border-color: var(--green);
 }
 .sidebar-bottom {
@@ -236,12 +293,12 @@ button:hover:not(:disabled) {
   border: 0;
   display: block;
   margin: 12px 0;
-  background: #d9ddcf;
+  background: var(--track);
   border-radius: 3px;
   overflow: hidden;
 }
 .sidebar-bottom progress::-webkit-progress-bar {
-  background: #d9ddcf;
+  background: var(--track);
 }
 .sidebar-bottom progress::-webkit-progress-value {
   background: var(--green);
@@ -334,8 +391,8 @@ main {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #607347;
-  border: 1px solid #cfd8b6;
+  color: var(--accent-ink);
+  border: 1px solid var(--soft-border);
   transform: rotate(-5deg);
   border-radius: 50%;
   padding: 12px 20px;
@@ -360,7 +417,7 @@ main {
 }
 .lesson-index {
   font: 500 37px/1 var(--serif);
-  color: #6d8053;
+  color: var(--index-ink);
   border-right: 1px solid var(--line);
   padding-right: 20px;
   display: flex;
@@ -410,7 +467,7 @@ main {
   font-weight: 700;
 }
 .tab-check {
-  color: #46753d;
+  color: var(--success-ink);
 }
 .activity-area {
   padding-top: 32px;
@@ -431,7 +488,7 @@ main {
 }
 .lesson-copy p {
   font-size: 13px;
-  color: #54655c;
+  color: var(--body-copy);
   line-height: 1.8;
   max-width: 70ch;
 }
@@ -446,7 +503,7 @@ main {
   gap: 11px;
   margin-top: 25px;
   padding: 18px;
-  background: #eaf0dc;
+  background: var(--callout);
   border-radius: 10px;
   color: var(--green);
 }
@@ -460,7 +517,7 @@ main {
 }
 .takeaway p {
   font-size: 12px;
-  color: #40573e;
+  color: var(--callout-ink);
   line-height: 1.7;
 }
 .lesson-footnote {
@@ -600,7 +657,7 @@ main {
   border: 1px solid var(--green);
   border-radius: 7px;
   padding: 11px 16px;
-  color: #fffefa;
+  color: var(--on-action);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -609,9 +666,9 @@ main {
   font-weight: 500;
 }
 .completion-button.is-complete {
-  background: #e2ead4;
+  background: var(--completed);
   color: var(--green);
-  border-color: #e2ead4;
+  border-color: var(--completed);
   opacity: 1;
 }
 .text-button {
@@ -650,20 +707,20 @@ main {
 .answer-row input {
   min-width: 0;
   flex: 1;
-  border: 1px solid #b8c4af;
+  border: 1px solid var(--control-border);
   background: var(--surface);
   border-radius: 7px;
   padding: 10px 12px;
 }
 .feedback {
   padding: 17px 20px;
-  background: #f5e8d5;
+  background: var(--warning);
   border-radius: 8px;
   margin-top: 25px;
   font-size: 13px;
 }
 .feedback.success {
-  background: #e6edd9;
+  background: var(--success);
 }
 .feedback strong {
   font-size: 14px;
@@ -696,8 +753,8 @@ main {
   cursor: pointer;
 }
 .choice.chosen {
-  background: #e7edda;
-  border-color: #7f9767;
+  background: var(--chosen);
+  border-color: var(--chosen-border);
 }
 .choice code {
   font-size: 13px;
@@ -720,7 +777,7 @@ main {
 }
 .secondary-button {
   background: transparent;
-  border: 1px solid #bac7ac;
+  border: 1px solid var(--control-border);
   border-radius: 7px;
   display: flex;
   align-items: center;
@@ -736,7 +793,7 @@ main {
 }
 .hint-list {
   padding: 17px 20px 17px 38px;
-  background: #edf0e1;
+  background: var(--hint);
   border-radius: 8px;
   font-size: 13px;
   line-height: 1.8;
@@ -768,7 +825,7 @@ main {
   list-style: none;
   padding: 0;
   font-size: 12px;
-  color: #52644f;
+  color: var(--checklist-ink);
 }
 .checklist li {
   display: flex;
@@ -847,7 +904,7 @@ main {
 .walkthrough-list button span {
   flex-shrink: 0;
   font-size: 10px;
-  background: #e7ebde;
+  background: var(--step);
   height: 20px;
   width: 20px;
   display: grid;
@@ -855,12 +912,12 @@ main {
   border-radius: 50%;
 }
 .walkthrough-list .current-step button {
-  background: #e7edda;
+  background: var(--chosen);
   color: var(--ink);
 }
 .current-step button span {
   background: var(--green);
-  color: white;
+  color: var(--on-action);
 }
 .all-done {
   font-size: 13px;
@@ -884,7 +941,7 @@ main {
   left: 20px;
   padding: 12px;
   background: var(--green);
-  color: white;
+  color: var(--on-action);
   z-index: 10;
 }
 .skip-link:focus {
@@ -1229,7 +1286,7 @@ main {
   width: 100%;
   min-width: 0;
   flex: 1;
-  border: 1px solid #bdc9b4;
+  border: 1px solid var(--control-border);
   background: var(--surface);
   color: var(--ink);
   border-radius: 7px;
@@ -1344,4 +1401,32 @@ main {
     width: 100%;
     justify-content: space-between;
   }
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.auth-preferences {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+}
+input {
+  color: var(--ink);
+}
+select option {
+  background: var(--surface);
+  color: var(--ink);
 }

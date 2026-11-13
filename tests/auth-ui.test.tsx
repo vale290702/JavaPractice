@@ -98,7 +98,9 @@ describe('managed account UI', () => {
       screen.getByRole('button', { name: 'Sign in' }).closest('form')!,
     );
     expect(screen.getByRole('button', { name: 'Signing in…' })).toBeDisabled();
-    fireEvent.submit(screen.getByRole('button').closest('form')!);
+    fireEvent.submit(
+      screen.getByRole('button', { name: 'Signing in…' }).closest('form')!,
+    );
     expect(fetch).toHaveBeenCalledTimes(1);
     await act(async () => resolve(new Response(JSON.stringify({ ok: true }))));
     expect(navigate).toHaveBeenCalledWith('/');

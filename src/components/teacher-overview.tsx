@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { ThemeToggle } from './theme-toggle';
 import { Braces } from 'lucide-react';
 import type { SessionUser } from '../features/auth/types';
 import type { StudentProgress } from '../features/learning/types';
@@ -42,6 +43,7 @@ export function TeacherOverview({
         </Link>
         <div className="teacher-actions">
           <AccountControls user={user} />
+          <ThemeToggle locale={locale} />
           <label className="auth-language">
             {auth.language}
             <select
