@@ -25,7 +25,7 @@
 }
 .auth-language select {
   background: var(--surface);
-  border: 1px solid #9da99c;
+  border: 1px solid var(--control-border);
   border-radius: 7px;
   color: var(--ink);
   padding: 9px 12px;
@@ -57,7 +57,7 @@
   width: 100%;
   background: var(--surface);
   color: var(--ink);
-  border: 1px solid #9da99c;
+  border: 1px solid var(--control-border);
   border-radius: 7px;
   padding: 12px;
   font-size: 16px;
@@ -65,7 +65,7 @@
 }
 .auth-primary {
   background: var(--green);
-  color: var(--surface);
+  color: var(--on-action);
   border: 0;
   border-radius: 7px;
   padding: 12px 18px;
@@ -73,10 +73,10 @@
   font-weight: 500;
 }
 .auth-primary:hover:not(:disabled) {
-  background: #193e32;
+  background: var(--action-hover);
 }
 .auth-notice {
-  background: #e7edda;
+  background: var(--chosen);
   padding: 14px 16px;
   border-radius: 8px;
   margin-block-end: 20px;
@@ -89,7 +89,7 @@
   margin-block-start: 28px;
   border-block-start: 1px solid var(--line);
   padding-block-start: 22px;
-  color: #52645a;
+  color: var(--account-note);
   font-size: 14px;
 }
 .auth-session {
@@ -113,14 +113,14 @@
   overflow-wrap: anywhere;
 }
 .auth-account button {
-  border: 1px solid #9da99c;
+  border: 1px solid var(--control-border);
   background: transparent;
   border-radius: 7px;
   padding: 8px 12px;
   min-height: 40px;
 }
 .auth-account button:hover:not(:disabled) {
-  background: #e7edda;
+  background: var(--chosen);
 }
 .auth-account p {
   flex-basis: 100%;

@@ -68,3 +68,9 @@ The user-approved implementation lives on `feat/managed-login-single-session`; p
 Session cookies are HttpOnly/SameSite and Secure on production HTTPS. Only token digests are stored in the database. The full password-change trigger migration prevents in-flight old-password claims after a reset. Progress is stored per account in Supabase. Teacher access to student summaries is checked on the server and database; student accounts can access only their own progress.
 
 Browser tests use an external loopback-only Supabase protocol fixture started by `e2e/start.mjs`; the application still executes its real login and session code. Fixture accounts and passwords are synthetic. SQL semantic tests apply the actual migration to embedded PostgreSQL (PGlite), with a minimal auth schema; they do not establish multi-connection concurrency or validate a hosted Supabase project.
+
+## Appearance and editor
+
+Use the light/dark control in the login, learning, or teacher header to change appearance. The choice is stored per browser; before a choice is saved, the app follows the device preference. When browser storage is unavailable, the selection remains usable for the current page session.
+
+In the Java editor, Enter preserves the current indentation and adds four spaces after a block opening. Enter between paired braces creates an indented line between them. Strings and comments are recognized so their braces do not open blocks. Tab keeps native keyboard focus navigation; native editing commands preserve browser undo where supported.

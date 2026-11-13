@@ -11,7 +11,24 @@ colors:
   lime: "#d8e898"
   editor: "#1d2c29"
   focus: "#406b30"
-  selected: "#e7edda"
+  selected: "#dfe6d6"
+  chosen: "#e7edda"
+  on-action: "#fffefa"
+  control-border: "#9da99c"
+  dark-paper: "#101a2c"
+  dark-surface: "#19283e"
+  dark-ink: "#edf2fa"
+  dark-muted: "#b2c0d4"
+  dark-line: "#34465f"
+  dark-green: "#d6e1f0"
+  dark-focus: "#f0f4fa"
+  dark-selected: "#2b3d58"
+  dark-chosen: "#2a3c56"
+  dark-on-action: "#142238"
+  dark-control-border: "#7a8ea9"
+  dark-editor: "#142137"
+  dark-lime: "#e8edf4"
+  dark-code-text: "#e4eaf2"
   code-text: "#e2e6c5"
 typography:
   display:
@@ -55,7 +72,7 @@ spacing:
 components:
   button-primary:
     backgroundColor: "{colors.green}"
-    textColor: "{colors.surface}"
+    textColor: "{colors.on-action}"
     rounded: "{rounded.control}"
     padding: "11px 16px"
   button-secondary:
@@ -72,7 +89,7 @@ components:
     padding: "10px 12px"
   access-primary:
     backgroundColor: "{colors.green}"
-    textColor: "{colors.surface}"
+    textColor: "{colors.on-action}"
     rounded: "{rounded.control}"
     padding: "12px 18px"
   access-input:
@@ -92,19 +109,19 @@ components:
 
 **Creative North Star: "Learning lab"**
 
-Warm paper and green ink frame a quiet learning lab. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.
+Warm paper and green ink frame a quiet learning lab, with navy surfaces and light gray and white accents for dark appearance. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.
 
-This is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The teacher overview and account-saved progress extension are evidenced by `src/app/teacher.css`, `src/app/progress.css`, `teacher-overview.tsx`, and `use-progress.ts`. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.
+This is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The teacher overview and account-saved progress extension are evidenced by `src/app/teacher.css`, `src/app/progress.css`, `teacher-overview.tsx`, and `use-progress.ts`. The persisted appearance and native-textarea indentation extension is evidenced by `theme.ts`, `theme-toggle.tsx`, `java-editor.tsx`, and `editor-indentation.ts`. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.
 
 **Key Characteristics:**
-- Warm paper with green ink and lime emphasis
+- Warm paper with green ink in light appearance; navy with light gray and white accents in dark appearance
 - Serif lesson hierarchy with compact sans-serif controls
 - Ruled separation and restrained soft corners
 - Coordinated source, variable, output, and explanation states
 
 ## Colors
 
-A restrained green palette sits on warm neutrals, with lime reserved for selection and code emphasis.
+Light appearance uses restrained green on warm neutrals, with lime for selection and code emphasis. Dark appearance uses navy and slate surfaces with light gray and white accents.
 
 ### Primary
 - **Green ink:** primary actions, selected topic numerals, active activity tabs, and progress.
@@ -118,10 +135,17 @@ A restrained green palette sits on warm neutrals, with lime reserved for selecti
 - **Line:** structural dividers and option borders.
 - **Editor:** code, editable source, and revealed solution surfaces.
 - **Code text:** readable source on the dark editor.
-- **Selected:** chosen answer and walkthrough backgrounds.
+- **Selected:** current unit background.
+- **Chosen:** chosen answer and walkthrough backgrounds.
+- **On action:** contrasting text on filled green actions; distinct from the general surface color.
+- **Control border:** shared field and secondary-control stroke.
 - **Focus:** keyboard outlines on interactive controls.
 
-**The Two Materials Rule.** Use paper for explanation and the dark editor for code, output, and revealed solutions.
+The default frontmatter roles describe light appearance; `dark-` counterparts record the matching overrides in `html[data-theme='dark']`. Paper, surface, ink, muted, line, green, focus, selected, chosen, action text, and control strokes change together. Supporting callouts, feedback, progress tracks, and hints also use semantic CSS properties from `globals.css`. Editor, code header, console, source text, active-line highlight, caret, and brand details also change to navy, slate, and light gray or white in dark appearance. The CSS names `green` and `lime` are incumbent semantic names: their dark values are neutral light accents, not green hues.
+
+**The Two Materials Rule.** Use the themed reading canvas for explanation and the dark editor for code, output, and revealed solutions.
+
+**The Semantic Appearance Rule.** Bind shared controls and reading surfaces to their semantic CSS properties so foreground, background, border, and focus change together.
 
 ## Typography
 
@@ -171,19 +195,31 @@ Controls have gently rounded corners; selectable rows use the slightly broader r
 
 ### Buttons
 
-Compact and quiet. Primary actions use green with warm white text; secondary help actions are transparent with a muted green border; text actions remove the enclosing border. Hover darkens through brightness (0.96), with background and color transitions over 0.18s. Keyboard focus uses a visible two-pixel focus outline with four-pixel offset. Disabled controls lower opacity to 0.5; completed actions retain full opacity and use a pale green fill.
+Compact and quiet. Primary actions use the semantic action color (green in light appearance, light gray in dark) with contrasting on-action text; secondary help actions are transparent with the semantic control border; text actions remove the enclosing border. Hover darkens through brightness (0.96), with background and color transitions over 0.18s. Keyboard focus uses a visible two-pixel focus outline with four-pixel offset. Disabled controls lower opacity to 0.5; completed actions retain full opacity and use the themed completed fill.
 
 ### Cards / Containers
 
-Lesson prose sits directly on paper. Takeaways and hints use pale green tonal containers; feedback uses warm caution or pale success backgrounds and explicit explanatory text. Code uses the dedicated dark surface. These are content roles rather than interchangeable dashboard cards.
+Lesson prose sits directly on paper. Takeaways and hints use pale green tonal containers in light appearance and slate tonal containers in dark; feedback uses warm caution or pale success backgrounds and explicit explanatory text. Code uses the dedicated dark surface. These are content roles rather than interchangeable dashboard cards.
 
 ### Inputs / Fields
 
-Answer fields use the warm surface, muted green stroke, and shared control corners. Choice rows place a native radio beside readable source, with a pale selected background, stronger border, and check icon. The source editor uses monospace, a lime caret, and vertical resizing. Shared keyboard outlines remain visible; the source textarea moves its outline inward.
+Answer fields use the themed surface and control stroke, and shared control corners. Choice rows place a native radio beside readable source, with a pale selected background, stronger border, and check icon. The source editor uses monospace, a themed accent caret, and vertical resizing. Shared keyboard outlines remain visible; the source textarea moves its outline inward.
+
+### Appearance Control
+
+A shared sun/moon SVG button appears in the login preferences, workspace header, and teacher header. Its visible English or Spanish label names the appearance it will activate; its accessible label and title describe the same action. It uses the shared surface, ink, control stroke and control corners, a 44px minimum height, and the existing keyboard focus treatment. Preference groups and header actions wrap on narrow screens.
+
+A validated saved light/dark preference takes precedence over device appearance. Without one, the page follows the device preference, including later changes. A head bootstrap applies appearance before body paint. Explicit changes persist across reloads and routes and synchronize across tabs; unavailable storage uses an in-memory fallback. Appearance is independent of the selected language.
+
+### Java Source Editing
+
+The editor remains a labeled native textarea. Plain Enter preserves the current line's leading spaces or tabs, adding four spaces after an opening Java block brace. Between paired braces it creates an indented blank line and places the closing brace at the original indentation. Braces within strings, character literals, text blocks, and comments do not trigger block indentation. The insertion replaces the selected range while keeping surrounding code and places the caret on the new line.
+
+Cancelable mobile line-break input follows the same insertion behavior. Composition input and modified Enter retain native handling; Tab retains native focus navigation. Spellcheck, autocorrect, and automatic capitalization are disabled for source. This is an editing affordance, not a new type, spacing, or component-shape scale.
 
 ### Managed Access
 
-The login and session-status surfaces inherit serif headings, paper, green actions, and shared keyboard outlines. Email and password fields and the language select use 16px text, a muted green stroke, and shared control corners. Login and retry actions have a minimum height of 48px; the compact workspace logout action has a 40px minimum. Pending login keeps fields read-only and disables submission with an explicit changing label. Access notices use the existing selected tone, rounded row corners, and readable status or alert text; failure is conveyed by copy and semantics rather than color alone. Login headings use a surface-specific fluid size (36–48px), not a new global heading token.
+The login and session-status surfaces inherit serif headings, the themed canvas and action colors, and shared keyboard outlines. Email and password fields and the language select use 16px text, the themed control stroke, and shared control corners. Login and retry actions have a minimum height of 48px; the compact workspace logout action has a 40px minimum. Pending login keeps fields read-only and disables submission with an explicit changing label. Access notices use the existing selected tone, rounded row corners, and readable status or alert text; failure is conveyed by copy and semantics rather than color alone. Login headings use a surface-specific fluid size (36–48px), not a new global heading token.
 
 Account identity and logout wrap within the workspace header; long names wrap rather than truncate. Checking, blocked, and ended sessions replace the interactive workspace with a plain status view; blocked access offers retry. Logout failure appears alongside account controls. No elevated dialog or new icon language is introduced. English and Spanish labels follow the shared locale resources.
 
@@ -195,7 +231,7 @@ The teacher-only account link opens a quiet roster on paper. A serif display hea
 
 ### Navigation
 
-Four units are broad rows with circular numbers, supporting completion counts, and a selected fill. On mobile they become a two-column grid with wrapping labels and visible counts. Within the current unit, a native topic select shares its row with previous/next icon buttons; endpoint buttons are disabled. The select uses the warm surface, a muted green border, shared control corners, and compact text. The unit heading and description sit above; a quiet source reference below identifies the PDF page. Activity navigation is a row of icon-and-label buttons; the active item gains green ink, heavier weight, and an underline, with horizontal scrolling where needed. Icons are inline SVG, paired with text or an accessible label.
+Four units are broad rows with circular numbers, supporting completion counts, and a selected fill. On mobile they become a two-column grid with wrapping labels and visible counts. Within the current unit, a native topic select shares its row with previous/next icon buttons; endpoint buttons are disabled. The select uses the themed surface and control border, shared control corners, and compact text. The unit heading and description sit above; a quiet source reference below identifies the PDF page. Activity navigation is a row of icon-and-label buttons; the active item gains semantic action ink, heavier weight, and an underline, with horizontal scrolling where needed. Icons are inline SVG, paired with text or an accessible label.
 
 ### Coordinated Code Trace
 
@@ -208,10 +244,12 @@ A file header, numbered source, variable watch, console, and previous/next contr
 - **Do** pair selected state color with a border, numeral, weight, or text cue.
 - **Do** preserve horizontal scrolling for activity tabs and code, and wrapping labels in the mobile unit grid.
 - **Do** disable arrival animation and transitions for reduced motion.
+- **Do** use semantic foreground, background, border, and focus properties together in both appearances.
+- **Do** preserve native composition and Tab focus navigation in source editing.
 
 ### Don't:
 - **Don't** turn every lesson section into an elevated card.
 - **Don't** use the lime highlight as ordinary body text on paper.
 - **Don't** clip bilingual labels or code to force a fixed layout.
 
-Not canonized: the decorative Java stamp and brand-dot green (#73924b) are identity flourishes rather than new reusable components or palette roles; tiny metadata sizes and the solution’s 9px radius are observed implementation details, not new scale tokens. Tiny source references should not set the size of new reading text. The access-only hover green (#193e32), field/account stroke (#9da99c), and account-note ink (#52645a) remain local treatments rather than new palette primitives. Roster column minimum widths and row padding remain local table layout details, not reusable spacing tokens. No seed candidate mapping or comp approval is inferred: the direction record explicitly identifies its missing pre-implementation mapping.
+Not canonized: the decorative Java stamp and brand-dot green (#73924b) are identity flourishes rather than new reusable components or palette roles; tiny metadata sizes and the solution’s 9px radius are observed implementation details, not new scale tokens. Tiny source references should not set the size of new reading text. The access hover and account-note tones remain supporting semantic treatments rather than independent palette primitives; the shared field/control stroke now belongs to the recorded semantic palette. Roster column minimum widths and row padding remain local table layout details, not reusable spacing tokens. No seed candidate mapping or comp approval is inferred: the direction record explicitly identifies its missing pre-implementation mapping.

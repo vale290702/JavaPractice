@@ -1,5 +1,6 @@
 'use client';
 import { useSyncExternalStore, useRef, useState, type FormEvent } from 'react';
+import { ThemeToggle } from '../theme-toggle';
 import { useAuthLocale } from './use-auth-locale';
 import { authRequest } from './request';
 import { navigate } from './navigation';
@@ -60,17 +61,20 @@ export function LoginForm() {
     <main className="auth-page">
       <header className="auth-header">
         <span className="auth-brand">{t.brand}</span>
-        <label className="auth-language">
-          {t.language}
-          <select
-            aria-label={t.language}
-            value={locale}
-            onChange={(e) => setLocale(e.target.value)}
-          >
-            <option value="en">{languageNames.en}</option>
-            <option value="es">{languageNames.es}</option>
-          </select>
-        </label>
+        <div className="auth-preferences">
+          <ThemeToggle locale={locale} />
+          <label className="auth-language">
+            {t.language}
+            <select
+              aria-label={t.language}
+              value={locale}
+              onChange={(e) => setLocale(e.target.value)}
+            >
+              <option value="en">{languageNames.en}</option>
+              <option value="es">{languageNames.es}</option>
+            </select>
+          </label>
+        </div>
       </header>
       <section className="auth-login" aria-labelledby="login-title">
         <h1 id="login-title">{t.title}</h1>

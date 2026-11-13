@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import '../app/progress.css';
+import { ThemeToggle } from './theme-toggle';
+import { JavaEditor } from './java-editor';
 import { useLocalStorage } from '../features/learning/use-local-storage';
 import {
   ArrowRight,
@@ -159,6 +161,7 @@ export function LearningWorkspace({
           </span>
           <div className="topbar-actions">
             <AccountControls user={user} />
+            <ThemeToggle locale={locale} />
             <label className="language-control">
               <Globe2 size={16} />
               <span className="sr-only">{t.language}</span>
@@ -405,13 +408,11 @@ export function LearningWorkspace({
                       {t.reset}
                     </button>
                   </div>
-                  <textarea
-                    className="code-input"
-                    aria-label={t.editor}
+                  <JavaEditor
+                    label={t.editor}
                     value={code[topic] ?? currentTopic.example.starter}
-                    spellCheck={false}
-                    onChange={(event) =>
-                      setCode({ ...code, [topic]: event.target.value })
+                    onChange={(value) =>
+                      setCode((current) => ({ ...current, [topic]: value }))
                     }
                   />
                   <p className="code-save-note">{t.codeSaved}</p>
