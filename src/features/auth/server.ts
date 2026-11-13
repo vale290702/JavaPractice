@@ -60,7 +60,7 @@ async function service(
     throw new AuthError('unavailable');
   }
 }
-const rpc = (name: string, body: unknown) =>
+export const rpc = (name: string, body: unknown) =>
   service(`/rest/v1/rpc/${name}`, body);
 function parseSession(value: unknown): AppSession | null {
   if (value === null) return null;
@@ -70,6 +70,7 @@ function parseSession(value: unknown): AppSession | null {
     typeof session.user?.id !== 'string' ||
     typeof session.user.email !== 'string' ||
     typeof session.user.displayName !== 'string' ||
+    !['teacher', 'student'].includes(session.user.role) ||
     typeof session.expiresAt !== 'string' ||
     !Number.isFinite(Date.parse(session.expiresAt))
   )
@@ -78,6 +79,7 @@ function parseSession(value: unknown): AppSession | null {
     ? {
         user: {
           id: session.user.id,
+          role: session.user.role,
           email: session.user.email,
           displayName: session.user.displayName,
         },

@@ -14,7 +14,12 @@ import { SessionBoundary } from '../src/components/auth/session-boundary';
 import { navigate } from '../src/components/auth/navigation';
 vi.mock('../src/components/auth/navigation', () => ({ navigate: vi.fn() }));
 const session = {
-  user: { id: 'one', email: 'student@example.com', displayName: 'Student' },
+  user: {
+    id: 'one',
+    email: 'student@example.com',
+    displayName: 'Student',
+    role: 'student' as const,
+  },
   expiresAt: '2099-01-01T00:00:00Z',
 };
 beforeEach(() => {

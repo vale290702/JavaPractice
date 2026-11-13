@@ -1,0 +1,5 @@
+# Hosted settings intentionally limited to disabling public registration.
+project_id = "java-practice"
+
+[auth]
+enable_signup = false

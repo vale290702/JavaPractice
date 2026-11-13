@@ -165,3 +165,26 @@ describe('password input', () => {
     expect(input.listenerCount('keypress')).toBe(0);
   });
 });
+
+it('creates a teacher only with an explicit valid role', async () => {
+  const f = fixture([200, 204], [{ id: userId }]);
+  await run(
+    [
+      'create',
+      '--email',
+      'teacher@example.com',
+      '--name',
+      'Teacher',
+      '--role',
+      'teacher',
+    ],
+    f.options,
+  );
+  expect(f.requests[1].body).toMatchObject({ role: 'teacher' });
+  await expect(
+    run(
+      ['create', '--email', 'x@example.com', '--name', 'X', '--role', 'admin'],
+      f.options,
+    ),
+  ).rejects.toThrow(/role/);
+});

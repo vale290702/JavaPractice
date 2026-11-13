@@ -1,6 +1,6 @@
 # Managed access setup
 
-This feature is source work on `feat/managed-login-single-session`. Production has not been deployed with it. No live Supabase schema, credentials, or student accounts have been configured or verified by this change. Choose a dedicated Supabase project before setup; never reuse another project's credentials accidentally.
+This feature lives on `feat/managed-login-single-session`; production has not been deployed with it. A dedicated JavaPractice Supabase project (`mxotijowgvkeqehedvsg`, US East) is configured for this branch. Local server credentials are in ignored `.env.local`; never reuse another project's credentials.
 
 ## Configure the database and Auth
 
@@ -15,7 +15,8 @@ Use Node 24 from the project directory. These commands use native Node fetch and
 
 ```sh
 node scripts/manage-users.mjs --help
-node --env-file=.env.local scripts/manage-users.mjs create --email student@example.com --name "Student"
+node --env-file=.env.local scripts/manage-users.mjs create --email student@example.com --name "Student" --role student
+node --env-file=.env.local scripts/manage-users.mjs create --email teacher@example.com --name "Teacher" --role teacher
 node --env-file=.env.local scripts/manage-users.mjs list
 node --env-file=.env.local scripts/manage-users.mjs disable --user-id ACCOUNT_UUID
 node --env-file=.env.local scripts/manage-users.mjs reset-password --user-id ACCOUNT_UUID
@@ -29,13 +30,13 @@ Replace the example email, display name, and UUID with the intended account valu
 
 `disable` first sets approval to disabled, then deletes that account's application sessions. The disabled approval immediately prevents app access and replacement sessions, even if subsequent session deletion fails; retry the command after resolving the connection problem. It does not ban or delete the provider user. There is no enable command or public administration interface.
 
-`reset-password` validates the new password before making changes, revokes application sessions, updates the provider password, then revokes sessions again. These calls are separate provider/database operations. A later error can leave the password changed or sessions revoked, so inspect and retry as appropriate; success is reported only after the last revocation succeeds. The migration also installs an Auth password-change trigger that atomically increments the account credential version and deletes sessions inside the password update transaction. Login captures that version before credential verification and checks it at session replacement, so an in-flight login using the previous password cannot claim a new session after the reset. This depends on applying the full migration, including its trigger; it has not been verified against a live Supabase project. Reset does not enable a disabled account. For an access incident, disable the account first and keep it disabled while investigating.
+`reset-password` validates the new password before making changes, revokes application sessions, updates the provider password, then revokes sessions again. These calls are separate provider/database operations. A later error can leave the password changed or sessions revoked, so inspect and retry as appropriate; success is reported only after the last revocation succeeds. The migration also installs an Auth password-change trigger that atomically increments the account credential version and deletes sessions inside the password update transaction. Login captures that version before credential verification and checks it at session replacement, so an in-flight login using the previous password cannot claim a new session after the reset. This depends on applying the full migration, including its trigger. Live verification status is recorded in the implementation plan. Reset does not enable a disabled account. For an access incident, disable the account first and keep it disabled while investigating.
 
 ## Session behavior and verification
 
 An application session lasts at most 12 hours. One approved account has one authoritative active session; a successful new login displaces its previous session. Different accounts remain independent. Protected server requests validate the database registry every time and reject a displaced session immediately. The browser checks session status every 10 seconds and when it regains focus; already delivered lesson information cannot be made unread. Tabs in one browser share the same cookie/session.
 
-Progress is stored locally under the authenticated user ID. There is no cross-device progress synchronization and anonymous legacy progress is not assigned to the first account that logs in.
+Completed activities are stored in Supabase under the authenticated account and follow that account across devices. The interface confirms a completion only after the server saves it. Old browser-only progress is not automatically assigned to an account. Teachers can open `/teacher` to view approved student accounts, activity completion by unit, and latest activity. Students cannot access this view. Completion records describe learning activity, not independently executed or graded Java code.
 
 After project setup, verify successful login, wrong credentials, disabled/unapproved access denial, logout, expiry, two separate browsers replacing the same account's session, and another account remaining active. Verify the migration's actual RLS and service-role permissions in the live project. Local protocol-fixture tests do not prove live SQL permissions, concurrency, or provider configuration.
 

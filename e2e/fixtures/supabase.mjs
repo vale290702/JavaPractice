@@ -11,12 +11,18 @@ export async function startFixture(port = 54339) {
     providerTokens = new Set(),
     limits = new Map();
   const accountFor = (email) => {
-    if (!/^student-[a-z0-9-]+@example\.test$/.test(email)) return null;
+    if (!/^(student|teacher)-[a-z0-9-]+@example\.test$/.test(email))
+      return null;
     if (!accounts.has(email))
       accounts.set(email, {
         id: randomUUID(),
         email,
-        displayName: 'Test learner',
+        displayName: email.startsWith('teacher-')
+          ? 'Test teacher'
+          : 'Test learner',
+        role: email.startsWith('teacher-') ? 'teacher' : 'student',
+        completed: [],
+        lastActivity: null,
         enabled: true,
         version: 0,
       });
@@ -27,6 +33,7 @@ export async function startFixture(port = 54339) {
       id: row.account.id,
       email: row.account.email,
       displayName: row.account.displayName,
+      role: row.account.role,
     },
     expiresAt: row.expiresAt,
   });
@@ -103,6 +110,56 @@ export async function startFixture(port = 54339) {
           ? publicSession(row)
           : null,
       );
+    }
+    if (
+      [
+        'app_read_progress',
+        'app_complete_activity',
+        'app_teacher_progress',
+      ].some((name) => path === `/rest/v1/rpc/${name}`)
+    ) {
+      const row = [...sessions.values()].find(
+        (s) => s.hash === body.p_token_hash,
+      );
+      if (
+        !row ||
+        !row.account.enabled ||
+        Date.parse(row.expiresAt) <= Date.now()
+      )
+        return reply(200, null);
+      if (path.endsWith('/app_teacher_progress')) {
+        if (row.account.role !== 'teacher') return reply(200, null);
+        return reply(
+          200,
+          [...accounts.values()]
+            .filter((a) => a.role === 'student')
+            .map((a) => ({
+              id: a.id,
+              email: a.email,
+              displayName: a.displayName,
+              enabled: a.enabled,
+              completed: a.completed,
+              lastActivity: a.lastActivity,
+            })),
+        );
+      }
+      if (path.endsWith('/app_complete_activity')) {
+        const match =
+          /^(1|2|3|4)\.(\d+):(learn|example|practice|quiz|code)$/.exec(
+            body.p_activity ?? '',
+          );
+        if (
+          !match ||
+          Number(match[2]) < 1 ||
+          Number(match[2]) > [0, 15, 12, 9, 17][Number(match[1])]
+        )
+          return reply(400, {});
+        row.account.completed = [
+          ...new Set([...row.account.completed, body.p_activity]),
+        ];
+        row.account.lastActivity = new Date().toISOString();
+      }
+      return reply(200, row.account.completed);
     }
     if (path === '/rest/v1/rpc/app_revoke_session') {
       for (const [id, row] of sessions)

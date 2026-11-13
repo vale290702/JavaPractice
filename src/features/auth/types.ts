@@ -1,4 +1,5 @@
 export interface SessionUser {
+  role: 'teacher' | 'student';
   id: string;
   email: string;
   displayName: string;

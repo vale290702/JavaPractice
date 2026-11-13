@@ -25,6 +25,7 @@ export const authMessages = {
     loggingOut: 'Signing out…',
     logoutError: 'We could not sign you out. Please try again.',
     account: 'Signed in as',
+    teacherProgress: 'Student progress',
     sessionTitle: 'Your practice is paused',
   },
   es: {
@@ -54,6 +55,7 @@ export const authMessages = {
     loggingOut: 'Cerrando sesión…',
     logoutError: 'No pudimos cerrar tu sesión. Inténtalo de nuevo.',
     account: 'Sesión de',
+    teacherProgress: 'Progreso de estudiantes',
     sessionTitle: 'Tu práctica está en pausa',
   },
 };

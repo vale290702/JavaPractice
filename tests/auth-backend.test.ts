@@ -20,7 +20,7 @@ import { POST } from '../src/app/api/auth/login/route';
 import { POST as logout } from '../src/app/api/auth/logout/route';
 import { GET as getSession } from '../src/app/api/auth/session/route';
 const session = {
-  user: { id: 'a', email: 'a@example.com', displayName: 'A' },
+  user: { role: 'student', id: 'a', email: 'a@example.com', displayName: 'A' },
   expiresAt: new Date(Date.now() + 43200000).toISOString(),
 };
 let active: string | null;
@@ -296,3 +296,15 @@ test.each([
   expect(await response.json()).toEqual({ code: 'unavailable' });
   expect(fetcher).not.toHaveBeenCalled();
 });
+
+test.each([undefined, 'admin'])(
+  'session response rejects unrecognized role %s',
+  async (role) => {
+    fetcher.mockResolvedValueOnce(
+      Response.json({ ...session, user: { ...session.user, role } }),
+    );
+    await expect(readSession('x'.repeat(43))).rejects.toMatchObject({
+      code: 'unavailable',
+    });
+  },
+);

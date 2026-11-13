@@ -3,7 +3,7 @@ import { emitKeypressEvents, createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
 
 const HELP = `Managed tutoring accounts (Node 24)
-  node --env-file=.env.local scripts/manage-users.mjs create --email student@example.com --name "Student"
+  node --env-file=.env.local scripts/manage-users.mjs create --email student@example.com --name "Student" [--role student|teacher]
   node --env-file=.env.local scripts/manage-users.mjs list
   node --env-file=.env.local scripts/manage-users.mjs disable --user-id UUID
   node --env-file=.env.local scripts/manage-users.mjs reset-password --user-id UUID
@@ -66,7 +66,7 @@ function parse(args) {
     return { command: 'help' };
   const [command, ...rest] = args;
   const allowed = {
-    create: ['--email', '--name'],
+    create: ['--email', '--name', '--role'],
     list: [],
     disable: ['--user-id'],
     'reset-password': ['--user-id'],
@@ -89,6 +89,11 @@ function parse(args) {
     options[flag] = rest[i + 1];
   }
   if (command === 'create') {
+    if (
+      options['--role'] !== undefined &&
+      !['teacher', 'student'].includes(options['--role'])
+    )
+      throw new ToolError('Provide --role teacher or student.');
     if (
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(options['--email'] ?? '') ||
       options['--email'].length > 254
@@ -178,7 +183,7 @@ export async function run(args, dependencies = {}) {
     // Explicit pagination avoids silently truncating at PostgREST's response limit.
     for (let offset = 0; ; offset += 100) {
       const page = await request(
-        `/rest/v1/app_accounts?select=user_id,display_name,enabled&order=user_id&limit=100&offset=${offset}`,
+        `/rest/v1/app_accounts?select=user_id,display_name,enabled,role&order=user_id&limit=100&offset=${offset}`,
         'GET',
         undefined,
         'Account listing',
@@ -205,6 +210,7 @@ export async function run(args, dependencies = {}) {
           displayName: account.display_name,
           email: user?.email ?? null,
           enabled: account.enabled,
+          role: account.role,
         }),
       );
     }
@@ -264,6 +270,7 @@ export async function run(args, dependencies = {}) {
         {
           user_id: user.id,
           display_name: options['--name'].trim(),
+          role: options['--role'] ?? 'student',
           enabled: true,
         },
         'Account approval',

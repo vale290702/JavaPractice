@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-13T00:51:53.169330+00:00",
+  "generatedAt": "2026-11-13T01:17:22.903381+00:00",
   "title": "Design System: JavaPractice",
   "extensions": {
     "shadows": [
@@ -285,11 +285,18 @@
       "description": "Readable credential input using the inherited paper and green stroke.",
       "html": "<label class=\"ds-access-label\" for=\"ds-access-email\">Email</label><input id=\"ds-access-email\" class=\"ds-access ds-access-input\" type=\"email\" autocomplete=\"username\">",
       "css": ".ds-access-label{display:block;font:500 15px/1.6 var(--sans,\"DM Sans\",sans-serif);color:var(--ink,#213b35);margin-bottom:9px}.ds-access-input{font:16px/1.6 var(--sans,\"DM Sans\",sans-serif);background:var(--surface,#fffefa);color:var(--ink,#213b35);border:1px solid #9da99c;border-radius:7px;padding:12px;min-width:0;caret-color:var(--green,#234d40)}.ds-access:focus-visible{outline:2px solid var(--focus,#406b30);outline-offset:4px}"
+    },
+    {
+      "name": "Teacher roster",
+      "kind": "custom",
+      "description": "Captioned, ruled student progress table on paper; identity and overall completion lead. A localized mobile hint describes the horizontally scrollable region. Access state is text, and completion records practice rather than grades.",
+      "html": "<p class=\"ds-roster-hint\" id=\"ds-roster-hint\">Scroll horizontally to see all units and last activity.</p><div class=\"ds-roster-scroll\" tabindex=\"0\" role=\"region\" aria-label=\"Student progress\" aria-describedby=\"ds-roster-hint\"><table class=\"ds-roster\"><caption>Completed activities</caption><thead><tr><th scope=\"col\">Student</th><th scope=\"col\">Overall completion</th><th scope=\"col\">Account access</th></tr></thead><tbody><tr><th scope=\"row\"><strong>Test learner</strong><span class=\"ds-roster-meta\">student@example.test</span></th><td><strong>20%</strong><span class=\"ds-roster-meta\">53 / 265</span></td><td>Enabled</td></tr></tbody></table></div>",
+      "css": ".ds-roster-scroll{overflow-x:auto;background:var(--paper,#f7f6f0);color:var(--ink,#213b35);scrollbar-color:var(--green,#234d40) var(--paper,#f7f6f0)}.ds-roster-scroll:focus-visible{outline:2px solid var(--focus,#406b30);outline-offset:4px}.ds-roster{border-collapse:collapse;width:100%;font:15px/1.6 var(--sans,\"DM Sans\",sans-serif);font-variant-numeric:tabular-nums}.ds-roster caption{text-align:start;color:var(--muted,#64736b);padding-bottom:14px}.ds-roster th,.ds-roster td{text-align:start;border-bottom:1px solid var(--line,#dddfd4);padding:18px 16px;vertical-align:top}.ds-roster th:first-child{padding-left:0}.ds-roster thead th{font-size:12px;font-weight:500;white-space:nowrap}.ds-roster tbody th{font-weight:400;min-width:200px;max-width:300px;overflow-wrap:anywhere}.ds-roster td{min-width:85px}.ds-roster-meta{display:block;color:var(--muted,#64736b);font-size:12px;margin-top:5px}.ds-roster-hint{display:none}@media(max-width:650px){.ds-roster-hint{display:block;margin-top:28px;color:var(--muted,#64736b);font:15px/1.6 var(--sans,\"DM Sans\",sans-serif);max-width:40ch}.ds-roster-scroll{margin-top:16px}.ds-roster tbody th{min-width:160px;max-width:180px}.ds-roster thead th{white-space:normal;min-width:110px}}"
     }
   ],
   "narrative": {
     "northStar": "Learning lab",
-    "overview": "Warm paper and green ink frame a quiet learning lab. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.\n\nThis is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.",
+    "overview": "Warm paper and green ink frame a quiet learning lab. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.\n\nThis is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The teacher overview and account-saved progress extension are evidenced by `src/app/teacher.css`, `src/app/progress.css`, `teacher-overview.tsx`, and `use-progress.ts`. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.",
     "keyCharacteristics": [
       "Warm paper with green ink and lime emphasis",
       "Serif lesson hierarchy with compact sans-serif controls",

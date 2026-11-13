@@ -94,7 +94,7 @@ components:
 
 Warm paper and green ink frame a quiet learning lab. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.
 
-This is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.
+This is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The teacher overview and account-saved progress extension are evidenced by `src/app/teacher.css`, `src/app/progress.css`, `teacher-overview.tsx`, and `use-progress.ts`. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.
 
 **Key Characteristics:**
 - Warm paper with green ink and lime emphasis
@@ -151,6 +151,8 @@ At 1150px the rail narrows to 235px and content inset to 28px. At 930px explanat
 
 The access surface uses the same paper canvas and ruled header without an enclosing card. Its header caps at 1228px; the single-column form caps at 420px. Desktop page inset is 46px and mobile inset is 20px at the existing 650px breakpoint. The session-status view caps at 520px with a 24px inset. These are surface-specific compositions, not replacements for the workspace grid.
 
+The teacher overview shares the 1320px content cap and 46px desktop / 20px mobile page inset. Its header wraps at 650px; the roster stays a semantic table in a keyboard-focusable horizontal scroll region, preserving columns rather than compressing names and counts into cards. Long student names and email addresses wrap. Student identity and overall completion lead the columns. On mobile, a visible localized scroll hint describes the table region; narrower identity columns and wrapping column headings expose useful completion information before scrolling. These roster dimensions are surface-specific, not a new global grid.
+
 ## Elevation & Depth
 
 Most surfaces are flat, distinguished by tone, rules, and whitespace. A single diffuse code-panel shadow introduces restrained depth; selected rows and callouts use tonal fills.
@@ -185,6 +187,12 @@ The login and session-status surfaces inherit serif headings, paper, green actio
 
 Account identity and logout wrap within the workspace header; long names wrap rather than truncate. Checking, blocked, and ended sessions replace the interactive workspace with a plain status view; blocked access offers retry. Logout failure appears alongside account controls. No elevated dialog or new icon language is introduced. English and Spanish labels follow the shared locale resources.
 
+### Saved Progress and Teacher Roster
+
+Completion remains a compact lesson action: a translated saving label and disabled control show the pending request; completed styling and counts update only after the server confirms the saved completion list. A failed save leaves completion unchanged and presents a ruled inline alert with the existing secondary retry action. Sidebar and mobile progress copy identify account storage. This extends existing state language without adding a new palette or elevation treatment.
+
+The teacher-only account link opens a quiet roster on paper. A serif display heading and muted introduction precede a captioned, ruled table. Student names and overall percentages receive weight; email and count metadata use the existing compact label size. Tabular numerals support comparison. Account access is written explicitly, alongside overall and per-unit completion and a locale-formatted last-activity time or no-activity label. Empty and unavailable states occupy the same ruled content region; unavailable data has an alert and reload action. Completion is described as practice rather than a grade. English and Spanish labels remain in typed locale resources.
+
 ### Navigation
 
 Four units are broad rows with circular numbers, supporting completion counts, and a selected fill. On mobile they become a two-column grid with wrapping labels and visible counts. Within the current unit, a native topic select shares its row with previous/next icon buttons; endpoint buttons are disabled. The select uses the warm surface, a muted green border, shared control corners, and compact text. The unit heading and description sit above; a quiet source reference below identifies the PDF page. Activity navigation is a row of icon-and-label buttons; the active item gains green ink, heavier weight, and an underline, with horizontal scrolling where needed. Icons are inline SVG, paired with text or an accessible label.
@@ -206,4 +214,4 @@ A file header, numbered source, variable watch, console, and previous/next contr
 - **Don't** use the lime highlight as ordinary body text on paper.
 - **Don't** clip bilingual labels or code to force a fixed layout.
 
-Not canonized: the decorative Java stamp and brand-dot green (#73924b) are identity flourishes rather than new reusable components or palette roles; tiny metadata sizes and the solution’s 9px radius are observed implementation details, not new scale tokens. Tiny source references should not set the size of new reading text. The access-only hover green (#193e32), field/account stroke (#9da99c), and account-note ink (#52645a) remain local treatments rather than new palette primitives. No seed candidate mapping or comp approval is inferred: the direction record explicitly identifies its missing pre-implementation mapping.
+Not canonized: the decorative Java stamp and brand-dot green (#73924b) are identity flourishes rather than new reusable components or palette roles; tiny metadata sizes and the solution’s 9px radius are observed implementation details, not new scale tokens. Tiny source references should not set the size of new reading text. The access-only hover green (#193e32), field/account stroke (#9da99c), and account-note ink (#52645a) remain local treatments rather than new palette primitives. Roster column minimum widths and row padding remain local table layout details, not reusable spacing tokens. No seed candidate mapping or comp approval is inferred: the direction record explicitly identifies its missing pre-implementation mapping.

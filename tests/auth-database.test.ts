@@ -35,6 +35,15 @@ beforeAll(async () => {
       'utf8',
     ),
   );
+  await db.exec(
+    await readFile(
+      new URL(
+        '../supabase/migrations/202611120002_teacher_progress.sql',
+        import.meta.url,
+      ),
+      'utf8',
+    ),
+  );
 }, 30000);
 beforeEach(async () => {
   await db.exec(
@@ -57,6 +66,7 @@ test('replacement leaves one authoritative session and stale logout preserves it
     id: a,
     email: 'a@example.com',
     displayName: 'Student A',
+    role: 'student',
   });
   const replacement = await claim(a, newHash);
   expect(replacement).not.toBeNull();
@@ -177,4 +187,134 @@ test('rate window allows eight attempts, blocks ninth, and resets after fifteen 
   expect(await scalar('public.app_check_login_limit($1,8)', [oldHash])).toBe(
     true,
   );
+});
+
+test('progress persists, isolates accounts, validates activities and rejects stale sessions', async () => {
+  await claim(a, oldHash);
+  await claim(b, otherHash);
+  expect(await scalar('public.app_read_progress($1)', [oldHash])).toEqual([]);
+  expect(
+    await scalar('public.app_complete_activity($1,$2)', [oldHash, '1.2:learn']),
+  ).toEqual(['1.2:learn']);
+  expect(
+    await scalar('public.app_complete_activity($1,$2)', [oldHash, '1.2:learn']),
+  ).toEqual(['1.2:learn']);
+  expect(await scalar('public.app_read_progress($1)', [otherHash])).toEqual([]);
+  for (const activity of [
+    '1.16:learn',
+    '2.13:quiz',
+    '3.10:code',
+    '4.18:learn',
+    '1.1:bad',
+    '01.1:learn',
+  ])
+    await expect(
+      scalar('public.app_complete_activity($1,$2)', [oldHash, activity]),
+    ).rejects.toThrow('invalid activity');
+  await claim(a, newHash);
+  expect(
+    await scalar('public.app_complete_activity($1,$2)', [oldHash, '1.3:quiz']),
+  ).toBeNull();
+  expect(await scalar('public.app_read_progress($1)', [newHash])).toEqual([
+    '1.2:learn',
+  ]);
+});
+test('teacher roster requires a live teacher session and includes disabled students only', async () => {
+  await claim(a, oldHash);
+  await claim(b, otherHash);
+  expect(await scalar('public.app_teacher_progress($1)', [oldHash])).toBeNull();
+  await db.query(
+    "update public.app_accounts set role='teacher' where user_id=$1",
+    [a],
+  );
+  await scalar('public.app_complete_activity($1,$2)', [otherHash, '4.17:code']);
+  await db.query(
+    'update public.app_accounts set enabled=false where user_id=$1',
+    [b],
+  );
+  expect(await scalar('public.app_teacher_progress($1)', [oldHash])).toEqual([
+    {
+      id: b,
+      email: 'b@example.com',
+      displayName: 'Student B',
+      enabled: false,
+      completed: ['4.17:code'],
+      lastActivity: expect.any(String),
+    },
+  ]);
+  await claim(a, newHash);
+  expect(await scalar('public.app_teacher_progress($1)', [oldHash])).toBeNull();
+});
+test.each(['anon', 'authenticated'])(
+  '%s cannot read progress table or execute progress RPCs',
+  async (role) => {
+    await db.exec(`set role ${role}`);
+    try {
+      await expect(
+        db.query('select * from public.app_progress'),
+      ).rejects.toThrow(/permission denied/);
+      for (const expr of [
+        'app_read_progress($1)',
+        'app_teacher_progress($1)',
+        "app_complete_activity($1,'1.1:learn')",
+      ])
+        await expect(scalar(`public.${expr}`, [oldHash])).rejects.toThrow(
+          /permission denied/,
+        );
+    } finally {
+      await db.exec('reset role');
+    }
+  },
+);
+
+test.each(['expired', 'disabled', 'banned', 'deleted', 'reset'])(
+  '%s session cannot write or read progress',
+  async (state) => {
+    await claim(a, oldHash);
+    if (state === 'expired')
+      await db.query(
+        "update public.app_sessions set expires_at=statement_timestamp()-interval '1 second' where user_id=$1",
+        [a],
+      );
+    if (state === 'disabled')
+      await db.query(
+        'update public.app_accounts set enabled=false where user_id=$1',
+        [a],
+      );
+    if (state === 'banned' || state === 'deleted')
+      await db.query(
+        `update auth.users set ${state === 'banned' ? 'banned_until' : 'deleted_at'}=statement_timestamp()+interval '1 day' where id=$1`,
+        [a],
+      );
+    if (state === 'reset')
+      await db.query(
+        "update auth.users set encrypted_password='changed' where id=$1",
+        [a],
+      );
+    expect(
+      await scalar('public.app_complete_activity($1,$2)', [
+        oldHash,
+        '1.1:learn',
+      ]),
+    ).toBeNull();
+    expect(await scalar('public.app_read_progress($1)', [oldHash])).toBeNull();
+    expect(
+      await scalar<number>(
+        '(select count(*)::integer from public.app_progress)',
+      ),
+    ).toBe(0);
+  },
+);
+test('SQL accepts the complete curriculum activity matrix', async () => {
+  await claim(a, oldHash);
+  for (const [index, count] of [15, 12, 9, 17].entries())
+    for (let topic = 1; topic <= count; topic++)
+      for (const mode of ['learn', 'example', 'practice', 'quiz', 'code'])
+        await scalar('public.app_complete_activity($1,$2)', [
+          oldHash,
+          `${index + 1}.${topic}:${mode}`,
+        ]);
+  expect(
+    (await scalar<string[]>('public.app_read_progress($1)', [oldHash])).length,
+  ).toBe(265);
 });

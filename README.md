@@ -20,7 +20,7 @@ Open http://localhost:3000.
 
 All four units and 53 numbered topics from the supplied AP Computer Science A course document: Using Objects and Methods (15), Selection and Iteration (12), Class Creation (9), and Data Collections (17). Each topic includes original explanations, an interactive code walkthrough, guided practice, a quiz with feedback, progressive hints, and an editable coding exercise with a review checklist and revealable solution. These quick checks are original tutoring activities, not official AP exams.
 
-English and Spanish UI copy lives in `src/i18n/content.ts`; localized lessons and Java examples are split by unit in `src/features/curriculum`. Switching language preserves the current activity, answer, and code. Learning progress is isolated by authenticated account on the same browser; language persists on that browser, and code edits persist only during the current session. Anonymous starter progress is not automatically attached to an account. Blocked browser storage falls back to session memory.
+English and Spanish UI copy lives in `src/i18n/content.ts`; localized lessons and Java examples are split by unit in `src/features/curriculum`. Switching language preserves the current activity, answer, and code. Completed learning activities are saved to the authenticated account in Supabase and follow it across devices. Teacher accounts can view student completion by unit at `/teacher`. Language persists in the browser; code edits persist during the current session. Old browser-only progress is not automatically attached to an account.
 
 The examples are authored walkthroughs, not an executing Java interpreter. Coding exercises do not compile or claim passing tests. A future Java execution service must run untrusted submissions in an isolated environment with resource limits.
 
@@ -30,7 +30,7 @@ The examples are authored walkthroughs, not an executing Java interpreter. Codin
 - `src/components`: learning workspace and code walkthrough presentation.
 - `src/i18n`: typed bilingual interface copy.
 - `src/features/curriculum`: typed unit registry, bilingual lessons, Java examples, and source-page references.
-- `src/features/learning`: code examples, progress validation, and browser persistence.
+- `src/features/learning`: code examples, progress validation, server persistence, and browser locale preference.
 - `tests`: unit and React interaction tests.
 - `e2e`: desktop/mobile Playwright learning flow.
 - `PRODUCT.md`: product constraints and open integrations.
@@ -65,6 +65,6 @@ At initial verification, `npm audit --omit=dev` reported no production vulnerabi
 
 The user-approved implementation lives on `feat/managed-login-single-session`; production is unchanged until it is merged and deployed after backend setup. No public signup or account-admin page exists. Accounts are managed with `scripts/manage-users.mjs`; passwords use a hidden terminal prompt or stdin. Each successful login atomically replaces the account’s prior opaque application session. The server rejects displaced requests immediately; open pages recheck at most every ten seconds while visible and whenever they regain focus. Previously delivered information cannot be erased by revocation.
 
-Session cookies are HttpOnly/SameSite and Secure on production HTTPS. Only token digests are stored in the database. The full password-change trigger migration prevents in-flight old-password claims after a reset. Local progress is scoped by account ID; cross-device progress synchronization is not included.
+Session cookies are HttpOnly/SameSite and Secure on production HTTPS. Only token digests are stored in the database. The full password-change trigger migration prevents in-flight old-password claims after a reset. Progress is stored per account in Supabase. Teacher access to student summaries is checked on the server and database; student accounts can access only their own progress.
 
 Browser tests use an external loopback-only Supabase protocol fixture started by `e2e/start.mjs`; the application still executes its real login and session code. Fixture accounts and passwords are synthetic. SQL semantic tests apply the actual migration to embedded PostgreSQL (PGlite), with a minimal auth schema; they do not establish multi-connection concurrency or validate a hosted Supabase project.

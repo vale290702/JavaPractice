@@ -59,3 +59,22 @@ UI exports LoginForm, SessionBoundary({session,children}), AccountControls({user
 - Security review: oneImportantstalledbodyfindingfixedandscoredresolved. Visualreview:ship forlogin+accountcontroldesktop/mobile;designrecordsupdated.
 - External state: SupabaseCLIlogin succeeded. AvailableprojectsSnackyzz/Hamilu areunrelated; neither modified. Dedicatedprojectselection andinitialaccountdetails stillpending. Vercelsessionvalid.
 - Branch handoff: commit/pushfeaturebranchonly; do notmergeordeployproduction.
+
+## Teacher progress extension — user requested
+
+User specified the first teacher account, with student progress visibility. Account identity and credentials are kept in private local files. Extend this same branch; production remains unchanged.
+
+- [x] Backend: teacher/student roles, service-only stored completions and session-authorized progress RPCs, teacher-only student overview, CLI role support. Backend worker owns auth/progress server, migration002, CLI and tests.
+- [x] Interface: server-confirmed progress, translated teacher overview, teacher-only navigation and error/empty states. UI worker owns workspace, teacher route/components/copy and UI tests.
+- [x] Integration: protocol fixture and browser tests, real new-project migration + signup disabled, first teacher provisioned with private generated password; root owns cloud setup and verification.
+- [x] Review/checks: SQL/unit/browser tests, build/lint/bundle scan, teacher desktop/mobile visual review, security review, branch commit/push only.
+
+Interfaces: SessionUser.role teacher|student. learning/server exports getCurrentProgress, completeActivity(activity), getTeacherProgress. StudentProgress {id,email,displayName,enabled,completed:string[],lastActivity:string|null}. GET/POST /api/progress returns {completed}. SQL validates current opaque token; browser supplies no target account.
+
+Preflight: backend produces role/progress DTO consumed by frontend, agreed above. UI and backend share no files other than type contract. Root fixture mirrors RPC protocol solely for browser tests; actual SQL tested separately. Old local browser progress is not imported without account verification. Completion counts represent recorded learning activities, not an independent Java execution score.
+
+Cloud: dedicated JavaPractice project mxotijowgvkeqehedvsg created successfully in us-east-1; migration001 applied. Existing Snackyzz/Hamilu untouched. Server credentials saved only ignored .env.local mode600. Config diff declares one mutation: auth.enable_signup=false; other remote-only differences remain unchanged.
+
+Extension verification: 87 unit/component/SQL tests, 16 desktop/mobile browser tests, lint and production build pass. Real Supabase HTTP checks verified teacher role/name, student denied teacher route, saved student progress visible to teacher, new login invalidating old session, independent accounts and disabled public signup. Temporary verification learner deleted; final roster contains one teacher and no students. Live SQL grants: anon progress SELECT false, authenticated teacher RPC EXECUTE false, service_role teacher RPC EXECUTE true. Both applied migrations registered in hosted migration history.
+
+Reviews: backend and completed UI security/quality review approved (62 focused tests). Impeccable mobile finding fixed by placing completion before access status with localized horizontal-scroll cue; refreshed desktop/mobile captures reviewed and shipped. Design records refreshed from implementation. Password stored outside repository in private mode600 credential file. No production environment/deployment changes.

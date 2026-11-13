@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import type { SessionUser } from '../../features/auth/types';
 import { useAuthLocale } from './use-auth-locale';
@@ -33,6 +34,9 @@ export function AccountControls({ user }: { user: SessionUser }) {
       <span className="auth-account-name" title={user.displayName}>
         {t.account} <strong>{user.displayName}</strong>
       </span>
+      {user.role === 'teacher' && (
+        <Link href="/teacher">{t.teacherProgress}</Link>
+      )}
       <button type="button" disabled={pending} onClick={logout}>
         {pending ? t.loggingOut : t.logout}
       </button>
