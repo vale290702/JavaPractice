@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import '../app/progress.css';
 import { useLocalStorage } from '../features/learning/use-local-storage';
 import {
   ArrowRight,
@@ -23,17 +24,10 @@ import {
   type Locale,
   type Mode,
 } from '../i18n/content';
-import {
-  completeActivity,
-  parseProgress,
-  progressKey,
-} from '../features/learning/progress';
-import {
-  getTopic,
-  getUnitForTopic,
-  topicIds,
-  totalActivities,
-} from '../features/curriculum';
+import { useProgress } from '../features/learning/use-progress';
+import { useCurriculum } from '../features/curriculum/provider';
+import type { SessionUser } from '../features/auth/types';
+import { AccountControls } from './auth/account-controls';
 import { CourseNavigation } from './course-navigation';
 import { TopicPicker } from './topic-picker';
 import { CodePanel } from './code-panel';
@@ -44,10 +38,18 @@ const modeIcons = {
   quiz: ListChecks,
   code: FlaskConical,
 };
-export function LearningWorkspace() {
+export function LearningWorkspace({
+  user,
+  initialCompleted,
+}: {
+  user: SessionUser;
+  initialCompleted: string[];
+}) {
+  const { getTopic, getUnitForTopic, topicIds, totalActivities } =
+    useCurriculum();
   const localeStore = useLocalStorage('java-practice:locale');
   const locale: Locale = localeStore.raw === 'es' ? 'es' : 'en';
-  const progressStore = useLocalStorage(progressKey);
+  const progress = useProgress(initialCompleted);
   const [topic, setTopic] = useState('1.1');
   const [mode, setMode] = useState<Mode>('learn');
   const [step, setStep] = useState(0);
@@ -56,8 +58,8 @@ export function LearningWorkspace() {
   const [checked, setChecked] = useState(false);
   const [hintCount, setHintCount] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
-  const completed = parseProgress(progressStore.raw);
-  const storageError = localeStore.failed || progressStore.failed;
+  const { completed } = progress;
+  const storageError = localeStore.failed;
   const [code, setCode] = useState<Record<string, string>>({});
   const currentTopic = getTopic(topic);
   const currentUnit = getUnitForTopic(topic);
@@ -81,12 +83,7 @@ export function LearningWorkspace() {
     setShowSolution(false);
   }
   function finish() {
-    progressStore.set(
-      JSON.stringify({
-        version: 1,
-        completed: completeActivity(completed, activity),
-      }),
-    );
+    void progress.complete(activity);
   }
   const correct =
     mode === 'quiz'
@@ -146,7 +143,7 @@ export function LearningWorkspace() {
             value={completed.length}
             aria-label={t.progress}
           />
-          <p>{storageError ? t.storageError : t.local}</p>
+          <p>{storageError ? t.storageError : t.synced}</p>
           <div className="sample-tag">
             <span />
             {t.curriculumLabel}
@@ -160,18 +157,21 @@ export function LearningWorkspace() {
             <ChevronRight size={14} />
             <strong>{t.course}</strong>
           </span>
-          <label className="language-control">
-            <Globe2 size={16} />
-            <span className="sr-only">{t.language}</span>
-            <select
-              aria-label={t.language}
-              value={locale}
-              onChange={(event) => switchLocale(event.target.value as Locale)}
-            >
-              <option value="en">{languageNames.en}</option>
-              <option value="es">{languageNames.es}</option>
-            </select>
-          </label>
+          <div className="topbar-actions">
+            <AccountControls user={user} />
+            <label className="language-control">
+              <Globe2 size={16} />
+              <span className="sr-only">{t.language}</span>
+              <select
+                aria-label={t.language}
+                value={locale}
+                onChange={(event) => switchLocale(event.target.value as Locale)}
+              >
+                <option value="en">{languageNames.en}</option>
+                <option value="es">{languageNames.es}</option>
+              </select>
+            </label>
+          </div>
         </header>
         <main id="lesson">
           <div className="mobile-progress">
@@ -185,7 +185,7 @@ export function LearningWorkspace() {
               aria-label={t.progress}
             />
             <p role={storageError ? 'status' : undefined}>
-              {storageError ? t.storageError : t.local}
+              {storageError ? t.storageError : t.synced}
             </p>
           </div>
           <div className="welcome">
@@ -463,11 +463,19 @@ export function LearningWorkspace() {
           <footer className="activity-footer">
             <button
               className={`completion-button ${completed.includes(activity) ? 'is-complete' : ''}`}
-              disabled={!canComplete || completed.includes(activity)}
+              disabled={
+                !canComplete ||
+                completed.includes(activity) ||
+                progress.pending !== null
+              }
               onClick={finish}
             >
               <CheckCircle2 size={18} />
-              {completed.includes(activity) ? t.completed : t.complete}
+              {progress.pending === activity
+                ? t.saving
+                : completed.includes(activity)
+                  ? t.completed
+                  : t.complete}
             </button>
             <button
               className="text-button next-activity"
@@ -477,6 +485,18 @@ export function LearningWorkspace() {
               <ArrowRight size={17} />
             </button>
           </footer>
+          {progress.failed && (
+            <div className="progress-error" role="alert">
+              <p>{t.saveError}</p>
+              <button
+                className="secondary-button"
+                disabled={progress.pending !== null}
+                onClick={() => void progress.complete(progress.failed!)}
+              >
+                {t.saveRetry}
+              </button>
+            </div>
+          )}
           {completed.length === totalActivities && (
             <p role="status" className="all-done">
               {t.allDone}

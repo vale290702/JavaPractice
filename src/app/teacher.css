@@ -1,0 +1,151 @@
+.teacher-page {
+  padding: 25px 46px 64px;
+}
+.teacher-header {
+  max-width: 1320px;
+  margin-inline: auto;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.teacher-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px 24px;
+}
+.teacher-main {
+  max-width: 1320px;
+  margin: 42px auto 0;
+}
+.teacher-back {
+  display: inline-block;
+  margin-bottom: 28px;
+  text-underline-offset: 4px;
+  font-size: 15px;
+}
+.teacher-main h1 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 3.8vw, 54px);
+  font-weight: 500;
+  line-height: 1.13;
+  letter-spacing: -0.025em;
+}
+.teacher-intro {
+  max-width: 70ch;
+  margin-top: 16px;
+  color: var(--muted);
+}
+.teacher-scroll-hint {
+  display: none;
+}
+.teacher-table-scroll {
+  overflow-x: auto;
+  margin-top: 36px;
+  scrollbar-color: var(--green) var(--paper);
+}
+.teacher-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+.teacher-table caption {
+  text-align: start;
+  font-size: 15px;
+  color: var(--muted);
+  padding-bottom: 14px;
+}
+.teacher-table th,
+.teacher-table td {
+  text-align: start;
+  border-bottom: 1px solid var(--line);
+  padding: 18px 16px;
+  vertical-align: top;
+}
+.teacher-table th:first-child,
+.teacher-table td:first-child {
+  padding-left: 0;
+}
+.teacher-table thead th {
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.teacher-table tbody th {
+  font-weight: 400;
+  min-width: 200px;
+  max-width: 300px;
+  overflow-wrap: anywhere;
+}
+.teacher-table td {
+  min-width: 85px;
+}
+.teacher-table td:last-child {
+  min-width: 170px;
+}
+.teacher-email,
+.teacher-count {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 5px;
+}
+.teacher-empty {
+  margin-top: 36px;
+  border-top: 1px solid var(--line);
+  padding-top: 32px;
+  max-width: 70ch;
+}
+.teacher-empty h2 {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 500;
+}
+.teacher-empty p {
+  margin-top: 12px;
+}
+.teacher-empty a {
+  display: inline-block;
+  margin-top: 20px;
+}
+.auth-account a {
+  text-underline-offset: 4px;
+}
+@media (max-width: 650px) {
+  .teacher-scroll-hint {
+    display: block;
+    margin-top: 28px;
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 40ch;
+  }
+  .teacher-table-scroll {
+    margin-top: 16px;
+  }
+  .teacher-table tbody th {
+    min-width: 160px;
+    max-width: 180px;
+  }
+  .teacher-table thead th {
+    white-space: normal;
+    min-width: 110px;
+  }
+  .teacher-page {
+    padding: 20px 20px 48px;
+  }
+  .teacher-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .teacher-actions {
+    justify-content: flex-start;
+  }
+  .teacher-main {
+    margin-top: 28px;
+  }
+}

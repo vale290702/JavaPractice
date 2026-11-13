@@ -45,7 +45,10 @@ export interface Messages {
   complete: string;
   completed: string;
   progress: string;
-  local: string;
+  synced: string;
+  saving: string;
+  saveError: string;
+  saveRetry: string;
   storageError: string;
   allDone: string;
   continue: string;
@@ -67,6 +70,11 @@ export interface Messages {
 }
 export const messages: Record<Locale, Messages> = {
   en: {
+    synced: 'Progress is saved to your account.',
+    saving: 'Saving…',
+    saveError:
+      'We could not save this activity. Check your connection and try again.',
+    saveRetry: 'Try saving again',
     brand: 'JavaPractice',
     workspace: 'Your learning space',
     course: 'AP Computer Science A',
@@ -114,9 +122,8 @@ export const messages: Record<Locale, Messages> = {
     complete: 'Mark as understood',
     completed: 'Understood',
     progress: 'Your progress',
-    local: 'Progress saved on this device',
     storageError:
-      'Your browser could not save progress. You can keep learning in this session.',
+      'Your browser could not save your language preference. Progress is saved to your account.',
     allDone: 'You’ve explored every activity in this course.',
     continue: 'Keep learning',
     lesson: 'Lesson',
@@ -137,6 +144,11 @@ export const messages: Record<Locale, Messages> = {
     sourceLabel: 'College Board curriculum · original practice',
   },
   es: {
+    synced: 'El progreso se guarda en tu cuenta.',
+    saving: 'Guardando…',
+    saveError:
+      'No pudimos guardar esta actividad. Revisa tu conexión e inténtalo de nuevo.',
+    saveRetry: 'Volver a guardar',
     brand: 'JavaPractice',
     workspace: 'Tu espacio de aprendizaje',
     course: 'AP Computer Science A',
@@ -184,9 +196,8 @@ export const messages: Record<Locale, Messages> = {
     complete: 'Marcar como comprendido',
     completed: 'Comprendido',
     progress: 'Tu progreso',
-    local: 'Progreso guardado en este dispositivo',
     storageError:
-      'El navegador no pudo guardar el progreso. Puedes seguir aprendiendo en esta sesión.',
+      'El navegador no pudo guardar tu preferencia de idioma. El progreso se guarda en tu cuenta.',
     allDone: 'Exploraste todas las actividades de este curso.',
     continue: 'Seguir aprendiendo',
     lesson: 'Lección',

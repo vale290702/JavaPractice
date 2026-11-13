@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+import { signIn } from './helpers';
+test.beforeEach(async ({ page }) => {
+  await signIn(page);
+});
 test('student can learn, practice and resume in Spanish', async ({ page }) => {
   await page.goto('/');
   await expect(

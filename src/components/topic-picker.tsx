@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getTopic, getUnitForTopic } from '../features/curriculum';
+import { useCurriculum } from '../features/curriculum/provider';
 import type { Locale, Messages } from '../i18n/content';
 export function TopicPicker({
   locale,
@@ -12,6 +12,7 @@ export function TopicPicker({
   onSelect: (topic: string) => void;
   t: Messages;
 }) {
+  const { getTopic, getUnitForTopic } = useCurriculum();
   const unit = getUnitForTopic(topic),
     index = unit.topics.findIndex((item) => item.id === topic),
     current = getTopic(topic);
