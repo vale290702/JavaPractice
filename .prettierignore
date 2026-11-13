@@ -4,3 +4,5 @@ package-lock.json
 playwright-report
 test-results
 .impeccable/review
+
+.next-e2e

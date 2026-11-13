@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, Terminal } from 'lucide-react';
 import type { Locale, Messages } from '../i18n/content';
-import { getTopic } from '../features/curriculum';
+import { useCurriculum } from '../features/curriculum/provider';
 export function CodePanel({
   topic,
   locale,
@@ -14,6 +14,7 @@ export function CodePanel({
   setStep: (step: number) => void;
   t: Messages;
 }) {
+  const { getTopic } = useCurriculum();
   const example = getTopic(topic).example;
   return (
     <section className="code-panel" aria-label={t.walkthrough}>

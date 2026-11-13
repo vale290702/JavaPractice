@@ -26,14 +26,11 @@ import {
 import {
   completeActivity,
   parseProgress,
-  progressKey,
+  progressKeyForUser,
 } from '../features/learning/progress';
-import {
-  getTopic,
-  getUnitForTopic,
-  topicIds,
-  totalActivities,
-} from '../features/curriculum';
+import { useCurriculum } from '../features/curriculum/provider';
+import type { SessionUser } from '../features/auth/types';
+import { AccountControls } from './auth/account-controls';
 import { CourseNavigation } from './course-navigation';
 import { TopicPicker } from './topic-picker';
 import { CodePanel } from './code-panel';
@@ -44,10 +41,12 @@ const modeIcons = {
   quiz: ListChecks,
   code: FlaskConical,
 };
-export function LearningWorkspace() {
+export function LearningWorkspace({ user }: { user: SessionUser }) {
+  const { getTopic, getUnitForTopic, topicIds, totalActivities } =
+    useCurriculum();
   const localeStore = useLocalStorage('java-practice:locale');
   const locale: Locale = localeStore.raw === 'es' ? 'es' : 'en';
-  const progressStore = useLocalStorage(progressKey);
+  const progressStore = useLocalStorage(progressKeyForUser(user.id));
   const [topic, setTopic] = useState('1.1');
   const [mode, setMode] = useState<Mode>('learn');
   const [step, setStep] = useState(0);
@@ -160,18 +159,21 @@ export function LearningWorkspace() {
             <ChevronRight size={14} />
             <strong>{t.course}</strong>
           </span>
-          <label className="language-control">
-            <Globe2 size={16} />
-            <span className="sr-only">{t.language}</span>
-            <select
-              aria-label={t.language}
-              value={locale}
-              onChange={(event) => switchLocale(event.target.value as Locale)}
-            >
-              <option value="en">{languageNames.en}</option>
-              <option value="es">{languageNames.es}</option>
-            </select>
-          </label>
+          <div className="topbar-actions">
+            <AccountControls user={user} />
+            <label className="language-control">
+              <Globe2 size={16} />
+              <span className="sr-only">{t.language}</span>
+              <select
+                aria-label={t.language}
+                value={locale}
+                onChange={(event) => switchLocale(event.target.value as Locale)}
+              >
+                <option value="en">{languageNames.en}</option>
+                <option value="es">{languageNames.es}</option>
+              </select>
+            </label>
+          </div>
         </header>
         <main id="lesson">
           <div className="mobile-progress">

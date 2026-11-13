@@ -39,4 +39,8 @@ The source PDF is at `/Users/valecharpentier/Downloads/ap-computer-science-a-cou
 
 ## Open Decisions
 
-Java execution provider, Supabase project credentials, and production deployment target are not yet supplied. Current learning experience has all four units and local progress. Backend integrations are added only when configured.
+Java execution provider and Supabase project credentials are not yet supplied. Production is hosted on Vercel in the Atrizon workspace. Current learning experience has all four units and local progress. Backend integrations are added only when configured.
+
+## Managed Access (feature branch)
+
+Approved: login-only, tutor-provisioned accounts, no public registration. A successful new login replaces the old device’s active application session. Backend session checks protect curriculum delivery; local progress is isolated per account. English/Spanish login, logout, and session messages retain the learning-lab identity. Implementation is on `feat/managed-login-single-session`, not merged into production. Supabase project selection, migration application, credentials, and initial account details remain external setup. Vercel hosting already exists under Atrizon; this branch must not change main’s live deployment.

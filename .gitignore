@@ -12,3 +12,5 @@ test-results/
 .impeccable/questions/*.log
 .impeccable/questions/*.state.json
 .vercel
+.next-e2e/
+supabase/.temp/

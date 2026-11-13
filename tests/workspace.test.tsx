@@ -3,12 +3,52 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LearningWorkspace } from '../src/components/learning-workspace';
+import { CurriculumProvider } from '../src/features/curriculum/provider';
+import { units } from '../src/features/curriculum';
+import { progressKeyForUser } from '../src/features/learning/progress';
+const student = {
+  id: '11111111-1111-4111-8111-111111111111',
+  email: 'learner@example.test',
+  displayName: 'Learner',
+};
+function renderWorkspace(account = student) {
+  return render(
+    <CurriculumProvider units={units}>
+      <LearningWorkspace user={account} />
+    </CurriculumProvider>,
+  );
+}
+
 beforeEach(() => localStorage.clear());
 afterEach(cleanup);
 describe('learning workspace', () => {
+  it('isolates progress by account and never adopts anonymous legacy progress', async () => {
+    localStorage.setItem(
+      'java-practice:progress:v1',
+      JSON.stringify({ version: 1, completed: ['variables:learn'] }),
+    );
+    const user = userEvent.setup();
+    const view = renderWorkspace();
+    await user.click(
+      screen.getByRole('button', { name: 'Mark as understood' }),
+    );
+    expect(localStorage.getItem(progressKeyForUser(student.id))).toContain(
+      '1.1:learn',
+    );
+    view.unmount();
+    renderWorkspace({ ...student, id: '22222222-2222-4222-8222-222222222222' });
+    expect(
+      screen.getByRole('button', { name: 'Mark as understood' }),
+    ).toBeEnabled();
+    expect(
+      localStorage.getItem(
+        progressKeyForUser('22222222-2222-4222-8222-222222222222'),
+      ),
+    ).toBeNull();
+  });
   it('shows all four units and opens the final topic in Data Collections', async () => {
     const user = userEvent.setup();
-    render(<LearningWorkspace />);
+    renderWorkspace();
     const navigation = screen.getByRole('navigation', { name: 'Course units' });
     expect(navigation.querySelectorAll('button')).toHaveLength(4);
     await user.click(screen.getByRole('button', { name: /Data Collections/ }));
@@ -27,7 +67,7 @@ describe('learning workspace', () => {
   });
   it('preserves work when switching languages and explains quiz answers', async () => {
     const user = userEvent.setup();
-    render(<LearningWorkspace />);
+    renderWorkspace();
     await user.selectOptions(screen.getByLabelText('Choose a topic'), '1.2');
     await user.click(screen.getByRole('button', { name: 'Practice' }));
     await user.click(screen.getByRole('button', { name: /Show next hint/ }));
@@ -44,7 +84,7 @@ describe('learning workspace', () => {
     await user.click(
       screen.getByRole('button', { name: 'Marcar como comprendido' }),
     );
-    expect(localStorage.getItem('java-practice:progress:v1')).toContain(
+    expect(localStorage.getItem(progressKeyForUser(student.id))).toContain(
       '1.2:practice',
     );
     await user.click(screen.getByRole('button', { name: 'Comprueba' }));
@@ -58,7 +98,7 @@ describe('learning workspace', () => {
   });
   it('shows progressive hints, keeps code across activities and never claims execution', async () => {
     const user = userEvent.setup();
-    render(<LearningWorkspace />);
+    renderWorkspace();
     await user.selectOptions(screen.getByLabelText('Choose a topic'), '1.2');
     await user.click(screen.getByRole('button', { name: 'Code it' }));
     expect(

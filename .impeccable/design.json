@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-11T20:20:53.774409+00:00",
+  "generatedAt": "2026-11-13T00:51:53.169330+00:00",
   "title": "Design System: JavaPractice",
   "extensions": {
     "shadows": [
@@ -269,11 +269,27 @@
       "description": "In-unit topic selection beside endpoint-disabled previous/next controls; a quiet PDF-page reference follows.",
       "html": "<div class=\"ds-picker\"><label for=\"ds-topic\">Select topic</label><div class=\"ds-picker-controls\"><select id=\"ds-topic\"><option>1.1 \u00b7 Introduction to Algorithms</option><option>1.2 \u00b7 Variables</option></select><button disabled aria-label=\"Previous topic\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m15 18-6-6 6-6\"/></svg></button><button aria-label=\"Next topic\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m9 18 6-6-6-6\"/></svg></button></div></div>",
       "css": ".ds-picker{font-family:var(--sans,\"DM Sans\",sans-serif);color:var(--ink,#213b35);display:flex;align-items:center;gap:18px}.ds-picker label{font-size:11px;color:var(--muted,#64736b)}.ds-picker-controls{display:flex;gap:7px;flex:1;min-width:0}.ds-picker select{width:100%;min-width:0;flex:1;border:1px solid #bdc9b4;background:var(--surface,#fffefa);color:inherit;border-radius:7px;padding:10px 12px;font:12px var(--sans,sans-serif);cursor:pointer}.ds-picker button{display:grid;place-items:center;flex-shrink:0;width:36px;border:1px solid var(--line,#dddfd4);background:transparent;border-radius:6px;color:inherit;cursor:pointer;transition:background .18s ease,color .18s ease}.ds-picker button:hover:not(:disabled){filter:brightness(.96)}.ds-picker select:focus-visible,.ds-picker button:focus-visible{outline:2px solid var(--focus,#406b30);outline-offset:4px}.ds-picker button:disabled{opacity:.5;cursor:default}"
+    },
+    {
+      "name": "Access primary action",
+      "kind": "button",
+      "refersTo": "access-primary",
+      "description": "Shared login and session retry action; larger than compact lesson actions.",
+      "html": "<button class=\"ds-access ds-access-primary\">Sign in</button>",
+      "css": ".ds-access-primary{font:500 15px/1.6 var(--sans,\"DM Sans\",sans-serif);background:var(--green,#234d40);color:var(--surface,#fffefa);border:0;border-radius:7px;padding:12px 18px;min-height:48px;cursor:pointer;transition:background .18s ease,color .18s ease}.ds-access-primary:hover:not(:disabled){background:#193e32;filter:brightness(.96)}.ds-access-primary:disabled{opacity:.5;cursor:default}.ds-access:focus-visible{outline:2px solid var(--focus,#406b30);outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-access-primary{transition:none}}"
+    },
+    {
+      "name": "Access field",
+      "kind": "input",
+      "refersTo": "access-input",
+      "description": "Readable credential input using the inherited paper and green stroke.",
+      "html": "<label class=\"ds-access-label\" for=\"ds-access-email\">Email</label><input id=\"ds-access-email\" class=\"ds-access ds-access-input\" type=\"email\" autocomplete=\"username\">",
+      "css": ".ds-access-label{display:block;font:500 15px/1.6 var(--sans,\"DM Sans\",sans-serif);color:var(--ink,#213b35);margin-bottom:9px}.ds-access-input{font:16px/1.6 var(--sans,\"DM Sans\",sans-serif);background:var(--surface,#fffefa);color:var(--ink,#213b35);border:1px solid #9da99c;border-radius:7px;padding:12px;min-width:0;caret-color:var(--green,#234d40)}.ds-access:focus-visible{outline:2px solid var(--focus,#406b30);outline-offset:4px}"
     }
   ],
   "narrative": {
     "northStar": "Learning lab",
-    "overview": "Warm paper and green ink frame a quiet learning lab. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.\n\nThis is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.",
+    "overview": "Warm paper and green ink frame a quiet learning lab. Serif headings establish the reading hierarchy; compact sans-serif controls keep topic selection and practice precise. A dark code surface gives source, values, and output their own material without turning the workspace into a dashboard.\n\nThis is a scan of the implemented interface, grounded in `src/app/globals.css`, the learning workspace, and the code panel. The managed-access extension also uses `src/app/auth.css` and the authentication components, retaining the same world. The direction was code-first; there is no approved image comp. Directional vocabulary comes from the recorded learning-lab contract rather than a new identity workshop.",
     "keyCharacteristics": [
       "Warm paper with green ink and lime emphasis",
       "Serif lesson hierarchy with compact sans-serif controls",

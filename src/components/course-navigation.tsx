@@ -1,5 +1,5 @@
 import { Check, ChevronRight } from 'lucide-react';
-import { units } from '../features/curriculum';
+import { useCurriculum } from '../features/curriculum/provider';
 import { modes, type Locale, type Messages } from '../i18n/content';
 export function CourseNavigation({
   locale,
@@ -14,6 +14,7 @@ export function CourseNavigation({
   onSelect: (topic: string) => void;
   t: Messages;
 }) {
+  const { units } = useCurriculum();
   return (
     <nav className="course-navigation" aria-label={t.units}>
       {units.map((unit) => {

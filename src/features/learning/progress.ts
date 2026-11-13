@@ -1,5 +1,5 @@
 import { modes } from '../../i18n/content';
-import { topicIds } from '../curriculum';
+import { topicIds } from '../curriculum/metadata';
 const valid = new Set(
   topicIds.flatMap((topic) => modes.map((mode) => `${topic}:${mode}`)),
 );
@@ -39,4 +39,10 @@ export function completeActivity(
   activity: string,
 ): string[] {
   return valid.has(activity) ? [...new Set([...current, activity])] : current;
+}
+
+export function progressKeyForUser(userId: string): string {
+  if (!userId.trim())
+    throw new Error('Progress requires an authenticated account');
+  return `${progressKey}:${encodeURIComponent(userId)}`;
 }
