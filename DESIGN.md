@@ -233,7 +233,7 @@ The teacher-only account link opens a quiet roster on paper. A serif display hea
 
 ### Extra-Practice Worksheets
 
-A ruled continuation of regular practice, using the existing serif heading ramp, readable sans-serif labels and semantic canvas, field, selection, and action colors. The activity select names the exercise; pressed-state buttons distinguish guided and independent sections through fill, border, and weight. The brief pairs a goal, ordered steps, and PDF source-page references. Supplied input and expected output use monospace on the dark code material.
+A ruled continuation of regular practice, using the existing serif heading ramp, readable sans-serif labels and semantic canvas, field, selection, and action colors. The activity select names the exercise; pressed-state buttons distinguish guided and independent sections through fill, border, and weight. The brief pairs a goal and PDF source-page references. The Virtual tutor displays one guided instruction at a time with localized step counts, a progress bar, and previous/next controls. Independent worksheets retain ordered instructions. Supplied input and expected output use monospace on the dark code material.
 
 Prediction and trace fields lead into wrapping file selectors, editable source, testing-results notes, and explanation. Java files retain the native editor indentation behavior; helper files are explicitly labeled read-only. Text fields resize vertically. Source and output preserve whitespace and scroll without widening the page. Fields and buttons keep visible focus outlines; selected state uses pressed semantics rather than color alone.
 

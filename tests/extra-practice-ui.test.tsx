@@ -307,3 +307,53 @@ it('does not replace work after a malformed successful save', async () => {
     'Preserve me',
   );
 });
+it('guides the student one step at a time through the virtual tutor', async () => {
+  const guidedActivity: ExtraActivity = {
+    ...activity,
+    guided: {
+      ...worksheet,
+      steps: {
+        en: ['Predict the output', 'Trace each line', 'Compare the results'],
+        es: ['Predice la salida', 'Traza cada línea', 'Compara los resultados'],
+      },
+    },
+  };
+  const view = render(
+    <ExtraPractice activities={[guidedActivity]} locale="en" userId="one" />,
+  );
+  await waitFor(() =>
+    expect(screen.getByLabelText('Prediction')).not.toBeDisabled(),
+  );
+  expect(screen.getByRole('button', { name: 'Virtual tutor' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  expect(screen.getByText('Step 1 of 3')).toBeVisible();
+  expect(screen.getByText('Predict the output')).toBeVisible();
+  expect(screen.queryByText('Trace each line')).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Previous step' })).toBeDisabled();
+  fireEvent.change(screen.getByLabelText('Prediction'), {
+    target: { value: 'My prediction' },
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Next step' }));
+  expect(screen.getByText('Trace each line')).toBeVisible();
+  expect(screen.getByLabelText('Prediction')).toHaveValue('My prediction');
+  view.rerender(
+    <ExtraPractice activities={[guidedActivity]} locale="es" userId="one" />,
+  );
+  expect(screen.getByText('Paso 2 de 3')).toBeVisible();
+  expect(screen.getByText('Traza cada línea')).toBeVisible();
+  fireEvent.click(screen.getByRole('button', { name: 'Paso anterior' }));
+  expect(screen.getByText('Predice la salida')).toBeVisible();
+  fireEvent.click(screen.getByRole('button', { name: 'Siguiente paso' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Siguiente paso' }));
+  expect(screen.getByText('Compara los resultados')).toBeVisible();
+  expect(screen.getByRole('button', { name: 'Siguiente paso' })).toBeDisabled();
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Inténtalo por tu cuenta' }),
+  );
+  expect(
+    screen.queryByRole('region', { name: 'Tutor virtual' }),
+  ).not.toBeInTheDocument();
+  expect(screen.getByText('Lee el código')).toBeVisible();
+});

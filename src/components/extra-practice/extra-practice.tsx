@@ -9,6 +9,7 @@ import type { Locale } from '../../i18n/content';
 import { extraPracticeMessages } from '../../i18n/extra-practice';
 import { useWorksheet } from '../../features/extra-practice/use-worksheet';
 import { JavaEditor } from '../java-editor';
+import { VirtualTutor } from './virtual-tutor';
 
 export function ExtraPractice({
   activities,
@@ -68,6 +69,7 @@ export function ExtraPractice({
             key={`${userId}:${activity[section].id}`}
             activity={activity}
             definition={activity[section]}
+            guided={section === 'guided'}
             locale={locale}
             userId={userId}
           />
@@ -79,11 +81,13 @@ export function ExtraPractice({
 function Worksheet({
   activity,
   definition,
+  guided,
   locale,
   userId,
 }: {
   activity: ExtraActivity;
   definition: WorksheetDefinition;
+  guided: boolean;
   locale: Locale;
   userId: string;
 }) {
@@ -139,11 +143,15 @@ function Worksheet({
           {activity.goal[locale]}
         </p>
         <p>{definition.prompt[locale]}</p>
-        <ol>
-          {definition.steps[locale].map((step, i) => (
-            <li key={i}>{step}</li>
-          ))}
-        </ol>
+        {guided ? (
+          <VirtualTutor steps={definition.steps[locale]} locale={locale} />
+        ) : (
+          <ol>
+            {definition.steps[locale].map((step, i) => (
+              <li key={i}>{step}</li>
+            ))}
+          </ol>
+        )}
         <p className="extra-muted">
           {m.source}: {definition.sourcePages.join(', ')}
         </p>

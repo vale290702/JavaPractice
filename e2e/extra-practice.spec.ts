@@ -20,6 +20,19 @@ test('student saves extra practice across reloads and keeps independent work sep
     exact: true,
   });
   await expect(extra.getByLabel('Prediction')).toBeEnabled();
+  const tutor = extra.getByRole('region', {
+    name: 'Virtual tutor',
+    exact: true,
+  });
+  await expect(tutor.getByText('Step 1 of 4')).toBeVisible();
+  await tutor.getByRole('button', { name: 'Next step', exact: true }).click();
+  await expect(tutor.getByText('Step 2 of 4')).toBeVisible();
+  await tutor
+    .getByRole('button', { name: 'Previous step', exact: true })
+    .click();
+  await expect(
+    tutor.getByRole('button', { name: 'Previous step', exact: true }),
+  ).toBeDisabled();
   await extra.getByLabel('Prediction').fill(work.prediction);
   await extra.getByLabel('Trace your reasoning').fill(work.trace);
   await extra
