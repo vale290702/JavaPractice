@@ -180,3 +180,38 @@ describe('learning workspace', () => {
     );
   });
 });
+
+it('opens Extra Practice as its own section without regular practice controls', async () => {
+  const user = userEvent.setup();
+  renderWorkspace();
+  await user.click(screen.getByRole('button', { name: 'Practice' }));
+  expect(
+    screen.getByRole('heading', { name: 'Think it through' }),
+  ).toBeVisible();
+  expect(
+    screen.queryByRole('heading', { name: 'Extra Practice' }),
+  ).not.toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: 'Extra Practice' }));
+  expect(
+    screen.getByRole('button', { name: 'Extra Practice' }),
+  ).toHaveAttribute('aria-current', 'step');
+  expect(screen.getByRole('heading', { name: 'Extra Practice' })).toBeVisible();
+  expect(
+    screen.queryByRole('heading', { name: 'Think it through' }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: 'Mark as understood' }),
+  ).not.toBeInTheDocument();
+  expect(fetch).not.toHaveBeenCalled();
+  await user.selectOptions(
+    screen.getByRole('combobox', { name: 'Language' }),
+    'es',
+  );
+  expect(
+    screen.getByRole('button', { name: 'Práctica adicional' }),
+  ).toHaveAttribute('aria-current', 'step');
+  await user.click(screen.getByRole('button', { name: 'Comprende' }));
+  expect(
+    screen.getByRole('button', { name: 'Marcar como comprendido' }),
+  ).toBeVisible();
+});

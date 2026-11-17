@@ -177,7 +177,7 @@ The access surface uses the same paper canvas and ruled header without an enclos
 
 The teacher overview shares the 1320px content cap and 46px desktop / 20px mobile page inset. Its header wraps at 650px; the roster stays a semantic table in a keyboard-focusable horizontal scroll region, preserving columns rather than compressing names and counts into cards. Long student names and email addresses wrap. Student identity and overall completion lead the columns. On mobile, a visible localized scroll hint describes the table region; narrower identity columns and wrapping column headings expose useful completion information before scrolling. These roster dimensions are surface-specific, not a new global grid.
 
-Extra-practice worksheets continue the lesson in a single reading column below regular practice completion and hints. The native activity selector precedes wrapping guided/independent controls; file selectors and save actions also wrap. At the existing mobile breakpoint, section and action buttons grow into available row space while source and expected output retain their own horizontal scrolling. This is a bounded worksheet composition, not a new workspace grid.
+Extra Practice has its own topic navigation entry after Practice and opens worksheets in a single reading column. The native activity selector precedes wrapping guided/independent controls; file selectors and save actions also wrap. At the existing mobile breakpoint, section and action buttons grow into available row space while source and expected output retain their own horizontal scrolling. This is a bounded worksheet composition, not a new workspace grid.
 
 ## Elevation & Depth
 
@@ -233,7 +233,7 @@ The teacher-only account link opens a quiet roster on paper. A serif display hea
 
 ### Extra-Practice Worksheets
 
-A ruled continuation of regular practice, using the existing serif heading ramp, readable sans-serif labels and semantic canvas, field, selection, and action colors. The activity select names the exercise; pressed-state buttons distinguish guided and independent sections through fill, border, and weight. The brief pairs a goal and PDF source-page references. The Virtual tutor displays one guided instruction at a time with localized step counts, a progress bar, and previous/next controls. Independent worksheets retain ordered instructions. Supplied input and expected output use monospace on the dark code material.
+A dedicated topic section using the existing serif heading ramp, readable sans-serif labels and semantic canvas, field, selection, and action colors. The activity select names the exercise; pressed-state buttons distinguish guided and independent sections through fill, border, and weight. The brief pairs a goal and PDF source-page references. The Virtual tutor displays one guided instruction at a time with localized step counts, a progress bar, and previous/next controls. Independent worksheets retain ordered instructions. Supplied input and expected output use monospace on the dark code material.
 
 Prediction and trace fields lead into wrapping file selectors, editable source, testing-results notes, and explanation. Java files retain the native editor indentation behavior; helper files are explicitly labeled read-only. Text fields resize vertically. Source and output preserve whitespace and scroll without widening the page. Fields and buttons keep visible focus outlines; selected state uses pressed semantics rather than color alone.
 

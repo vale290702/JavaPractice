@@ -14,7 +14,9 @@ test('student saves extra practice across reloads and keeps independent work sep
   page,
 }) => {
   await signIn(page);
-  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await page
+    .getByRole('button', { name: 'Extra Practice', exact: true })
+    .click();
   const extra = page.getByRole('region', {
     name: 'Extra Practice',
     exact: true,
@@ -34,6 +36,12 @@ test('student saves extra practice across reloads and keeps independent work sep
     tutor.getByRole('button', { name: 'Previous step', exact: true }),
   ).toBeDisabled();
   await extra.getByLabel('Prediction').fill(work.prediction);
+  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await expect(extra).toHaveCount(0);
+  await page
+    .getByRole('button', { name: 'Extra Practice', exact: true })
+    .click();
+  await expect(extra.getByLabel('Prediction')).toHaveValue(work.prediction);
   await extra.getByLabel('Trace your reasoning').fill(work.trace);
   await extra
     .getByRole('textbox', { name: 'Main.java', exact: true })
@@ -53,7 +61,9 @@ test('student saves extra practice across reloads and keeps independent work sep
     extra.getByRole('button', { name: 'Completed · self-reported' }),
   ).toBeDisabled();
   await page.reload();
-  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await page
+    .getByRole('button', { name: 'Extra Practice', exact: true })
+    .click();
   await expect(extra.getByLabel('Prediction')).toHaveValue(work.prediction);
   await extra
     .getByRole('button', { name: 'Try it yourself', exact: true })
@@ -138,7 +148,9 @@ test('topic 1.10 exposes supplied read-only helpers and teacher extra totals sta
 }) => {
   const studentEmail = await signIn(page);
   await page.getByLabel('Choose a topic').selectOption('1.10');
-  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await page
+    .getByRole('button', { name: 'Extra Practice', exact: true })
+    .click();
   const extra = page.getByRole('region', {
     name: 'Extra Practice',
     exact: true,
