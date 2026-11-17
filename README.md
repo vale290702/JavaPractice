@@ -74,3 +74,11 @@ Browser tests use an external loopback-only Supabase protocol fixture started by
 Use the light/dark control in the login, learning, or teacher header to change appearance. The choice is stored per browser; before a choice is saved, the app follows the device preference. When browser storage is unavailable, the selection remains usable for the current page session.
 
 In the Java editor, Enter preserves the current indentation and adds four spaces after a block opening. Enter between paired braces creates an indented line between them. Strings and comments are recognized so their braces do not open blocks. Tab keeps native keyboard focus navigation; native editing commands preserve browser undo where supported.
+
+## Extra Practice
+
+Inside Practice, Extra Practice adapts the two supplied workbooks for topics 1.1–1.10: 14 activities with 28 guided/independent worksheets. Each worksheet contains predictions, tracing, named code files, external test results, and an explanation. Source PDF pages are shown; the four provided helper classes remain read-only. All teaching prose and interface labels are available in English and Spanish. Other topics show an explicit availability message.
+
+Save worksheet stores work in the authenticated account across devices. Local drafts are backed up per account and worksheet when browser storage permits. Conflicting versions preserve the draft and offer a download before explicitly replacing it with the saved version. Completion is student-reported, requires filled notes/files, and is counted separately from the original 265 course activities in the teacher overview. No Java compiler or automatic grading is provided.
+
+Apply `202611160001_extra_practice.sql` before deploying this feature. The dedicated JavaPractice backend has this additive migration applied and registered; the interface remains on `feat/extra-practice-workbooks` until merged. The new API requires an `X-Account-ID` assertion matching the cookie session under the database session lock; that header never authorizes access to a different account.

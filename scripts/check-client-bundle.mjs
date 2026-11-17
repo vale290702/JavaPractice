@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { unit1 } from '../src/features/curriculum/unit-1.ts';
 import { unit2 } from '../src/features/curriculum/unit-2.ts';
 import { unit3 } from '../src/features/curriculum/unit-3.ts';
+import { extraActivities } from '../src/features/extra-practice/content.ts';
 import { unit4 } from '../src/features/curriculum/unit-4.ts';
 async function files(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -22,6 +23,14 @@ const markers = [unit1, unit2, unit3, unit4].flatMap((unit) =>
     ['en', 'es'].map((locale) =>
       topic.content[locale].explanation.slice(0, 64),
     ),
+  ),
+);
+markers.push(
+  ...extraActivities.flatMap((activity) =>
+    ['en', 'es'].flatMap((locale) => [
+      activity.guided.prompt[locale].slice(0, 64),
+      activity.independent.prompt[locale].slice(0, 64),
+    ]),
   ),
 );
 const chunks = (await files('.next/static')).filter((path) =>

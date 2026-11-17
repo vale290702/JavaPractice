@@ -1,0 +1,228 @@
+.extra-practice {
+  margin-top: 42px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+.extra-practice h2 {
+  font-family: Newsreader, Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+  margin: 0 0 18px;
+}
+.extra-practice h3 {
+  font-family: Newsreader, Georgia, serif;
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+.extra-practice h4 {
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+.extra-practice p,
+.extra-practice li {
+  line-height: 1.7;
+}
+.extra-practice p {
+  margin: 0 0 12px;
+}
+.extra-practice ol {
+  padding-left: 24px;
+  max-width: 72ch;
+}
+.extra-practice li {
+  margin: 8px 0;
+  padding-left: 4px;
+}
+.extra-muted {
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 72ch;
+}
+.extra-selector {
+  display: grid;
+  gap: 9px;
+  max-width: 650px;
+}
+.extra-selector label {
+  font-weight: 600;
+  font-size: 15px;
+}
+.extra-selector select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+.extra-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  margin: 8px 0 24px;
+}
+.extra-practice button {
+  min-height: 44px;
+  border: 1px solid var(--control-border);
+  border-radius: 7px;
+  padding: 9px 13px;
+  color: var(--green);
+  background: var(--surface);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.extra-practice button:hover:not(:disabled) {
+  background: var(--selected);
+}
+.extra-practice button[aria-pressed='true'] {
+  background: var(--chosen);
+  border-color: var(--green);
+  font-weight: 700;
+}
+.extra-practice button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.extra-practice :is(button, textarea, select):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+.extra-brief {
+  max-width: 74ch;
+}
+.extra-output {
+  margin: 22px 0;
+  min-width: 0;
+}
+.extra-output pre {
+  background: var(--editor);
+  color: var(--code-text);
+  padding: 16px;
+  border-radius: 7px;
+  white-space: pre;
+  overflow: auto;
+  max-width: 100%;
+  font-size: 15px;
+  line-height: 1.8;
+}
+.extra-status {
+  font-size: 15px;
+  color: var(--muted);
+  padding: 14px 0;
+  border-block: 1px solid var(--line);
+  margin: 24px 0;
+}
+.extra-status p {
+  margin: 8px 0 0;
+}
+.extra-notice {
+  background: var(--selected);
+  padding: 16px;
+  margin: 0 0 24px;
+  border-radius: 7px;
+}
+.extra-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  display: grid;
+  gap: 26px;
+}
+.extra-fields > label {
+  display: grid;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.extra-fields textarea:not(.code-input) {
+  width: 100%;
+  min-width: 0;
+  min-height: 100px;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid var(--control-border);
+  border-radius: 7px;
+  color: var(--ink);
+  background: var(--surface);
+  font: inherit;
+  font-weight: 400;
+  line-height: 1.7;
+}
+.extra-fields textarea:disabled {
+  opacity: 0.7;
+}
+.extra-files {
+  min-width: 0;
+}
+.extra-file-nav {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 16px 0 12px;
+}
+.extra-file-label {
+  font-size: 12px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.extra-files .code-input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-height: 280px;
+  border: 1px solid var(--control-border);
+  border-radius: 7px;
+  background: var(--editor);
+  color: var(--code-text);
+  padding: 16px;
+  resize: vertical;
+  font-size: 15px;
+  white-space: pre;
+  overflow: auto;
+}
+.extra-text-file {
+  font-family: ui-monospace, monospace !important;
+}
+.extra-fields + .extra-muted {
+  margin-top: 24px;
+}
+.extra-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 6px;
+}
+.extra-actions .extra-save {
+  color: var(--on-action);
+  background: var(--green);
+  border-color: var(--green);
+}
+.extra-actions .extra-save:hover:not(:disabled) {
+  background: var(--green);
+  opacity: 0.9;
+}
+@media (max-width: 650px) {
+  .extra-practice {
+    margin-top: 30px;
+  }
+  .extra-section-nav > button {
+    flex: 1 1 140px;
+  }
+  .extra-actions > button {
+    flex: 1 1 160px;
+  }
+  .extra-files .code-input {
+    padding: 12px;
+  }
+}

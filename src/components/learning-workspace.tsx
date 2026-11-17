@@ -4,6 +4,8 @@ import Link from 'next/link';
 import '../app/progress.css';
 import { ThemeToggle } from './theme-toggle';
 import { JavaEditor } from './java-editor';
+import { ExtraPractice } from './extra-practice/extra-practice';
+import type { ExtraActivity } from '../features/extra-practice/types';
 import { useLocalStorage } from '../features/learning/use-local-storage';
 import {
   ArrowRight,
@@ -43,9 +45,11 @@ const modeIcons = {
 export function LearningWorkspace({
   user,
   initialCompleted,
+  extraActivities = [],
 }: {
   user: SessionUser;
   initialCompleted: string[];
+  extraActivities?: ExtraActivity[];
 }) {
   const { getTopic, getUnitForTopic, topicIds, totalActivities } =
     useCurriculum();
@@ -502,6 +506,15 @@ export function LearningWorkspace({
             <p role="status" className="all-done">
               {t.allDone}
             </p>
+          )}
+          {mode === 'practice' && (
+            <ExtraPractice
+              activities={extraActivities.filter(
+                (item) => item.topicId === topic,
+              )}
+              locale={locale}
+              userId={user.id}
+            />
           )}
         </main>
       </div>

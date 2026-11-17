@@ -22,11 +22,14 @@ export default async function Home() {
   }
   // Lesson modules are server-only and never imported by unauthenticated client code.
   const { units } = await import('../features/curriculum/server');
+  const { extraActivities } =
+    await import('../features/extra-practice/content-server');
   return (
     <SessionBoundary session={session}>
       <CurriculumProvider units={units}>
         <LearningWorkspace
           user={session.user}
+          extraActivities={extraActivities}
           initialCompleted={initialCompleted}
         />
       </CurriculumProvider>
