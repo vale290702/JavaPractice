@@ -30,6 +30,9 @@ markers.push(
     ['en', 'es'].flatMap((locale) => [
       activity.guided.prompt[locale].slice(0, 64),
       activity.independent.prompt[locale].slice(0, 64),
+      ...activity.guide.concepts[locale].map((text) => text.slice(0, 64)),
+      ...activity.guide.guided[locale].map((text) => text.slice(0, 64)),
+      ...activity.guide.independent[locale].map((text) => text.slice(0, 64)),
     ]),
   ),
 );

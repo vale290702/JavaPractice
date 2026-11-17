@@ -13,7 +13,13 @@ export interface WorksheetDefinition {
   inputs?: string;
   sourcePages: number[];
 }
+export interface ActivityGuide {
+  concepts: Localized<string[]>;
+  guided: Localized<string[]>;
+  independent: Localized<string[]>;
+}
 export interface ExtraActivity {
+  guide: ActivityGuide;
   id: string;
   topicId: string;
   group: '1.1–1.5' | '1.6–1.10';

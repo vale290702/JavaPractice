@@ -10,7 +10,23 @@ const en = {
   tutorProgress: 'Virtual tutor steps',
   independent: 'Try it yourself',
   goal: 'Goal',
-  source: 'Source PDF pages',
+  reference: 'What you need to know',
+  requirements: 'Task requirements',
+  setup: 'Files and how to run',
+  setupInstructions:
+    'Create a Java project in your IDE. Save each Java file below with its exact filename in the same folder, without a package declaration. Add your code to the editable starter; copy reference files exactly and leave them unchanged. Run the class containing main. With a JDK installed, you can also run these commands from that folder:',
+  helperInstructions:
+    'These complete reference classes are part of the exercise. Copy each into its own file beside your runner; do not reimplement their methods.',
+  workflow:
+    'Before running, write your predicted output and trace the values in execution order. Then run in your IDE, compare the actual output with your prediction, and explain any correction. Everything required for this exercise is included here.',
+  predictionHelp:
+    'Write the output you expect before running, including line breaks and labels. For a broken program, predict the compiler problem first.',
+  traceHelp:
+    'Record values in execution order. For method calls, include arguments, parameters, returned values, and the variable that receives the return.',
+  resultsHelp:
+    'Record the inputs you used, actual output or compiler messages, and what changed after each test. Compare with your prediction.',
+  explanationHelp:
+    'Explain why your code works and what you learned. Answer the reflection questions listed in Task requirements.',
   prediction: 'Prediction',
   trace: 'Trace your reasoning',
   results: 'Testing and results',
@@ -61,7 +77,23 @@ export const extraPracticeMessages: Record<Locale, typeof en> = {
     tutorProgress: 'Pasos del tutor virtual',
     independent: 'Inténtalo por tu cuenta',
     goal: 'Objetivo',
-    source: 'Páginas del PDF fuente',
+    reference: 'Lo que necesitas saber',
+    requirements: 'Requisitos de la tarea',
+    setup: 'Archivos y cómo ejecutar',
+    setupInstructions:
+      'Crea un proyecto Java en tu IDE. Guarda cada archivo Java mostrado con su nombre exacto en la misma carpeta, sin declaración package. Agrega tu código al archivo inicial editable; copia los archivos de referencia exactamente y no los modifiques. Ejecuta la clase que contiene main. Si tienes un JDK instalado, también puedes usar estos comandos desde esa carpeta:',
+    helperInstructions:
+      'Estas clases de referencia completas son parte del ejercicio. Copia cada una en su propio archivo junto al programa principal; no necesitas reimplementar sus métodos.',
+    workflow:
+      'Antes de ejecutar, escribe la salida que predices y traza los valores en orden de ejecución. Luego ejecuta en tu IDE, compara la salida real con tu predicción y explica las correcciones. Todo lo necesario para este ejercicio está incluido aquí.',
+    predictionHelp:
+      'Escribe la salida que esperas antes de ejecutar, con saltos de línea y etiquetas. Si el programa tiene errores, predice primero el problema de compilación.',
+    traceHelp:
+      'Registra los valores en orden de ejecución. En las llamadas incluye argumentos, parámetros, valores devueltos y la variable que recibe el retorno.',
+    resultsHelp:
+      'Registra entradas usadas, salida real o mensajes del compilador y lo que cambió en cada prueba. Compara con tu predicción.',
+    explanationHelp:
+      'Explica por qué funciona tu código y qué aprendiste. Responde las preguntas de reflexión indicadas en Requisitos de la tarea.',
     prediction: 'Predicción',
     trace: 'Traza tu razonamiento',
     results: 'Pruebas y resultados',

@@ -262,3 +262,30 @@
 .virtual-tutor-actions button {
   flex: 1 1 140px;
 }
+
+.extra-reference {
+  margin: 24px 0;
+  padding-block: 20px;
+  border-block: 1px solid var(--line);
+}
+.extra-reference h4:not(:first-child) {
+  margin-top: 24px;
+}
+.extra-reference h5 {
+  font-size: 14px;
+  margin: 18px 0 8px;
+}
+.extra-reference ul {
+  padding-left: 24px;
+}
+.extra-reference pre {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 16px;
+  border-radius: 7px;
+  color: var(--code-text);
+  background: var(--editor);
+  line-height: 1.7;
+  font-size: 13px;
+  tab-size: 4;
+}
