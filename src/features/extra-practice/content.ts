@@ -1,8 +1,11 @@
 import type { ExtraActivity } from './types';
+import { practiceGuides } from './guides.ts';
 
 // Adapted from the supplied student workbooks. Page numbers refer to each activity's group PDF.
 // Only printed targets supplied by the workbook appear as expectedOutput; predictions remain student work.
-export const extraActivities: ExtraActivity[] = [
+const activities: (Omit<ExtraActivity, 'guide' | 'id'> & {
+  id: keyof typeof practiceGuides;
+})[] = [
   {
     id: 'a1',
     topicId: '1.1',
@@ -89,21 +92,21 @@ export const extraActivities: ExtraActivity[] = [
     guided: {
       id: 'a2-guided',
       prompt: {
-        en: 'The original task expects the seven lines below. Rebuild a correct version with one println per line. The original buggy file was not included, so this review does not assign its six bug locations.',
-        es: 'La tarea original espera las siete líneas mostradas. Reconstruye una versión correcta con una llamada println por línea. El archivo original con errores no se incluyó; esta práctica no asigna las ubicaciones de sus seis errores.',
+        en: 'Build Main.java from the starter to print the seven target lines exactly, using one println per line. This is a reconstruction task, not a six-error debugging task.',
+        es: 'Construye Main.java a partir del archivo inicial para imprimir exactamente las siete líneas del modelo, con una llamada println por línea. Esta es una reconstrucción, no una depuración de seis errores.',
       },
       steps: {
         en: [
           'Create one print statement for each expected line.',
           'Compare capitalization, spaces, punctuation, and line breaks.',
-          'For the original file, inspect the first compiler error and the line before it.',
+          'If your program does not compile, inspect the first compiler error and the line before it.',
           'Record the line, problem, category, correction, and result in Debugging.txt.',
           'Reflect: name two strategies, one challenge, and one rule to remember.',
         ],
         es: [
           'Crea una instrucción de impresión para cada línea esperada.',
           'Compara mayúsculas, espacios, puntuación y saltos de línea.',
-          'En el archivo original, revisa el primer error del compilador y la línea anterior.',
+          'Si tu programa no compila, revisa el primer error del compilador y la línea anterior.',
           'Registra la línea, el problema, la categoría, la corrección y el resultado en Debugging.txt.',
           'Reflexiona: menciona dos estrategias, un desafío y una regla para recordar.',
         ],
@@ -125,8 +128,8 @@ export const extraActivities: ExtraActivity[] = [
     independent: {
       id: 'a2-independent',
       prompt: {
-        en: 'This new program has six independent corrections. Make it print the target below. Record each correction in the debugging log; then answer the three reflection prompts above.',
-        es: 'Este nuevo programa necesita seis correcciones independientes. Haz que imprima la salida indicada. Registra cada corrección en el registro de depuración y responde las tres preguntas de reflexión de la práctica guiada.',
+        en: 'This new program has six independent corrections. Make it print the target below. Record each correction in the debugging log; then explain two debugging strategies, one challenge, and one rule to remember.',
+        es: 'Este nuevo programa necesita seis correcciones independientes. Haz que imprima la salida indicada. Registra cada corrección en el registro de depuración y explica dos estrategias de depuración, una dificultad y una regla para recordar.',
       },
       steps: {
         en: [
@@ -820,14 +823,14 @@ export const extraActivities: ExtraActivity[] = [
           'Check that each argument is compatible with double.',
           'Check that each returned double is stored in a compatible variable.',
           'Predict the conversions for 0 Celsius, 20 pounds, and 65 miles.',
-          'Use the new three-bug program on the independent page to practise debugging.',
+          'To practise debugging afterward, choose Try it yourself: it contains a separate program with exactly three errors.',
         ],
         es: [
           'Busca la escritura exacta del método en la clase auxiliar y cópiala igual.',
           'Comprueba que cada argumento sea compatible con double.',
           'Comprueba que cada double devuelto se almacene en una variable compatible.',
           'Predice las conversiones de 0 Celsius, 20 libras y 65 millas.',
-          'Usa el nuevo programa con tres errores de la página independiente para practicar depuración.',
+          'Para practicar depuración después, elige Inténtalo por tu cuenta: contiene otro programa con exactamente tres errores.',
         ],
       },
       files: [
@@ -965,8 +968,8 @@ export const extraActivities: ExtraActivity[] = [
     guided: {
       id: 'b8-guided',
       prompt: {
-        en: 'Use Calculator.java as a supplied tool. Calculate the slope from (1,1) to (5,10), the distance from (2,3) to (6,7), and the roots of x² + 2x - 8 = 0. The sample values in the homework describe different inputs.',
-        es: 'Usa Calculator.java como herramienta suministrada. Calcula la pendiente de (1,1) a (5,10), la distancia de (2,3) a (6,7) y las raíces de x² + 2x - 8 = 0. Los valores de ejemplo de la tarea original corresponden a otras entradas.',
+        en: 'Use Calculator.java as a supplied tool. Calculate the slope from (1,1) to (5,10), the distance from (2,3) to (6,7), and the roots of x² + 2x - 8 = 0.',
+        es: 'Usa Calculator.java como herramienta suministrada. Calcula la pendiente de (1,1) a (5,10), la distancia de (2,3) a (6,7) y las raíces de x² + 2x - 8 = 0.',
       },
       steps: {
         en: [
@@ -1027,3 +1030,8 @@ export const extraActivities: ExtraActivity[] = [
     ],
   },
 ];
+
+export const extraActivities: ExtraActivity[] = activities.map((activity) => ({
+  ...activity,
+  guide: practiceGuides[activity.id],
+}));

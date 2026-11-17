@@ -69,7 +69,7 @@ describe('extra workbook content', () => {
     expect(get('a2').independent.files[0].code).toContain(
       'System.out.println("Total: " + 2 + 3);',
     );
-    expect(get('a2').guided.prompt.en).toContain('not included');
+    expect(get('a2').guided.prompt.en).toContain('reconstruction task');
     expect(get('b3').guided.files[0].code).toContain(
       'string string = "This is an error!";',
     );
@@ -148,4 +148,23 @@ it('preserves helper contracts and multi-page provenance', () => {
   expect(get('b8').helpers[0].code).toContain(
     'return first + " and " + second;',
   );
+});
+
+it('provides bilingual reference material and explicit requirements for every worksheet', () => {
+  for (const activity of extraActivities) {
+    for (const locale of ['en', 'es'] as const) {
+      expect(activity.guide.concepts[locale].length).toBeGreaterThanOrEqual(2);
+      for (const section of ['guided', 'independent'] as const) {
+        expect(activity.guide[section][locale].length).toBeGreaterThanOrEqual(
+          2,
+        );
+        expect(activity[section].prompt[locale]).not.toMatch(
+          /page|página|prompts above|preguntas anteriores/i,
+        );
+      }
+    }
+  }
+  const converters = extraActivities.find((a) => a.id === 'b6')!;
+  expect(converters.guide.concepts.en.join(' ')).toContain('0.45359237');
+  expect(converters.guide.concepts.es.join(' ')).toContain('double');
 });

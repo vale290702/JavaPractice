@@ -151,6 +151,54 @@ function Worksheet({
           {activity.goal[locale]}
         </p>
         <p>{definition.prompt[locale]}</p>
+        <p className="extra-muted">{m.workflow}</p>
+        <section
+          className="extra-reference"
+          aria-labelledby={`${id}-reference`}
+        >
+          <h4 id={`${id}-reference`}>{m.reference}</h4>
+          {activity.guide.concepts[locale].map((text) => (
+            <p key={text}>{text}</p>
+          ))}
+          <h4>{m.requirements}</h4>
+          <ol>
+            {activity.guide[guided ? 'guided' : 'independent'][locale].map(
+              (text) => (
+                <li key={text}>{text}</li>
+              ),
+            )}
+          </ol>
+          <h4>{m.setup}</h4>
+          <p>{m.setupInstructions}</p>
+          <ul>
+            {files.map((f) => (
+              <li key={f.name}>
+                <code>{f.name}</code>
+              </li>
+            ))}
+          </ul>
+          <pre>
+            <code>{`javac ${files
+              .filter((f) => f.name.endsWith('.java'))
+              .map((f) => f.name)
+              .join(' ')}
+java ${definition.files.find((f) => f.name.endsWith('.java'))!.name.replace('.java', '')}`}</code>
+          </pre>
+          {activity.helpers.length > 0 && (
+            <>
+              <h4>{m.helpers}</h4>
+              <p>{m.helperInstructions}</p>
+              {activity.helpers.map((helper) => (
+                <div key={helper.name}>
+                  <h5>{helper.name}</h5>
+                  <pre>
+                    <code>{helper.code}</code>
+                  </pre>
+                </div>
+              ))}
+            </>
+          )}
+        </section>
         {guided ? (
           <VirtualTutor steps={definition.steps[locale]} locale={locale} />
         ) : (
@@ -160,9 +208,6 @@ function Worksheet({
             ))}
           </ol>
         )}
-        <p className="extra-muted">
-          {m.source}: {definition.sourcePages.join(', ')}
-        </p>
       </div>
       {definition.inputs !== undefined && (
         <div className="extra-output">
@@ -208,15 +253,21 @@ function Worksheet({
       {sheet.storageError && <p role="alert">{m.storage}</p>}
       <fieldset className="extra-fields" disabled={blocked}>
         {(['prediction', 'trace'] as const).map((field) => (
-          <label key={field} htmlFor={`${id}-${field}`}>
-            {m[field]}
-            <textarea
-              id={`${id}-${field}`}
-              value={sheet.work[field]}
-              onChange={(e) => change(field, e.target.value)}
-              rows={3}
-            />
-          </label>
+          <div key={field}>
+            <label htmlFor={`${id}-${field}`}>
+              {m[field]}
+              <textarea
+                aria-describedby={`${id}-${field}-help`}
+                id={`${id}-${field}`}
+                value={sheet.work[field]}
+                onChange={(e) => change(field, e.target.value)}
+                rows={3}
+              />
+            </label>
+            <p className="extra-muted" id={`${id}-${field}-help`}>
+              {m[`${field}Help`]}
+            </p>
+          </div>
         ))}
         <section className="extra-files" aria-label={m.files}>
           <h4>{m.files}</h4>
@@ -279,15 +330,21 @@ function Worksheet({
           )}
         </section>
         {(['results', 'explanation'] as const).map((field) => (
-          <label key={field} htmlFor={`${id}-${field}`}>
-            {m[field]}
-            <textarea
-              id={`${id}-${field}`}
-              value={sheet.work[field]}
-              onChange={(e) => change(field, e.target.value)}
-              rows={4}
-            />
-          </label>
+          <div key={field}>
+            <label htmlFor={`${id}-${field}`}>
+              {m[field]}
+              <textarea
+                aria-describedby={`${id}-${field}-help`}
+                id={`${id}-${field}`}
+                value={sheet.work[field]}
+                onChange={(e) => change(field, e.target.value)}
+                rows={4}
+              />
+            </label>
+            <p className="extra-muted" id={`${id}-${field}-help`}>
+              {m[`${field}Help`]}
+            </p>
+          </div>
         ))}
       </fieldset>
       <p className="extra-muted" id={`${id}-completion`}>

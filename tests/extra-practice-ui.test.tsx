@@ -20,6 +20,11 @@ const worksheet = {
   sourcePages: [1],
 };
 const activity: ExtraActivity = {
+  guide: {
+    concepts: { en: ['Read Java code'], es: ['Lee código Java'] },
+    guided: { en: ['Use Main.java'], es: ['Usa Main.java'] },
+    independent: { en: ['Use Main.java'], es: ['Usa Main.java'] },
+  },
   id: 'a1',
   topicId: '1.1',
   group: '1.1–1.5',
@@ -356,4 +361,39 @@ it('guides the student one step at a time through the virtual tutor', async () =
     screen.queryByRole('region', { name: 'Tutor virtual' }),
   ).not.toBeInTheDocument();
   expect(screen.getByText('Lee el código')).toBeVisible();
+});
+
+it('shows complete setup and helper source without sending students to PDF pages', async () => {
+  const { extraActivities } =
+    await import('../src/features/extra-practice/content');
+  const converters = extraActivities.find((a) => a.id === 'b6')!;
+  const view = render(
+    <ExtraPractice activities={[converters]} locale="en" userId="one" />,
+  );
+  expect(screen.queryByText(/Source PDF pages/)).not.toBeInTheDocument();
+  expect(
+    screen.getByRole('heading', { name: 'What you need to know' }),
+  ).toBeVisible();
+  expect(
+    screen.getByRole('heading', { name: 'Task requirements' }),
+  ).toBeVisible();
+  expect(
+    screen.getByText(
+      'javac UnitRunner.java UnitConverter.java java UnitRunner',
+    ),
+  ).toBeVisible();
+  expect(
+    screen.getByText(
+      (_text, element) =>
+        element?.tagName === 'CODE' &&
+        element.textContent === converters.helpers[0].code,
+    ),
+  ).toBeVisible();
+  view.rerender(
+    <ExtraPractice activities={[converters]} locale="es" userId="one" />,
+  );
+  expect(
+    screen.getByRole('heading', { name: 'Lo que necesitas saber' }),
+  ).toBeVisible();
+  expect(screen.queryByText(/Páginas del PDF/)).not.toBeInTheDocument();
 });
