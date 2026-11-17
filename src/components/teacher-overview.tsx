@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { ThemeToggle } from './theme-toggle';
 import { Braces } from 'lucide-react';
 import type { SessionUser } from '../features/auth/types';
+import type { ExtraStudentProgress } from '../features/extra-practice/types';
+import { worksheetIds } from '../features/extra-practice/metadata';
 import type { StudentProgress } from '../features/learning/types';
 import { topicIds } from '../features/curriculum/metadata';
 import { languageNames, modes } from '../i18n/content';
@@ -16,10 +18,14 @@ export function TeacherOverview({
   user,
   students,
   unavailable = false,
+  extraProgress = [],
+  extraUnavailable = false,
 }: {
   user: SessionUser;
   students: StudentProgress[];
   unavailable?: boolean;
+  extraProgress?: ExtraStudentProgress[];
+  extraUnavailable?: boolean;
 }) {
   const { locale, setLocale, t: auth } = useAuthLocale();
   const t = teacherMessages[locale === 'es' ? 'es' : 'en'];
@@ -31,6 +37,7 @@ export function TeacherOverview({
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+  const extraByUser = new Map(extraProgress.map((item) => [item.userId, item]));
   return (
     <div className="teacher-page">
       <header className="teacher-header">
@@ -98,48 +105,63 @@ export function TeacherOverview({
                         {t.unit} {unit}
                       </th>
                     ))}
+                    <th scope="col">{t.extraPractice}</th>
                     <th scope="col">{t.lastActivity}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {students.map((student) => (
-                    <tr key={student.id}>
-                      <th scope="row">
-                        <strong>{student.displayName}</strong>
-                        <span className="teacher-email">{student.email}</span>
-                      </th>
-                      <td>
-                        <strong>
-                          {percent.format(student.completed.length / total)}
-                        </strong>
-                        <span className="teacher-count">
-                          {student.completed.length} / {total}
-                        </span>
-                      </td>
-                      <td>{student.enabled ? t.enabled : t.disabled}</td>
-                      {unitNumbers.map((unit) => (
-                        <td key={unit}>
-                          {
-                            student.completed.filter((activity) =>
-                              activity.startsWith(`${unit}.`),
-                            ).length
-                          }{' '}
-                          /{' '}
-                          {topicIds.filter((id) => id.startsWith(`${unit}.`))
-                            .length * modes.length}
+                  {students.map((student) => {
+                    const extra = extraByUser.get(student.id);
+                    const lastActivity = [
+                      student.lastActivity,
+                      extra?.updatedAt,
+                    ]
+                      .filter((value): value is string => !!value)
+                      .sort((a, b) => Date.parse(b) - Date.parse(a))[0];
+                    return (
+                      <tr key={student.id}>
+                        <th scope="row">
+                          <strong>{student.displayName}</strong>
+                          <span className="teacher-email">{student.email}</span>
+                        </th>
+                        <td>
+                          <strong>
+                            {percent.format(student.completed.length / total)}
+                          </strong>
+                          <span className="teacher-count">
+                            {student.completed.length} / {total}
+                          </span>
                         </td>
-                      ))}
-                      <td>
-                        {student.lastActivity ? (
-                          <time dateTime={student.lastActivity}>
-                            {date.format(new Date(student.lastActivity))}
-                          </time>
-                        ) : (
-                          t.noActivity
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                        <td>{student.enabled ? t.enabled : t.disabled}</td>
+                        {unitNumbers.map((unit) => (
+                          <td key={unit}>
+                            {
+                              student.completed.filter((activity) =>
+                                activity.startsWith(`${unit}.`),
+                              ).length
+                            }{' '}
+                            /{' '}
+                            {topicIds.filter((id) => id.startsWith(`${unit}.`))
+                              .length * modes.length}
+                          </td>
+                        ))}
+                        <td>
+                          {extraUnavailable
+                            ? t.extraUnavailable
+                            : `${extra?.completed.length ?? 0} / ${worksheetIds.length}`}
+                        </td>
+                        <td>
+                          {lastActivity ? (
+                            <time dateTime={lastActivity}>
+                              {date.format(new Date(lastActivity))}
+                            </time>
+                          ) : (
+                            t.noActivity
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

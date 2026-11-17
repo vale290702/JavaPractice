@@ -1,6 +1,6 @@
 # Managed access setup
 
-This feature lives on `feat/managed-login-single-session`; production has not been deployed with it. A dedicated JavaPractice Supabase project (`mxotijowgvkeqehedvsg`, US East) is configured for this branch. Local server credentials are in ignored `.env.local`; never reuse another project's credentials.
+Managed login and regular progress are deployed. Extra Practice is implemented on `feat/extra-practice-workbooks` and has not been deployed. The dedicated JavaPractice Supabase project (`mxotijowgvkeqehedvsg`, US East) is configured with the approved-account, session, progress, and additive worksheet migrations. Local server credentials are in ignored `.env.local`; never reuse another project's credentials.
 
 ## Configure the database and Auth
 
@@ -45,3 +45,7 @@ Supabase references: [admin user creation](https://supabase.com/docs/reference/j
 ### Canonical request origin
 
 Set server-only `APP_ORIGIN` to the exact browser origin (for production, `https://java-practice-atrizon.vercel.app`; for local development, `http://localhost:3000`). This avoids confusing an internal proxy hostname with the public origin when checking login/logout requests. Configure the appropriate origin separately for a preview deployment. Foreign origins are rejected.
+
+### Extra Practice persistence
+
+The additive `202611160001_extra_practice.sql` migration stores each account’s worksheet work and version separately from regular course progress. Both read and save RPCs verify the expected rendered account against the locked active session, so switching accounts in another tab cannot transfer answers. A stale version returns a conflict; no saved work is silently overwritten. Only teachers can read the extra completion summary, which does not include student answer bodies. The migration is applied and registered in the dedicated project; the UI branch still requires integration/deployment.

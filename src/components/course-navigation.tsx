@@ -1,15 +1,20 @@
-import { Check, ChevronRight } from 'lucide-react';
+import { extraPracticeMessages } from '../i18n/extra-practice';
+import { Check, ChevronRight, FileText } from 'lucide-react';
 import { useCurriculum } from '../features/curriculum/provider';
 import { modes, type Locale, type Messages } from '../i18n/content';
 export function CourseNavigation({
   locale,
   currentUnit,
+  extraOpen = false,
+  onExtraSelect,
   completed,
   onSelect,
   t,
 }: {
   locale: Locale;
-  currentUnit: string;
+  currentUnit?: string;
+  extraOpen?: boolean;
+  onExtraSelect?: () => void;
   completed: string[];
   onSelect: (topic: string) => void;
   t: Messages;
@@ -47,6 +52,21 @@ export function CourseNavigation({
           </button>
         );
       })}
+      {onExtraSelect && (
+        <button
+          className={`topic-button unit-button ${extraOpen ? 'selected' : ''}`}
+          aria-current={extraOpen ? 'page' : undefined}
+          onClick={onExtraSelect}
+        >
+          <span className="topic-number">
+            <FileText size={15} />
+          </span>
+          <span>
+            <strong>{extraPracticeMessages[locale].title}</strong>
+          </span>
+          {extraOpen && <ChevronRight size={16} />}
+        </button>
+      )}
     </nav>
   );
 }

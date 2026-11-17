@@ -1,0 +1,77 @@
+import { worksheetIds } from './metadata';
+import type { WorksheetWork } from './types';
+export const maxWorksheetBytes = 65536;
+export const maxWorkBytes = 65024;
+export function isAccountId(value: unknown): value is string {
+  return (
+    typeof value === 'string' &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      value,
+    )
+  );
+}
+export function isWorksheetId(value: unknown): value is string {
+  return typeof value === 'string' && worksheetIds.includes(value);
+}
+export function editableFiles(id: string): string[] {
+  const activity = id.split('-')[0];
+  return activity === 'a2'
+    ? ['Main.java', 'Debugging.txt']
+    : [
+        {
+          b5: 'LogRunner.java',
+          b6: 'UnitRunner.java',
+          b7: 'HelloRunner.java',
+          b8: 'CalculatorRunner.java',
+        }[activity] ?? 'Main.java',
+      ];
+}
+export function exactKeys(
+  value: unknown,
+  keys: string[],
+): value is Record<string, unknown> {
+  return (
+    !!value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === keys.length &&
+    keys.every((key) => Object.hasOwn(value, key))
+  );
+}
+export function validWork(
+  id: string,
+  value: unknown,
+  completed: boolean,
+): value is WorksheetWork {
+  if (
+    !isWorksheetId(id) ||
+    !exactKeys(value, [
+      'prediction',
+      'trace',
+      'files',
+      'results',
+      'explanation',
+    ])
+  )
+    return false;
+  if (new TextEncoder().encode(JSON.stringify(value)).byteLength > maxWorkBytes)
+    return false;
+  for (const key of ['prediction', 'trace', 'results', 'explanation']) {
+    const note = value[key];
+    if (
+      typeof note !== 'string' ||
+      note.length > 8000 ||
+      (completed && !note.trim())
+    )
+      return false;
+  }
+  const names = editableFiles(id);
+  const files = value.files;
+  if (!exactKeys(files, names)) return false;
+  return names.every(
+    (name) =>
+      typeof files[name] === 'string' &&
+      files[name].length <= 32000 &&
+      (!completed || !!files[name].trim()),
+  );
+}

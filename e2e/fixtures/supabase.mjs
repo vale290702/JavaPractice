@@ -22,6 +22,7 @@ export async function startFixture(port = 54339) {
           : 'Test learner',
         role: email.startsWith('teacher-') ? 'teacher' : 'student',
         completed: [],
+        worksheets: new Map(),
         lastActivity: null,
         enabled: true,
         version: 0,
@@ -160,6 +161,58 @@ export async function startFixture(port = 54339) {
         row.account.lastActivity = new Date().toISOString();
       }
       return reply(200, row.account.completed);
+    }
+    if (
+      [
+        'app_read_extra_worksheet',
+        'app_save_extra_worksheet',
+        'app_extra_teacher_progress',
+      ].some((name) => path === `/rest/v1/rpc/${name}`)
+    ) {
+      const session = [...sessions.values()].find(
+        (s) => s.hash === body.p_token_hash,
+      );
+      if (
+        !session ||
+        !session.account.enabled ||
+        Date.parse(session.expiresAt) <= Date.now()
+      )
+        return reply(200, null);
+      const account = session.account;
+      if (path.endsWith('/app_extra_teacher_progress')) {
+        if (account.role !== 'teacher') return reply(200, null);
+        return reply(
+          200,
+          [...accounts.values()]
+            .filter((a) => a.role === 'student')
+            .map((a) => ({
+              userId: a.id,
+              completed: [...a.worksheets.values()]
+                .filter((w) => w.completed)
+                .map((w) => w.id),
+              updatedAt:
+                [...a.worksheets.values()]
+                  .map((w) => w.updatedAt)
+                  .sort()
+                  .at(-1) ?? null,
+            })),
+        );
+      }
+      if (account.id !== body.p_expected_user_id) return reply(200, null);
+      const current = account.worksheets.get(body.p_id) ?? null;
+      if (path.endsWith('/app_read_extra_worksheet'))
+        return reply(200, { ok: true, worksheet: current });
+      if ((current?.version ?? 0) !== body.p_version)
+        return reply(200, { ok: false, code: 'conflict' });
+      const worksheet = {
+        id: body.p_id,
+        version: body.p_version + 1,
+        work: body.p_work,
+        completed: body.p_completed,
+        updatedAt: new Date().toISOString(),
+      };
+      account.worksheets.set(body.p_id, worksheet);
+      return reply(200, { ok: true, worksheet });
     }
     if (path === '/rest/v1/rpc/app_revoke_session') {
       for (const [id, row] of sessions)

@@ -1,3 +1,5 @@
+import { getExtraTeacherProgress } from '../../features/extra-practice/server';
+import type { ExtraStudentProgress } from '../../features/extra-practice/types';
 import { redirect } from 'next/navigation';
 import { getCurrentSession } from '../../features/auth/server';
 import { getTeacherProgress } from '../../features/learning/server';
@@ -21,12 +23,23 @@ export default async function TeacherPage() {
   } catch {
     unavailable = true;
   }
+  let extraProgress: ExtraStudentProgress[] = [];
+  let extraUnavailable = false;
+  if (!unavailable) {
+    try {
+      extraProgress = await getExtraTeacherProgress();
+    } catch {
+      extraUnavailable = true;
+    }
+  }
   return (
     <SessionBoundary session={session}>
       <TeacherOverview
         user={session.user}
         students={students}
         unavailable={unavailable}
+        extraProgress={extraProgress}
+        extraUnavailable={extraUnavailable}
       />
     </SessionBoundary>
   );

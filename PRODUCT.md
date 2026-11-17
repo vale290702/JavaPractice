@@ -39,8 +39,12 @@ The source PDF is at `/Users/valecharpentier/Downloads/ap-computer-science-a-cou
 
 ## Open Decisions
 
-A Java execution provider is not yet supplied. A dedicated Supabase project is configured for the managed-access branch. Production is hosted on Vercel in the Atrizon workspace. Production has all four units and local progress; the managed-access branch adds account progress synchronization. Backend integrations are added only when configured.
+A Java execution provider is not yet supplied. A dedicated Supabase project is configured for managed accounts and progress. Production is hosted on Vercel in the Atrizon workspace. Production has all four units, account progress synchronization, teacher progress, and selectable light/navy appearances. Backend integrations are added only when configured.
 
-## Managed Access (feature branch)
+## Managed Access
 
-Approved: login-only, tutor-provisioned accounts, no public registration. A successful new login replaces the old device’s active application session. Backend session checks protect curriculum delivery; progress is stored per account in Supabase and teacher accounts can view student summaries. English/Spanish login, logout, and session messages retain the learning-lab identity. Implementation is on `feat/managed-login-single-session`, not merged into production. The dedicated JavaPractice Supabase project is configured with migrations and public signup disabled; the first teacher account is provisioned. Credentials remain in private local files. Vercel hosting already exists under Atrizon; this branch must not change main’s live deployment.
+Approved: login-only, tutor-provisioned accounts, no public registration. A successful new login replaces the old device’s active application session. Backend session checks protect curriculum delivery; progress is stored per account in Supabase and teacher accounts can view student summaries. English/Spanish login, logout, and session messages retain the learning-lab identity. Managed access and the teacher overview are deployed. The dedicated JavaPractice Supabase project is configured with migrations and public signup disabled; the first teacher account is provisioned. Credentials remain in private local files. Vercel hosting already exists under Atrizon; new feature branches must not change main’s live deployment without integration.
+
+## Extra Practice (feature branch)
+
+Approved: adapt the two supplied workbooks for topics 1.1–1.10 into 14 activities / 28 guided and independent worksheets. Interactive prediction, trace, named code files, external test evidence, and explanation are saved per account. Helpers stay read-only; completion is self-reported and separate from regular course progress. Topics outside this coverage show an availability state. EN/ES and both appearances are preserved. Implementation is on `feat/extra-practice-workbooks`; the additive backend migration is configured, but this interface is not deployed until integrated.

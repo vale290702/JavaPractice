@@ -1,6 +1,8 @@
 export const teacherMessages = {
   en: {
     title: 'Student progress',
+    extraPractice: 'Extra Practice',
+    extraUnavailable: 'Unavailable',
     scrollHint:
       'Scroll horizontally to see account access, unit completion, and last activity.',
     intro:
@@ -24,6 +26,8 @@ export const teacherMessages = {
   },
   es: {
     title: 'Progreso de estudiantes',
+    extraPractice: 'Práctica adicional',
+    extraUnavailable: 'No disponible',
     scrollHint:
       'Desplázate horizontalmente para ver el acceso de la cuenta, el progreso por unidad y la última actividad.',
     intro:

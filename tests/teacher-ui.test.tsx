@@ -112,3 +112,36 @@ it.each([
     ).toHaveAttribute('aria-describedby', 'teacher-scroll-hint');
   },
 );
+it('reports extra worksheets separately from the original course completion', () => {
+  render(
+    <TeacherOverview
+      user={teacher}
+      students={[
+        {
+          id: 's',
+          email: 'student@example.test',
+          displayName: 'Ana',
+          enabled: true,
+          completed: ['1.1:learn'],
+          lastActivity: null,
+        },
+      ]}
+      extraProgress={[
+        {
+          userId: 's',
+          completed: ['a1-guided', 'a1-independent'],
+          updatedAt: '2026-11-16T12:00:00Z',
+        },
+      ]}
+    />,
+  );
+  expect(
+    screen.getByRole('columnheader', { name: 'Extra Practice' }),
+  ).toBeInTheDocument();
+  expect(screen.getByText('2 / 28')).toBeInTheDocument();
+  expect(screen.getByText('1 / 265')).toBeInTheDocument();
+  expect(document.querySelector('time')).toHaveAttribute(
+    'dateTime',
+    '2026-11-16T12:00:00Z',
+  );
+});

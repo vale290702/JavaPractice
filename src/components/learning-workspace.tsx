@@ -4,6 +4,8 @@ import Link from 'next/link';
 import '../app/progress.css';
 import { ThemeToggle } from './theme-toggle';
 import { JavaEditor } from './java-editor';
+import { ExtraPractice } from './extra-practice/extra-practice';
+import type { ExtraActivity } from '../features/extra-practice/types';
 import { useLocalStorage } from '../features/learning/use-local-storage';
 import {
   ArrowRight,
@@ -43,9 +45,11 @@ const modeIcons = {
 export function LearningWorkspace({
   user,
   initialCompleted,
+  extraActivities = [],
 }: {
   user: SessionUser;
   initialCompleted: string[];
+  extraActivities?: ExtraActivity[];
 }) {
   const { getTopic, getUnitForTopic, topicIds, totalActivities } =
     useCurriculum();
@@ -54,6 +58,7 @@ export function LearningWorkspace({
   const progress = useProgress(initialCompleted);
   const [topic, setTopic] = useState('1.1');
   const [mode, setMode] = useState<Mode>('learn');
+  const [extraOpen, setExtraOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [answer, setAnswer] = useState('');
   const [choice, setChoice] = useState<number | null>(null);
@@ -75,6 +80,7 @@ export function LearningWorkspace({
     localeStore.set(value);
   }
   function changeActivity(nextTopic: string, nextMode: Mode) {
+    setExtraOpen(false);
     setTopic(nextTopic);
     setMode(nextMode);
     setStep(0);
@@ -130,7 +136,9 @@ export function LearningWorkspace({
         <h2 className="nav-title">{t.units}</h2>
         <CourseNavigation
           locale={locale}
-          currentUnit={currentUnit.id}
+          currentUnit={extraOpen ? undefined : currentUnit.id}
+          extraOpen={extraOpen}
+          onExtraSelect={() => setExtraOpen(true)}
           completed={completed}
           onSelect={(id) => changeActivity(id, 'learn')}
           t={t}
@@ -205,303 +213,329 @@ export function LearningWorkspace({
             <BookOpen size={16} />
             <span>{t.curriculumNote}</span>
           </div>
-          <TopicPicker
-            locale={locale}
-            topic={topic}
-            onSelect={(id) => changeActivity(id, 'learn')}
-            t={t}
-          />
-          <section className="lesson-header">
-            <div className="lesson-index">{topic}</div>
-            <div>
-              <h2>{lesson.title}</h2>
-              <p>{lesson.description}</p>
-            </div>
-            <span className="reading-time">{t.readTime}</span>
-          </section>
-          <nav className="mode-tabs" aria-label={t.lesson}>
-            {modes.map((id) => {
-              const Icon = modeIcons[id];
-              return (
-                <button
-                  key={id}
-                  aria-current={mode === id ? 'step' : undefined}
-                  className={mode === id ? 'current' : ''}
-                  onClick={() => changeActivity(topic, id)}
-                >
-                  <Icon size={17} />
-                  <span>{t.modes[id]}</span>
-                  {completed.includes(`${topic}:${id}`) && (
-                    <Check className="tab-check" size={13} />
-                  )}
-                </button>
-              );
-            })}
-          </nav>
-          <div className="activity-area" key={`${topic}:${mode}`}>
-            {(mode === 'learn' || mode === 'example') && (
-              <div className="lesson-grid">
-                <div className="lesson-copy">
-                  <h3>{mode === 'learn' ? t.goal : t.walkthrough}</h3>
-                  <p className="lesson-goal">{lesson.goal}</p>
-                  {mode === 'learn' ? (
-                    <>
-                      <p>{lesson.explanation}</p>
-                      <div className="takeaway">
-                        <Lightbulb size={20} />
-                        <div>
-                          <h4>{t.takeaway}</h4>
-                          <p>{lesson.takeaway}</p>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <ol className="walkthrough-list">
-                      {lesson.steps.map((text, index) => (
-                        <li
-                          key={text}
-                          className={index === step ? 'current-step' : ''}
-                        >
-                          <button onClick={() => setStep(index)}>
-                            <span>{index + 1}</span>
-                            {text}
-                          </button>
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-                  <div className="lesson-footnote">
-                    <span className="tiny-dot" />
-                    {t.step} {step + 1}: {lesson.steps[step]}
-                  </div>
+          {!extraOpen && (
+            <>
+              <TopicPicker
+                locale={locale}
+                topic={topic}
+                onSelect={(id) => changeActivity(id, 'learn')}
+                t={t}
+              />
+              <section className="lesson-header">
+                <div className="lesson-index">{topic}</div>
+                <div>
+                  <h2>{lesson.title}</h2>
+                  <p>{lesson.description}</p>
                 </div>
-                <CodePanel
-                  topic={topic}
-                  locale={locale}
-                  step={step}
-                  setStep={setStep}
-                  t={t}
-                />
-              </div>
-            )}
-            {mode === 'practice' && (
-              <section className="exercise">
-                <h3>{t.practicePrompt}</h3>
-                <p className="exercise-question">{lesson.practice}</p>
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    setChecked(true);
-                  }}
-                >
-                  <label htmlFor="practice-answer">{t.answer}</label>
-                  <div className="answer-row">
-                    <input
-                      id="practice-answer"
-                      value={answer}
-                      onChange={(event) => {
-                        setAnswer(event.target.value);
-                        setChecked(false);
-                      }}
-                      autoComplete="off"
+                {!extraOpen && (
+                  <span className="reading-time">{t.readTime}</span>
+                )}
+              </section>
+              <nav className="mode-tabs" aria-label={t.lesson}>
+                {modes.map((id) => {
+                  const Icon = modeIcons[id];
+                  const selected = mode === id;
+                  return (
+                    <button
+                      key={id}
+                      aria-current={selected ? 'step' : undefined}
+                      className={selected ? 'current' : ''}
+                      onClick={() => changeActivity(topic, id)}
+                    >
+                      <Icon size={17} />
+                      <span>{t.modes[id]}</span>
+                      {completed.includes(`${topic}:${id}`) && (
+                        <Check className="tab-check" size={13} />
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
+            </>
+          )}
+          <div
+            className="activity-area"
+            key={`${topic}:${extraOpen ? 'extra' : mode}`}
+          >
+            {extraOpen ? (
+              <ExtraPractice
+                activities={extraActivities}
+                locale={locale}
+                userId={user.id}
+              />
+            ) : (
+              <>
+                {(mode === 'learn' || mode === 'example') && (
+                  <div className="lesson-grid">
+                    <div className="lesson-copy">
+                      <h3>{mode === 'learn' ? t.goal : t.walkthrough}</h3>
+                      <p className="lesson-goal">{lesson.goal}</p>
+                      {mode === 'learn' ? (
+                        <>
+                          <p>{lesson.explanation}</p>
+                          <div className="takeaway">
+                            <Lightbulb size={20} />
+                            <div>
+                              <h4>{t.takeaway}</h4>
+                              <p>{lesson.takeaway}</p>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <ol className="walkthrough-list">
+                          {lesson.steps.map((text, index) => (
+                            <li
+                              key={text}
+                              className={index === step ? 'current-step' : ''}
+                            >
+                              <button onClick={() => setStep(index)}>
+                                <span>{index + 1}</span>
+                                {text}
+                              </button>
+                            </li>
+                          ))}
+                        </ol>
+                      )}
+                      <div className="lesson-footnote">
+                        <span className="tiny-dot" />
+                        {t.step} {step + 1}: {lesson.steps[step]}
+                      </div>
+                    </div>
+                    <CodePanel
+                      topic={topic}
+                      locale={locale}
+                      step={step}
+                      setStep={setStep}
+                      t={t}
                     />
+                  </div>
+                )}
+                {mode === 'practice' && (
+                  <section className="exercise">
+                    <h3>{t.practicePrompt}</h3>
+                    <p className="exercise-question">{lesson.practice}</p>
+                    <form
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        setChecked(true);
+                      }}
+                    >
+                      <label htmlFor="practice-answer">{t.answer}</label>
+                      <div className="answer-row">
+                        <input
+                          id="practice-answer"
+                          value={answer}
+                          onChange={(event) => {
+                            setAnswer(event.target.value);
+                            setChecked(false);
+                          }}
+                          autoComplete="off"
+                        />
+                        <button
+                          className="primary-button"
+                          disabled={!answer.trim()}
+                        >
+                          {t.check}
+                          <ArrowRight size={16} />
+                        </button>
+                      </div>
+                    </form>
+                    {checked && (
+                      <div
+                        role="status"
+                        className={`feedback ${correct ? 'success' : ''}`}
+                      >
+                        <strong>{correct ? t.correct : t.incorrect}</strong>
+                        <p>
+                          {correct
+                            ? lesson.practiceFeedback
+                            : lesson.practiceHints[0]}
+                        </p>
+                      </div>
+                    )}
+                  </section>
+                )}
+                {mode === 'quiz' && (
+                  <section className="exercise">
+                    <h3>{t.quizPrompt}</h3>
+                    <fieldset>
+                      <legend className="exercise-question">
+                        {lesson.question}
+                      </legend>
+                      <div className="choices">
+                        {lesson.choices.map((text, index) => (
+                          <label
+                            key={text}
+                            className={`choice ${choice === index ? 'chosen' : ''}`}
+                          >
+                            <input
+                              type="radio"
+                              name="quiz"
+                              checked={choice === index}
+                              onChange={() => {
+                                setChoice(index);
+                                setChecked(false);
+                              }}
+                            />
+                            <code>{text}</code>
+                            {choice === index && <CheckCircle2 size={19} />}
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
                     <button
                       className="primary-button"
-                      disabled={!answer.trim()}
+                      disabled={choice === null}
+                      onClick={() => setChecked(true)}
                     >
                       {t.check}
                       <ArrowRight size={16} />
                     </button>
-                  </div>
-                </form>
-                {checked && (
-                  <div
-                    role="status"
-                    className={`feedback ${correct ? 'success' : ''}`}
-                  >
-                    <strong>{correct ? t.correct : t.incorrect}</strong>
-                    <p>
-                      {correct
-                        ? lesson.practiceFeedback
-                        : lesson.practiceHints[0]}
-                    </p>
-                  </div>
-                )}
-              </section>
-            )}
-            {mode === 'quiz' && (
-              <section className="exercise">
-                <h3>{t.quizPrompt}</h3>
-                <fieldset>
-                  <legend className="exercise-question">
-                    {lesson.question}
-                  </legend>
-                  <div className="choices">
-                    {lesson.choices.map((text, index) => (
-                      <label
-                        key={text}
-                        className={`choice ${choice === index ? 'chosen' : ''}`}
+                    {checked && (
+                      <div
+                        role="status"
+                        className={`feedback ${correct ? 'success' : ''}`}
                       >
-                        <input
-                          type="radio"
-                          name="quiz"
-                          checked={choice === index}
-                          onChange={() => {
-                            setChoice(index);
-                            setChecked(false);
-                          }}
-                        />
-                        <code>{text}</code>
-                        {choice === index && <CheckCircle2 size={19} />}
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-                <button
-                  className="primary-button"
-                  disabled={choice === null}
-                  onClick={() => setChecked(true)}
-                >
-                  {t.check}
-                  <ArrowRight size={16} />
-                </button>
-                {checked && (
-                  <div
-                    role="status"
-                    className={`feedback ${correct ? 'success' : ''}`}
-                  >
-                    <strong>{correct ? t.correct : t.incorrect}</strong>
-                    <p>{correct ? lesson.feedback : t.retry}</p>
+                        <strong>{correct ? t.correct : t.incorrect}</strong>
+                        <p>{correct ? lesson.feedback : t.retry}</p>
+                      </div>
+                    )}
+                  </section>
+                )}
+                {mode === 'code' && (
+                  <section className="coding-exercise">
+                    <div>
+                      <h3>{t.challengePrompt}</h3>
+                      <p className="exercise-question">{lesson.challenge}</p>
+                      <h4>{t.testCases}</h4>
+                      <ul className="checklist">
+                        {lesson.checklist.map((text) => (
+                          <li key={text}>
+                            <Check size={16} />
+                            {text}
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="execution-note">{t.executionNote}</p>
+                    </div>
+                    <div className="editor-container">
+                      <div className="editor-top">
+                        <span className="file-tab">Main.java</span>
+                        <button
+                          onClick={() =>
+                            setCode({
+                              ...code,
+                              [topic]: currentTopic.example.starter,
+                            })
+                          }
+                          aria-label={t.reset}
+                        >
+                          <RotateCcw size={15} />
+                          {t.reset}
+                        </button>
+                      </div>
+                      <JavaEditor
+                        label={t.editor}
+                        value={code[topic] ?? currentTopic.example.starter}
+                        onChange={(value) =>
+                          setCode((current) => ({ ...current, [topic]: value }))
+                        }
+                      />
+                      <p className="code-save-note">{t.codeSaved}</p>
+                    </div>
+                  </section>
+                )}
+                {(mode === 'practice' || mode === 'code') && (
+                  <div className="help-section">
+                    <div className="help-controls">
+                      <button
+                        className="secondary-button"
+                        onClick={() =>
+                          setHintCount(
+                            Math.min(hintCount + 1, activeHints.length),
+                          )
+                        }
+                        disabled={hintCount === activeHints.length}
+                      >
+                        <Lightbulb size={16} />
+                        {t.hint}
+                        <span>
+                          {hintCount}/{activeHints.length}
+                        </span>
+                      </button>
+                      <button
+                        className="text-button"
+                        onClick={() => setShowSolution(!showSolution)}
+                      >
+                        {showSolution ? t.hideSolution : t.solution}
+                      </button>
+                    </div>
+                    {hintCount > 0 && (
+                      <ol className="hint-list" aria-label={t.hints}>
+                        {activeHints.slice(0, hintCount).map((hint) => (
+                          <li key={hint}>{hint}</li>
+                        ))}
+                      </ol>
+                    )}
+                    {showSolution && (
+                      <pre className="solution">
+                        <code>
+                          {mode === 'practice'
+                            ? `${lesson.practiceAnswer}\n\n${lesson.practiceFeedback}`
+                            : currentTopic.example.solution}
+                        </code>
+                      </pre>
+                    )}
                   </div>
                 )}
-              </section>
-            )}
-            {mode === 'code' && (
-              <section className="coding-exercise">
-                <div>
-                  <h3>{t.challengePrompt}</h3>
-                  <p className="exercise-question">{lesson.challenge}</p>
-                  <h4>{t.testCases}</h4>
-                  <ul className="checklist">
-                    {lesson.checklist.map((text) => (
-                      <li key={text}>
-                        <Check size={16} />
-                        {text}
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="execution-note">{t.executionNote}</p>
-                </div>
-                <div className="editor-container">
-                  <div className="editor-top">
-                    <span className="file-tab">Main.java</span>
-                    <button
-                      onClick={() =>
-                        setCode({
-                          ...code,
-                          [topic]: currentTopic.example.starter,
-                        })
-                      }
-                      aria-label={t.reset}
-                    >
-                      <RotateCcw size={15} />
-                      {t.reset}
-                    </button>
-                  </div>
-                  <JavaEditor
-                    label={t.editor}
-                    value={code[topic] ?? currentTopic.example.starter}
-                    onChange={(value) =>
-                      setCode((current) => ({ ...current, [topic]: value }))
-                    }
-                  />
-                  <p className="code-save-note">{t.codeSaved}</p>
-                </div>
-              </section>
-            )}
-            {(mode === 'practice' || mode === 'code') && (
-              <div className="help-section">
-                <div className="help-controls">
-                  <button
-                    className="secondary-button"
-                    onClick={() =>
-                      setHintCount(Math.min(hintCount + 1, activeHints.length))
-                    }
-                    disabled={hintCount === activeHints.length}
-                  >
-                    <Lightbulb size={16} />
-                    {t.hint}
-                    <span>
-                      {hintCount}/{activeHints.length}
-                    </span>
-                  </button>
-                  <button
-                    className="text-button"
-                    onClick={() => setShowSolution(!showSolution)}
-                  >
-                    {showSolution ? t.hideSolution : t.solution}
-                  </button>
-                </div>
-                {hintCount > 0 && (
-                  <ol className="hint-list" aria-label={t.hints}>
-                    {activeHints.slice(0, hintCount).map((hint) => (
-                      <li key={hint}>{hint}</li>
-                    ))}
-                  </ol>
-                )}
-                {showSolution && (
-                  <pre className="solution">
-                    <code>
-                      {mode === 'practice'
-                        ? `${lesson.practiceAnswer}\n\n${lesson.practiceFeedback}`
-                        : currentTopic.example.solution}
-                    </code>
-                  </pre>
-                )}
-              </div>
+              </>
             )}
           </div>
-          <footer className="activity-footer">
-            <button
-              className={`completion-button ${completed.includes(activity) ? 'is-complete' : ''}`}
-              disabled={
-                !canComplete ||
-                completed.includes(activity) ||
-                progress.pending !== null
-              }
-              onClick={finish}
-            >
-              <CheckCircle2 size={18} />
-              {progress.pending === activity
-                ? t.saving
-                : completed.includes(activity)
-                  ? t.completed
-                  : t.complete}
-            </button>
-            <button
-              className="text-button next-activity"
-              onClick={nextActivity}
-            >
-              {t.continue}
-              <ArrowRight size={17} />
-            </button>
-          </footer>
-          {progress.failed && (
-            <div className="progress-error" role="alert">
-              <p>{t.saveError}</p>
-              <button
-                className="secondary-button"
-                disabled={progress.pending !== null}
-                onClick={() => void progress.complete(progress.failed!)}
-              >
-                {t.saveRetry}
-              </button>
-            </div>
-          )}
-          {completed.length === totalActivities && (
-            <p role="status" className="all-done">
-              {t.allDone}
-            </p>
+          {!extraOpen && (
+            <>
+              <footer className="activity-footer">
+                <button
+                  className={`completion-button ${completed.includes(activity) ? 'is-complete' : ''}`}
+                  disabled={
+                    !canComplete ||
+                    completed.includes(activity) ||
+                    progress.pending !== null
+                  }
+                  onClick={finish}
+                >
+                  <CheckCircle2 size={18} />
+                  {progress.pending === activity
+                    ? t.saving
+                    : completed.includes(activity)
+                      ? t.completed
+                      : t.complete}
+                </button>
+                <button
+                  className="text-button next-activity"
+                  onClick={nextActivity}
+                >
+                  {t.continue}
+                  <ArrowRight size={17} />
+                </button>
+              </footer>
+              {progress.failed && (
+                <div className="progress-error" role="alert">
+                  <p>{t.saveError}</p>
+                  <button
+                    className="secondary-button"
+                    disabled={progress.pending !== null}
+                    onClick={() => void progress.complete(progress.failed!)}
+                  >
+                    {t.saveRetry}
+                  </button>
+                </div>
+              )}
+              {completed.length === totalActivities && (
+                <p role="status" className="all-done">
+                  {t.allDone}
+                </p>
+              )}
+            </>
           )}
         </main>
       </div>

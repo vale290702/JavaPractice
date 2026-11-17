@@ -97,7 +97,10 @@ describe('learning workspace', () => {
     const user = userEvent.setup();
     renderWorkspace();
     const navigation = screen.getByRole('navigation', { name: 'Course units' });
-    expect(navigation.querySelectorAll('button')).toHaveLength(4);
+    expect(navigation.querySelectorAll('button')).toHaveLength(5);
+    expect(
+      screen.getByRole('button', { name: 'Extra Practice' }),
+    ).toBeVisible();
     await user.click(screen.getByRole('button', { name: /Data Collections/ }));
     await user.selectOptions(screen.getByLabelText('Choose a topic'), '4.17');
     expect(
@@ -179,4 +182,50 @@ describe('learning workspace', () => {
       'int points = 20;',
     );
   });
+});
+
+it('opens Extra Practice from the units menu without regular lesson controls', async () => {
+  const user = userEvent.setup();
+  renderWorkspace();
+  await user.click(screen.getByRole('button', { name: 'Practice' }));
+  expect(
+    screen.getByRole('heading', { name: 'Think it through' }),
+  ).toBeVisible();
+  expect(
+    screen.queryByRole('heading', { name: 'Extra Practice' }),
+  ).not.toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: 'Extra Practice' }));
+  expect(
+    screen.getByRole('button', { name: 'Extra Practice' }),
+  ).toHaveAttribute('aria-current', 'page');
+  expect(screen.getByRole('heading', { name: 'Extra Practice' })).toBeVisible();
+  expect(
+    screen.queryByRole('heading', { name: 'Think it through' }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: 'Mark as understood' }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole('navigation', { name: 'Lesson' }),
+  ).not.toBeInTheDocument();
+  expect(
+    screen.getByRole('navigation', { name: 'Course units' }),
+  ).toContainElement(screen.getByRole('button', { name: 'Extra Practice' }));
+  expect(screen.queryByLabelText('Choose a topic')).not.toBeInTheDocument();
+  expect(fetch).not.toHaveBeenCalled();
+  await user.selectOptions(
+    screen.getByRole('combobox', { name: 'Language' }),
+    'es',
+  );
+  expect(
+    screen.getByRole('button', { name: 'Práctica adicional' }),
+  ).toHaveAttribute('aria-current', 'page');
+  await user.click(
+    screen.getByRole('button', {
+      name: /Using Objects|Uso de objetos|Utilizar objetos/,
+    }),
+  );
+  expect(
+    screen.getByRole('button', { name: 'Marcar como comprendido' }),
+  ).toBeVisible();
 });
