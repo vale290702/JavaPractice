@@ -7,7 +7,7 @@ test('student can learn, practice and resume in Spanish', async ({ page }) => {
   await page.goto('/');
   await expect(
     page.getByRole('navigation', { name: 'Course units' }).getByRole('button'),
-  ).toHaveCount(4);
+  ).toHaveCount(5);
   await page.getByLabel('Choose a topic').selectOption('1.2');
   await page.getByRole('button', { name: 'Next step', exact: true }).click();
   await expect(page.getByText('score = 15', { exact: true })).toBeVisible();

@@ -177,7 +177,7 @@ The access surface uses the same paper canvas and ruled header without an enclos
 
 The teacher overview shares the 1320px content cap and 46px desktop / 20px mobile page inset. Its header wraps at 650px; the roster stays a semantic table in a keyboard-focusable horizontal scroll region, preserving columns rather than compressing names and counts into cards. Long student names and email addresses wrap. Student identity and overall completion lead the columns. On mobile, a visible localized scroll hint describes the table region; narrower identity columns and wrapping column headings expose useful completion information before scrolling. These roster dimensions are surface-specific, not a new global grid.
 
-Extra Practice has its own topic navigation entry after Practice and opens worksheets in a single reading column. The native activity selector precedes wrapping guided/independent controls; file selectors and save actions also wrap. At the existing mobile breakpoint, section and action buttons grow into available row space while source and expected output retain their own horizontal scrolling. This is a bounded worksheet composition, not a new workspace grid.
+Extra Practice has its own course-menu entry below the four units and opens worksheets in a single reading column. The native activity selector precedes wrapping guided/independent controls; file selectors and save actions also wrap. At the existing mobile breakpoint, section and action buttons grow into available row space while source and expected output retain their own horizontal scrolling. This is a bounded worksheet composition, not a new workspace grid.
 
 ## Elevation & Depth
 

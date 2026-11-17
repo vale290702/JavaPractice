@@ -36,7 +36,11 @@ test('student saves extra practice across reloads and keeps independent work sep
     tutor.getByRole('button', { name: 'Previous step', exact: true }),
   ).toBeDisabled();
   await extra.getByLabel('Prediction').fill(work.prediction);
-  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await page
+    .getByRole('navigation', { name: 'Course units' })
+    .getByRole('button')
+    .first()
+    .click();
   await expect(extra).toHaveCount(0);
   await page
     .getByRole('button', { name: 'Extra Practice', exact: true })
@@ -155,6 +159,7 @@ test('topic 1.10 exposes supplied read-only helpers and teacher extra totals sta
     name: 'Extra Practice',
     exact: true,
   });
+  await extra.getByRole('combobox', { name: 'Choose a worksheet' }).selectOption('b5');
   await extra.getByRole('button', { name: 'Logger.java', exact: true }).click();
   await expect(
     extra.getByRole('textbox', { name: 'Logger.java', exact: true }),

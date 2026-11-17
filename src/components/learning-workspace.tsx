@@ -4,7 +4,6 @@ import Link from 'next/link';
 import '../app/progress.css';
 import { ThemeToggle } from './theme-toggle';
 import { JavaEditor } from './java-editor';
-import { extraPracticeMessages } from '../i18n/extra-practice';
 import { ExtraPractice } from './extra-practice/extra-practice';
 import type { ExtraActivity } from '../features/extra-practice/types';
 import { useLocalStorage } from '../features/learning/use-local-storage';
@@ -20,7 +19,6 @@ import {
   Globe2,
   Lightbulb,
   ListChecks,
-  FileText,
   RotateCcw,
 } from 'lucide-react';
 import {
@@ -37,19 +35,10 @@ import { AccountControls } from './auth/account-controls';
 import { CourseNavigation } from './course-navigation';
 import { TopicPicker } from './topic-picker';
 import { CodePanel } from './code-panel';
-const viewModes = [
-  'learn',
-  'example',
-  'practice',
-  'extra',
-  'quiz',
-  'code',
-] as const;
 const modeIcons = {
   learn: BookOpen,
   example: Code2,
   practice: Braces,
-  extra: FileText,
   quiz: ListChecks,
   code: FlaskConical,
 };
@@ -147,7 +136,9 @@ export function LearningWorkspace({
         <h2 className="nav-title">{t.units}</h2>
         <CourseNavigation
           locale={locale}
-          currentUnit={currentUnit.id}
+          currentUnit={extraOpen ? undefined : currentUnit.id}
+          extraOpen={extraOpen}
+          onExtraSelect={() => setExtraOpen(true)}
           completed={completed}
           onSelect={(id) => changeActivity(id, 'learn')}
           t={t}
@@ -222,57 +213,53 @@ export function LearningWorkspace({
             <BookOpen size={16} />
             <span>{t.curriculumNote}</span>
           </div>
-          <TopicPicker
-            locale={locale}
-            topic={topic}
-            onSelect={(id) => changeActivity(id, 'learn')}
-            t={t}
-          />
-          <section className="lesson-header">
-            <div className="lesson-index">{topic}</div>
-            <div>
-              <h2>{lesson.title}</h2>
-              <p>{lesson.description}</p>
-            </div>
-            {!extraOpen && <span className="reading-time">{t.readTime}</span>}
-          </section>
-          <nav className="mode-tabs" aria-label={t.lesson}>
-            {viewModes.map((id) => {
-              const Icon = modeIcons[id];
-              const selected = extraOpen ? id === 'extra' : mode === id;
-              return (
-                <button
-                  key={id}
-                  aria-current={selected ? 'step' : undefined}
-                  className={selected ? 'current' : ''}
-                  onClick={() =>
-                    id === 'extra'
-                      ? setExtraOpen(true)
-                      : changeActivity(topic, id)
-                  }
-                >
-                  <Icon size={17} />
-                  <span>
-                    {id === 'extra'
-                      ? extraPracticeMessages[locale].title
-                      : t.modes[id]}
-                  </span>
-                  {id !== 'extra' && completed.includes(`${topic}:${id}`) && (
-                    <Check className="tab-check" size={13} />
-                  )}
-                </button>
-              );
-            })}
-          </nav>
+          {!extraOpen && (
+            <>
+              <TopicPicker
+                locale={locale}
+                topic={topic}
+                onSelect={(id) => changeActivity(id, 'learn')}
+                t={t}
+              />
+              <section className="lesson-header">
+                <div className="lesson-index">{topic}</div>
+                <div>
+                  <h2>{lesson.title}</h2>
+                  <p>{lesson.description}</p>
+                </div>
+                {!extraOpen && (
+                  <span className="reading-time">{t.readTime}</span>
+                )}
+              </section>
+              <nav className="mode-tabs" aria-label={t.lesson}>
+                {modes.map((id) => {
+                  const Icon = modeIcons[id];
+                  const selected = mode === id;
+                  return (
+                    <button
+                      key={id}
+                      aria-current={selected ? 'step' : undefined}
+                      className={selected ? 'current' : ''}
+                      onClick={() => changeActivity(topic, id)}
+                    >
+                      <Icon size={17} />
+                      <span>{t.modes[id]}</span>
+                      {completed.includes(`${topic}:${id}`) && (
+                        <Check className="tab-check" size={13} />
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
+            </>
+          )}
           <div
             className="activity-area"
             key={`${topic}:${extraOpen ? 'extra' : mode}`}
           >
             {extraOpen ? (
               <ExtraPractice
-                activities={extraActivities.filter(
-                  (item) => item.topicId === topic,
-                )}
+                activities={extraActivities}
                 locale={locale}
                 userId={user.id}
               />

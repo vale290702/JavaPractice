@@ -39,11 +39,19 @@ export function ExtraPractice({
               value={activity.id}
               onChange={(e) => setSelected(e.target.value)}
             >
-              {activities.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.title[locale]}
-                </option>
-              ))}
+              {Array.from(new Set(activities.map((a) => a.group))).map(
+                (group) => (
+                  <optgroup key={group} label={`${m.group} ${group}`}>
+                    {activities
+                      .filter((a) => a.group === group)
+                      .map((a) => (
+                        <option key={a.id} value={a.id}>
+                          {a.topicId} · {a.title[locale]}
+                        </option>
+                      ))}
+                  </optgroup>
+                ),
+              )}
             </select>
             <p className="extra-muted">
               {m.group} {activity.group}
