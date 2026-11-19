@@ -1,5 +1,6 @@
 import type { ExtraActivity } from './types';
 import { practiceGuides } from './guides.ts';
+import { unit2ExtraActivities } from './unit-2.ts';
 
 // Adapted from the supplied student workbooks. Page numbers refer to each activity's group PDF.
 // Only printed targets supplied by the workbook appear as expectedOutput; predictions remain student work.
@@ -1031,7 +1032,10 @@ const activities: (Omit<ExtraActivity, 'guide' | 'id'> & {
   },
 ];
 
-export const extraActivities: ExtraActivity[] = activities.map((activity) => ({
-  ...activity,
-  guide: practiceGuides[activity.id],
-}));
+export const extraActivities: ExtraActivity[] = [
+  ...activities.map((activity) => ({
+    ...activity,
+    guide: practiceGuides[activity.id],
+  })),
+  ...unit2ExtraActivities,
+];

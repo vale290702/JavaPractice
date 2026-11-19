@@ -144,3 +144,32 @@ test('enforces compact work byte budget independently of code character cap', ()
     ),
   ).toBe(false);
 });
+
+test('accepts Unit 2 text and Java worksheets with the exact section-specific filenames', () => {
+  for (const [id, name] of [
+    ['c1-guided', 'Algorithm.txt'],
+    ['c1-independent', 'Algorithm.txt'],
+    ['c2-guided', 'Goals.java'],
+    ['c2-independent', 'ReadingGoal.java'],
+    ['c3-guided', 'Bill.java'],
+    ['c3-independent', 'ParkingFee.java'],
+    ['c4-guided', 'DrinkOrder.java'],
+    ['c4-independent', 'DeliveryOrder.java'],
+    ['c5-guided', 'SmoothieRunner.java'],
+    ['c5-independent', 'PrintMode.java'],
+    ['c6-guided', 'TemperatureClassifier.java'],
+    ['c6-independent', 'BatteryStatus.java'],
+    ['c7-guided', 'TheaterDiscounts.java'],
+    ['c7-independent', 'LibraryAccess.java'],
+    ['c8-guided', 'Salmon.java'],
+    ['c8-independent', 'SchoolTerm.java'],
+    ['c9-guided', 'FindMedian.java'],
+    ['c9-independent', 'MiddleReading.java'],
+  ]) {
+    expect(
+      validWork(id, { ...work, files: { [name]: 'student work' } }, true),
+    ).toBe(true);
+    expect(validWork(id, work, false)).toBe(false);
+  }
+  expect(validWork('c10-guided', work, false)).toBe(false);
+});

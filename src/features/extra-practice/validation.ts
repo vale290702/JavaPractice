@@ -15,6 +15,19 @@ export function isWorksheetId(value: unknown): value is string {
 }
 export function editableFiles(id: string): string[] {
   const activity = id.split('-')[0];
+  const unit2Files: Record<string, [string, string]> = {
+    c1: ['Algorithm.txt', 'Algorithm.txt'],
+    c2: ['Goals.java', 'ReadingGoal.java'],
+    c3: ['Bill.java', 'ParkingFee.java'],
+    c4: ['DrinkOrder.java', 'DeliveryOrder.java'],
+    c5: ['SmoothieRunner.java', 'PrintMode.java'],
+    c6: ['TemperatureClassifier.java', 'BatteryStatus.java'],
+    c7: ['TheaterDiscounts.java', 'LibraryAccess.java'],
+    c8: ['Salmon.java', 'SchoolTerm.java'],
+    c9: ['FindMedian.java', 'MiddleReading.java'],
+  };
+  if (Object.hasOwn(unit2Files, activity))
+    return [unit2Files[activity][id.endsWith('-independent') ? 1 : 0]];
   return activity === 'a2'
     ? ['Main.java', 'Debugging.txt']
     : [

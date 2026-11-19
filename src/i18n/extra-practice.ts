@@ -13,6 +13,20 @@ const en = {
   reference: 'What you need to know',
   requirements: 'Task requirements',
   setup: 'Files and how to run',
+  algorithmSetup:
+    'This is a plain-language algorithm task. Write your ordered steps in Algorithm.txt below. No Java program, compiler, or keyboard input is required. Use the test situations in the requirements to walk through your steps by hand.',
+  algorithmWorkflow:
+    'Write your plan, label sequence, selection, and repetition, then follow your algorithm by hand for each test situation. Record the result and explain any revision.',
+  algorithmExternal:
+    'Write your algorithm in plain language, then dry-run it by hand. This activity does not require an IDE.',
+  traceAlgorithmHelp:
+    'Number the steps you follow, record the changing balance or copy count, and identify each condition and repetition.',
+  explanationAlgorithmHelp:
+    'Explain how your algorithm uses sequence, selection, and repetition and why it handles both sufficient and insufficient resources.',
+  predictionAlgorithmHelp:
+    'Predict which path your algorithm will take and how many repetitions it needs for each test situation.',
+  resultsAlgorithmHelp:
+    'Record the test situation, steps followed, final result, and any revision needed. Compare with your prediction.',
   setupInstructions:
     'Create a Java project in your IDE. Save each Java file below with its exact filename in the same folder, without a package declaration. Add your code to the editable starter; copy reference files exactly and leave them unchanged. Run the class containing main. With a JDK installed, you can also run these commands from that folder:',
   helperInstructions:
@@ -80,6 +94,20 @@ export const extraPracticeMessages: Record<Locale, typeof en> = {
     reference: 'Lo que necesitas saber',
     requirements: 'Requisitos de la tarea',
     setup: 'Archivos y cómo ejecutar',
+    algorithmSetup:
+      'Esta es una tarea de algoritmos en lenguaje natural. Escribe tus pasos ordenados en Algorithm.txt abajo. No necesitas programa Java, compilador ni entrada del teclado. Usa las situaciones de prueba de los requisitos para recorrer los pasos a mano.',
+    algorithmWorkflow:
+      'Escribe tu plan, identifica secuencia, selección y repetición y luego recorre tu algoritmo a mano en cada situación de prueba. Registra el resultado y explica las revisiones.',
+    algorithmExternal:
+      'Escribe tu algoritmo en lenguaje natural y recórrelo a mano. Esta actividad no requiere IDE.',
+    traceAlgorithmHelp:
+      'Numera los pasos seguidos, registra los cambios del saldo o contador de copias e identifica cada condición y repetición.',
+    explanationAlgorithmHelp:
+      'Explica cómo tu algoritmo usa secuencia, selección y repetición y por qué contempla recursos suficientes e insuficientes.',
+    predictionAlgorithmHelp:
+      'Predice qué camino tomará tu algoritmo y cuántas repeticiones necesita en cada situación de prueba.',
+    resultsAlgorithmHelp:
+      'Registra la situación de prueba, pasos seguidos, resultado final y revisiones necesarias. Compara con tu predicción.',
     setupInstructions:
       'Crea un proyecto Java en tu IDE. Guarda cada archivo Java mostrado con su nombre exacto en la misma carpeta, sin declaración package. Agrega tu código al archivo inicial editable; copia los archivos de referencia exactamente y no los modifiques. Ejecuta la clase que contiene main. Si tienes un JDK instalado, también puedes usar estos comandos desde esa carpeta:',
     helperInstructions:

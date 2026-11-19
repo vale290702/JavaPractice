@@ -138,7 +138,7 @@ it('reports extra worksheets separately from the original course completion', ()
   expect(
     screen.getByRole('columnheader', { name: 'Extra Practice' }),
   ).toBeInTheDocument();
-  expect(screen.getByText('2 / 28')).toBeInTheDocument();
+  expect(screen.getByText('2 / 46')).toBeInTheDocument();
   expect(screen.getByText('1 / 265')).toBeInTheDocument();
   expect(document.querySelector('time')).toHaveAttribute(
     'dateTime',

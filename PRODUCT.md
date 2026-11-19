@@ -48,3 +48,7 @@ Approved: login-only, tutor-provisioned accounts, no public registration. A succ
 ## Extra Practice (feature branch)
 
 Approved: adapt the two supplied workbooks for topics 1.1–1.10 into 14 activities / 28 guided and independent worksheets. Interactive prediction, trace, named code files, external test evidence, and explanation are saved per account. Helpers stay read-only; completion is self-reported and separate from regular course progress. Topics outside this coverage show an availability state. EN/ES and both appearances are preserved. Implementation is on `feat/extra-practice-workbooks`; the additive backend migration is configured, but this interface is not deployed until integrated.
+
+## Unit 2 Extra Practice
+
+The supplied `Java_Unit_2_Practice_2_1_to_2_5_Student_EN.pdf` adds nine activities / 18 guided and independent worksheets for topics 2.1–2.5. All task material is available in English and Spanish in the app. Algorithm work uses plain text and manual dry runs; Java tasks preserve supplied templates, exact messages, test boundaries, and readonly support classes. Bill boundary tests include a separate complete runner. Extra Practice now has 23 activities / 46 worksheets; the 265 regular course activities remain separate.
