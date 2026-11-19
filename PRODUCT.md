@@ -56,3 +56,7 @@ The supplied `Java_Unit_2_Practice_2_1_to_2_5_Student_EN.pdf` adds nine activiti
 ## Unit 1 topics 1.10–1.15
 
 The supplied `Java_Practice_1_10_to_1_15_Student_EN.pdf` adds twelve activities / 24 bilingual worksheets. Original exercise numbers identify the workbook variants; existing 1.10 saved work retains its IDs and content. Full support classes cover static calls, Math, object construction, instance methods, and strings. Balloon.java and its runner are both editable and saved independently in each worksheet. Explicit name-tag borders and labels resolve unspecified formatting without requiring a separate document. The combined catalogue has 35 activities / 70 worksheets, separate from 265 regular course activities.
+
+## Unit 1 exam
+
+Approved: a separate Unit 1 exam section from the supplied 16-page student exam. All 23 questions and permitted API notes are available in English/Spanish without guidance, answer keys, code execution, or autocompletion. Digital answers, account drafts, confirmed permanent submission, teacher-only review, and PDF export are required. Teachers grade manually. A submitted record retains its version and answers; student drafts are private. No duration, proctoring, registration, email notification, or automated scoring was requested.
