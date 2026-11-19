@@ -25,8 +25,23 @@ export const unit2ActivityTopics = {
   c8: '2.5',
   c9: '2.5',
 } as const;
+export const unit1ExtendedActivityTopics = {
+  d1: '1.10',
+  d2: '1.10',
+  d3: '1.10',
+  d4: '1.10',
+  d5: '1.11',
+  d6: '1.11',
+  d7: '1.12',
+  d8: '1.13',
+  d9: '1.13',
+  d10: '1.14',
+  d11: '1.14',
+  d12: '1.15',
+} as const;
 export const activityTopics = {
   ...unit1ActivityTopics,
+  ...unit1ExtendedActivityTopics,
   ...unit2ActivityTopics,
 } as const;
 export const worksheetIds = Object.keys(activityTopics).flatMap((id) => [

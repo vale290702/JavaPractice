@@ -6,8 +6,8 @@ import {
 } from '../src/features/extra-practice/metadata';
 
 describe('extra workbook content', () => {
-  it('has 23 activities and 46 bilingual worksheets across the approved workbooks', () => {
-    expect(extraActivities).toHaveLength(23);
+  it('has 35 activities and 70 bilingual worksheets across the approved workbooks', () => {
+    expect(extraActivities).toHaveLength(35);
     expect(
       extraActivities.flatMap((a) => [a.guided.id, a.independent.id]),
     ).toEqual(worksheetIds);
@@ -30,7 +30,9 @@ describe('extra workbook content', () => {
     }
   });
   it('matches editable Java filenames to classes and provides the four read-only helpers', () => {
-    const helpers = extraActivities.flatMap((a) => a.helpers);
+    const helpers = extraActivities
+      .filter((a) => a.group === '1.1–1.5' || a.group === '1.6–1.10')
+      .flatMap((a) => a.helpers);
     expect(helpers.map((f) => f.name)).toEqual([
       'Logger.java',
       'UnitConverter.java',
@@ -38,7 +40,9 @@ describe('extra workbook content', () => {
       'Calculator.java',
     ]);
     expect(helpers.every((f) => f.readOnly)).toBe(true);
-    for (const a of extraActivities.filter((a) => a.group !== '2.1–2.5'))
+    for (const a of extraActivities.filter(
+      (a) => a.group === '1.1–1.5' || a.group === '1.6–1.10',
+    ))
       for (const w of [a.guided, a.independent]) {
         const java = w.files.filter((f) => f.name.endsWith('.java'));
         expect(java).toHaveLength(1);
@@ -117,7 +121,9 @@ it('keeps creation tasks as empty valid starters and limits targets to supplied 
     'b6-independent',
     'b8-guided',
   ]);
-  for (const activity of extraActivities.filter((a) => a.group !== '2.1–2.5'))
+  for (const activity of extraActivities.filter(
+    (a) => a.group === '1.1–1.5' || a.group === '1.6–1.10',
+  ))
     for (const w of [activity.guided, activity.independent]) {
       if (!given.has(w.id)) {
         const name = w.files[0].name.replace('.java', '');
@@ -217,4 +223,41 @@ it('covers every Unit 2 worksheet with matching persistence files and complete s
   expect(get('c9').guided.files[0].code).toContain(
     'public static int findMedian(int a, int b, int c)',
   );
+});
+
+it('adds all twelve late Unit 1 workbook activities without altering existing worksheet identities', async () => {
+  const { editableFiles } =
+    await import('../src/features/extra-practice/validation');
+  const late = extraActivities.filter((a) => a.group === '1.10–1.15');
+  expect(late).toHaveLength(12);
+  expect([...new Set(late.map((a) => a.topicId))]).toEqual([
+    '1.10',
+    '1.11',
+    '1.12',
+    '1.13',
+    '1.14',
+    '1.15',
+  ]);
+  for (const a of late)
+    for (const w of [a.guided, a.independent]) {
+      expect(w.files.filter((f) => !f.readOnly).map((f) => f.name)).toEqual(
+        editableFiles(w.id),
+      );
+      expect(w.expectedOutput).toBeUndefined();
+      for (const f of [...w.files, ...(w.helpers ?? a.helpers)])
+        expect(f.code).toContain(`public class ${f.name.replace('.java', '')}`);
+    }
+  const balloon = late.find((a) => a.id === 'd10')!;
+  expect(balloon.guided.files.map((f) => f.name)).toEqual([
+    'BalloonRunner.java',
+    'Balloon.java',
+  ]);
+  expect(balloon.independent.files.map((f) => f.name)).toEqual([
+    'DecorationRunner.java',
+    'Balloon.java',
+  ]);
+  for (const w of [balloon.guided, balloon.independent])
+    expect(w.files.find((f) => f.name === 'Balloon.java')?.code).toContain(
+      '// TODO: add amount to radius.',
+    );
 });

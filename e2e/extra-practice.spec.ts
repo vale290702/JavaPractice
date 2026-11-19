@@ -178,7 +178,7 @@ test('topic 1.10 exposes supplied read-only helpers and teacher extra totals sta
     page.getByRole('columnheader', { name: 'Extra Practice' }),
   ).toBeVisible();
   await expect(
-    page.getByRole('row').filter({ hasText: studentEmail }).getByText('1 / 46'),
+    page.getByRole('row').filter({ hasText: studentEmail }).getByText('1 / 70'),
   ).toBeAttached();
 });
 
@@ -240,6 +240,74 @@ test('Unit 2 algorithms save as text and Bill helpers stay scoped to guided work
   await page.getByLabel('Language').selectOption('es');
   await expect(
     page.getByRole('heading', { name: 'Requisitos de la tarea' }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});
+
+test('late Unit 1 preserves both editable Balloon files and isolates independent work', async ({
+  page,
+}) => {
+  await signIn(page);
+  await page
+    .getByRole('button', { name: 'Extra Practice', exact: true })
+    .click();
+  const extra = page.getByRole('region', {
+    name: 'Extra Practice',
+    exact: true,
+  });
+  const select = extra.getByRole('combobox', { name: 'Choose a worksheet' });
+  await select.selectOption('d10');
+  const runner = extra.getByRole('textbox', {
+    name: 'BalloonRunner.java',
+    exact: true,
+  });
+  await expect(runner).toBeEnabled();
+  await runner.fill('public class BalloonRunner { /* saved runner */ }');
+  await extra
+    .getByRole('button', { name: 'Balloon.java', exact: true })
+    .click();
+  await extra
+    .getByRole('textbox', { name: 'Balloon.java', exact: true })
+    .fill('public class Balloon { /* saved method work */ }');
+  await extra
+    .getByRole('button', { name: 'Save worksheet', exact: true })
+    .click();
+  await expect(extra.getByRole('status')).toContainText(
+    'Saved to your account',
+  );
+  await page.reload();
+  await page
+    .getByRole('button', { name: 'Extra Practice', exact: true })
+    .click();
+  await select.selectOption('d10');
+  await expect(runner).toHaveValue(
+    'public class BalloonRunner { /* saved runner */ }',
+  );
+  await extra
+    .getByRole('button', { name: 'Balloon.java', exact: true })
+    .click();
+  await expect(
+    extra.getByRole('textbox', { name: 'Balloon.java', exact: true }),
+  ).toHaveValue('public class Balloon { /* saved method work */ }');
+  await extra
+    .getByRole('button', { name: 'Try it yourself', exact: true })
+    .click();
+  await expect(
+    extra.getByRole('textbox', { name: 'DecorationRunner.java', exact: true }),
+  ).toBeEnabled();
+  await extra
+    .getByRole('button', { name: 'Balloon.java', exact: true })
+    .click();
+  await expect(
+    extra.getByRole('textbox', { name: 'Balloon.java', exact: true }),
+  ).toHaveValue(/TODO/);
+  await page.getByLabel('Language').selectOption('es');
+  await expect(
+    page.getByRole('heading', { name: 'Lo que necesitas saber' }),
   ).toBeVisible();
   expect(
     await page.evaluate(

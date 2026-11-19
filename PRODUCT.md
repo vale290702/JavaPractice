@@ -52,3 +52,7 @@ Approved: adapt the two supplied workbooks for topics 1.1–1.10 into 14 activit
 ## Unit 2 Extra Practice
 
 The supplied `Java_Unit_2_Practice_2_1_to_2_5_Student_EN.pdf` adds nine activities / 18 guided and independent worksheets for topics 2.1–2.5. All task material is available in English and Spanish in the app. Algorithm work uses plain text and manual dry runs; Java tasks preserve supplied templates, exact messages, test boundaries, and readonly support classes. Bill boundary tests include a separate complete runner. Extra Practice now has 23 activities / 46 worksheets; the 265 regular course activities remain separate.
+
+## Unit 1 topics 1.10–1.15
+
+The supplied `Java_Practice_1_10_to_1_15_Student_EN.pdf` adds twelve activities / 24 bilingual worksheets. Original exercise numbers identify the workbook variants; existing 1.10 saved work retains its IDs and content. Full support classes cover static calls, Math, object construction, instance methods, and strings. Balloon.java and its runner are both editable and saved independently in each worksheet. Explicit name-tag borders and labels resolve unspecified formatting without requiring a separate document. The combined catalogue has 35 activities / 70 worksheets, separate from 265 regular course activities.

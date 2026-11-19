@@ -1,6 +1,8 @@
 import type { ExtraActivity } from './types';
 import { practiceGuides } from './guides.ts';
 import { unit2ExtraActivities } from './unit-2.ts';
+import { unit1ClassMathActivities } from './unit-1-10-11.ts';
+import { unit1ObjectStringActivities } from './unit-1-12-15.ts';
 
 // Adapted from the supplied student workbooks. Page numbers refer to each activity's group PDF.
 // Only printed targets supplied by the workbook appear as expectedOutput; predictions remain student work.
@@ -1037,5 +1039,7 @@ export const extraActivities: ExtraActivity[] = [
     ...activity,
     guide: practiceGuides[activity.id],
   })),
+  ...unit1ClassMathActivities,
+  ...unit1ObjectStringActivities,
   ...unit2ExtraActivities,
 ];
