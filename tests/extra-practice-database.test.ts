@@ -53,6 +53,8 @@ beforeAll(async () => {
     '202611120001_managed_access.sql',
     '202611120002_teacher_progress.sql',
     '202611160001_extra_practice.sql',
+    '202611190001_unit_2_extra_practice.sql',
+    '202611190002_unit_1_10_15_extra_practice.sql',
   ])
     await db.exec(
       await readFile(
@@ -191,4 +193,78 @@ test('database compact byte budget agrees with client boundary', async () => {
   await expect(
     save(1, { ...atLimit, prediction: atLimit.prediction + 'x' }),
   ).rejects.toThrow();
+});
+
+test('Unit 2 supports plain-language algorithms and section-specific Java filenames', async () => {
+  const { worksheetIds } =
+    await import('../src/features/extra-practice/metadata');
+  const { editableFiles } =
+    await import('../src/features/extra-practice/validation');
+  for (const id of worksheetIds.filter((id) => id.startsWith('c'))) {
+    const body = {
+      ...work,
+      files: Object.fromEntries(
+        editableFiles(id).map((name) => [name, 'student work']),
+      ),
+    };
+    expect((await save(0, body, id)).worksheet).toMatchObject({
+      id,
+      work: body,
+      completed: true,
+    });
+    expect(
+      await scalar('public.app_valid_extra_work($1,$2::jsonb,true)', [
+        id,
+        JSON.stringify(work),
+      ]),
+    ).toBe(false);
+  }
+  expect(
+    await scalar('public.app_valid_extra_work($1,$2::jsonb,true)', [
+      'c10-guided',
+      JSON.stringify(work),
+    ]),
+  ).toBe(false);
+});
+
+test('late Unit 1 persists all exact file sets, including both editable Balloon files', async () => {
+  const { worksheetIds } =
+    await import('../src/features/extra-practice/metadata');
+  const { editableFiles } =
+    await import('../src/features/extra-practice/validation');
+  for (const id of worksheetIds.filter((id) => id.startsWith('d'))) {
+    const body = {
+      ...work,
+      files: Object.fromEntries(
+        editableFiles(id).map((name) => [name, 'student work']),
+      ),
+    };
+    expect((await save(0, body, id)).worksheet).toMatchObject({
+      id,
+      work: body,
+      completed: true,
+    });
+    expect(
+      await scalar('public.app_valid_extra_work($1,$2::jsonb,true)', [
+        id,
+        JSON.stringify(work),
+      ]),
+    ).toBe(false);
+  }
+  expect(
+    await scalar('public.app_valid_extra_work($1,$2::jsonb,true)', [
+      'd13-guided',
+      JSON.stringify(work),
+    ]),
+  ).toBe(false);
+  const incomplete = {
+    ...work,
+    files: { 'BalloonRunner.java': 'runner only' },
+  };
+  expect(
+    await scalar('public.app_valid_extra_work($1,$2::jsonb,true)', [
+      'd10-guided',
+      JSON.stringify(incomplete),
+    ]),
+  ).toBe(false);
 });

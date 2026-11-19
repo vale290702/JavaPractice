@@ -101,19 +101,28 @@ function Worksheet({
 }) {
   const m = extraPracticeMessages[locale];
   const sheet = useWorksheet(userId, definition);
+  const helpers = definition.helpers ?? activity.helpers;
+  const javaFiles = [...definition.files, ...helpers].filter((f) =>
+    f.name.endsWith('.java'),
+  );
+  const entryPoint =
+    definition.entryPoint === undefined
+      ? definition.files
+          .find((f) => f.name.endsWith('.java'))
+          ?.name.replace('.java', '')
+      : definition.entryPoint;
   const [fileName, setFileName] = useState(
-    definition.files[0]?.name ?? activity.helpers[0]?.name ?? '',
+    definition.files[0]?.name ?? helpers[0]?.name ?? '',
   );
   const files = [
     ...definition.files,
-    ...activity.helpers.filter(
+    ...helpers.filter(
       (helper) => !definition.files.some((f) => f.name === helper.name),
     ),
   ];
   const file = files.find((f) => f.name === fileName);
   const readOnly =
-    !!file &&
-    (file.readOnly || activity.helpers.some((h) => h.name === file.name));
+    !!file && (file.readOnly || helpers.some((h) => h.name === file.name));
   const blocked =
     sheet.loading ||
     sheet.pending ||
@@ -151,7 +160,9 @@ function Worksheet({
           {activity.goal[locale]}
         </p>
         <p>{definition.prompt[locale]}</p>
-        <p className="extra-muted">{m.workflow}</p>
+        <p className="extra-muted">
+          {entryPoint ? m.workflow : m.algorithmWorkflow}
+        </p>
         <section
           className="extra-reference"
           aria-labelledby={`${id}-reference`}
@@ -169,7 +180,7 @@ function Worksheet({
             )}
           </ol>
           <h4>{m.setup}</h4>
-          <p>{m.setupInstructions}</p>
+          <p>{entryPoint ? m.setupInstructions : m.algorithmSetup}</p>
           <ul>
             {files.map((f) => (
               <li key={f.name}>
@@ -177,18 +188,17 @@ function Worksheet({
               </li>
             ))}
           </ul>
-          <pre>
-            <code>{`javac ${files
-              .filter((f) => f.name.endsWith('.java'))
-              .map((f) => f.name)
-              .join(' ')}
-java ${definition.files.find((f) => f.name.endsWith('.java'))!.name.replace('.java', '')}`}</code>
-          </pre>
-          {activity.helpers.length > 0 && (
+          {entryPoint && (
+            <pre>
+              <code>{`javac ${javaFiles.map((f) => f.name).join(' ')}
+java ${entryPoint}`}</code>
+            </pre>
+          )}
+          {helpers.length > 0 && (
             <>
               <h4>{m.helpers}</h4>
               <p>{m.helperInstructions}</p>
-              {activity.helpers.map((helper) => (
+              {helpers.map((helper) => (
                 <div key={helper.name}>
                   <h5>{helper.name}</h5>
                   <pre>
@@ -265,13 +275,15 @@ java ${definition.files.find((f) => f.name.endsWith('.java'))!.name.replace('.ja
               />
             </label>
             <p className="extra-muted" id={`${id}-${field}-help`}>
-              {m[`${field}Help`]}
+              {!entryPoint ? m[`${field}AlgorithmHelp`] : m[`${field}Help`]}
             </p>
           </div>
         ))}
         <section className="extra-files" aria-label={m.files}>
           <h4>{m.files}</h4>
-          <p className="extra-muted">{m.external}</p>
+          <p className="extra-muted">
+            {entryPoint ? m.external : m.algorithmExternal}
+          </p>
           <div className="extra-file-nav" role="group" aria-label={m.files}>
             {files.map((f) => (
               <button
@@ -342,7 +354,7 @@ java ${definition.files.find((f) => f.name.endsWith('.java'))!.name.replace('.ja
               />
             </label>
             <p className="extra-muted" id={`${id}-${field}-help`}>
-              {m[`${field}Help`]}
+              {!entryPoint ? m[`${field}AlgorithmHelp`] : m[`${field}Help`]}
             </p>
           </div>
         ))}

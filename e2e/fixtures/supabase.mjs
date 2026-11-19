@@ -214,6 +214,77 @@ export async function startFixture(port = 54339) {
       account.worksheets.set(body.p_id, worksheet);
       return reply(200, { ok: true, worksheet });
     }
+    if (
+      [
+        'app_read_unit1_exam',
+        'app_save_unit1_exam',
+        'app_list_unit1_submissions',
+        'app_get_unit1_submission',
+      ].some((name) => path === `/rest/v1/rpc/${name}`)
+    ) {
+      const session = [...sessions.values()].find(
+        (s) => s.hash === body.p_token_hash,
+      );
+      if (
+        !session ||
+        !session.account.enabled ||
+        Date.parse(session.expiresAt) <= Date.now() ||
+        session.account.id !== body.p_expected_user_id
+      )
+        return reply(200, null);
+      const account = session.account;
+      const summary = (a) => ({
+        userId: a.id,
+        displayName: a.displayName,
+        email: a.email,
+        submittedAt: a.exam.submittedAt,
+        examVersion: a.exam.examVersion,
+        locale: a.exam.locale,
+      });
+      if (path.endsWith('/app_list_unit1_submissions')) {
+        if (account.role !== 'teacher') return reply(200, null);
+        return reply(
+          200,
+          [...accounts.values()]
+            .filter((a) => a.exam?.status === 'submitted')
+            .map(summary),
+        );
+      }
+      if (path.endsWith('/app_get_unit1_submission')) {
+        if (account.role !== 'teacher') return reply(200, null);
+        const student = [...accounts.values()].find(
+          (a) => a.id === body.p_student_id && a.exam?.status === 'submitted',
+        );
+        return reply(200, {
+          ok: true,
+          submission: student
+            ? { ...summary(student), attempt: student.exam }
+            : null,
+        });
+      }
+      if (account.role !== 'student') return reply(200, null);
+      const current = account.exam ?? null;
+      if (path.endsWith('/app_read_unit1_exam'))
+        return reply(200, { ok: true, attempt: current });
+      if (current?.status === 'submitted')
+        return reply(200, { ok: false, code: 'submitted', attempt: current });
+      if ((current?.version ?? 0) !== body.p_version)
+        return reply(200, { ok: false, code: 'conflict' });
+      if (body.p_acknowledged !== true) return reply(400, {});
+      const now = new Date().toISOString();
+      account.exam = {
+        examId: 'unit-1',
+        examVersion: 'unit-1-v1',
+        version: body.p_version + 1,
+        status: body.p_submit ? 'submitted' : 'draft',
+        locale: body.p_locale,
+        answers: body.p_answers,
+        startedAt: current?.startedAt ?? now,
+        updatedAt: now,
+        submittedAt: body.p_submit ? now : null,
+      };
+      return reply(200, { ok: true, attempt: account.exam });
+    }
     if (path === '/rest/v1/rpc/app_revoke_session') {
       for (const [id, row] of sessions)
         if (row.hash === body.p_token_hash) sessions.delete(id);

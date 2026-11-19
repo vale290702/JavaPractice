@@ -15,6 +15,37 @@ export function isWorksheetId(value: unknown): value is string {
 }
 export function editableFiles(id: string): string[] {
   const activity = id.split('-')[0];
+  if (activity === 'd10')
+    return [
+      id.endsWith('-independent')
+        ? 'DecorationRunner.java'
+        : 'BalloonRunner.java',
+      'Balloon.java',
+    ];
+  const worksheetFilePairs: Record<string, [string, string]> = {
+    c1: ['Algorithm.txt', 'Algorithm.txt'],
+    c2: ['Goals.java', 'ReadingGoal.java'],
+    c3: ['Bill.java', 'ParkingFee.java'],
+    c4: ['DrinkOrder.java', 'DeliveryOrder.java'],
+    c5: ['SmoothieRunner.java', 'PrintMode.java'],
+    c6: ['TemperatureClassifier.java', 'BatteryStatus.java'],
+    c7: ['TheaterDiscounts.java', 'LibraryAccess.java'],
+    c8: ['Salmon.java', 'SchoolTerm.java'],
+    c9: ['FindMedian.java', 'MiddleReading.java'],
+    d1: ['LogRunner.java', 'BackupLog.java'],
+    d2: ['UnitRunner.java', 'TravelUnits.java'],
+    d3: ['HelloRunner.java', 'WelcomeTeam.java'],
+    d4: ['CalculatorRunner.java', 'SurveyCalculator.java'],
+    d5: ['RandomGenerator.java', 'QueueNumbers.java'],
+    d6: ['TrafficEngineer.java', 'RampCheck.java'],
+    d7: ['RectangleRunner.java', 'PosterRunner.java'],
+    d8: ['SystemRunner.java', 'BranchRunner.java'],
+    d9: ['CameraRunner.java', 'CameraKit.java'],
+    d11: ['BottleRunner.java', 'HikeBottle.java'],
+    d12: ['NameTagGenerator.java', 'BadgeGenerator.java'],
+  };
+  if (Object.hasOwn(worksheetFilePairs, activity))
+    return [worksheetFilePairs[activity][id.endsWith('-independent') ? 1 : 0]];
   return activity === 'a2'
     ? ['Main.java', 'Debugging.txt']
     : [

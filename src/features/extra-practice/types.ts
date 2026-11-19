@@ -12,6 +12,8 @@ export interface WorksheetDefinition {
   expectedOutput?: string;
   inputs?: string;
   sourcePages: number[];
+  helpers?: PracticeFile[];
+  entryPoint?: string | null;
 }
 export interface ActivityGuide {
   concepts: Localized<string[]>;
@@ -22,7 +24,7 @@ export interface ExtraActivity {
   guide: ActivityGuide;
   id: string;
   topicId: string;
-  group: '1.1–1.5' | '1.6–1.10';
+  group: '1.1–1.5' | '1.6–1.10' | '1.10–1.15' | '2.1–2.5';
   title: Localized<string>;
   goal: Localized<string>;
   guided: WorksheetDefinition;

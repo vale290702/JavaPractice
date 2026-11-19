@@ -1,9 +1,9 @@
 import type { ActivityGuide } from './types';
-import type { activityTopics } from './metadata';
+import type { unit1ActivityTopics } from './metadata';
 
 // Teaching references supplement the task data; these are delivered only after authentication.
 export const practiceGuides: Record<
-  keyof typeof activityTopics,
+  keyof typeof unit1ActivityTopics,
   ActivityGuide
 > = {
   a1: {

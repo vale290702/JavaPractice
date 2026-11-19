@@ -6,8 +6,8 @@ import {
 } from '../src/features/extra-practice/metadata';
 
 describe('extra workbook content', () => {
-  it('has exactly the approved 14 activities and 28 bilingual worksheets', () => {
-    expect(extraActivities).toHaveLength(14);
+  it('has 35 activities and 70 bilingual worksheets across the approved workbooks', () => {
+    expect(extraActivities).toHaveLength(35);
     expect(
       extraActivities.flatMap((a) => [a.guided.id, a.independent.id]),
     ).toEqual(worksheetIds);
@@ -30,7 +30,9 @@ describe('extra workbook content', () => {
     }
   });
   it('matches editable Java filenames to classes and provides the four read-only helpers', () => {
-    const helpers = extraActivities.flatMap((a) => a.helpers);
+    const helpers = extraActivities
+      .filter((a) => a.group === '1.1–1.5' || a.group === '1.6–1.10')
+      .flatMap((a) => a.helpers);
     expect(helpers.map((f) => f.name)).toEqual([
       'Logger.java',
       'UnitConverter.java',
@@ -38,7 +40,9 @@ describe('extra workbook content', () => {
       'Calculator.java',
     ]);
     expect(helpers.every((f) => f.readOnly)).toBe(true);
-    for (const a of extraActivities)
+    for (const a of extraActivities.filter(
+      (a) => a.group === '1.1–1.5' || a.group === '1.6–1.10',
+    ))
       for (const w of [a.guided, a.independent]) {
         const java = w.files.filter((f) => f.name.endsWith('.java'));
         expect(java).toHaveLength(1);
@@ -117,7 +121,9 @@ it('keeps creation tasks as empty valid starters and limits targets to supplied 
     'b6-independent',
     'b8-guided',
   ]);
-  for (const activity of extraActivities)
+  for (const activity of extraActivities.filter(
+    (a) => a.group === '1.1–1.5' || a.group === '1.6–1.10',
+  ))
     for (const w of [activity.guided, activity.independent]) {
       if (!given.has(w.id)) {
         const name = w.files[0].name.replace('.java', '');
@@ -159,7 +165,7 @@ it('provides bilingual reference material and explicit requirements for every wo
           2,
         );
         expect(activity[section].prompt[locale]).not.toMatch(
-          /page|página|prompts above|preguntas anteriores/i,
+          /PDF|see page|on page|la página|prompts above|preguntas anteriores/i,
         );
       }
     }
@@ -167,4 +173,91 @@ it('provides bilingual reference material and explicit requirements for every wo
   const converters = extraActivities.find((a) => a.id === 'b6')!;
   expect(converters.guide.concepts.en.join(' ')).toContain('0.45359237');
   expect(converters.guide.concepts.es.join(' ')).toContain('double');
+});
+
+it('covers every Unit 2 worksheet with matching persistence files and complete support code', async () => {
+  const { editableFiles } =
+    await import('../src/features/extra-practice/validation');
+  const unit2 = extraActivities.filter((a) => a.group === '2.1–2.5');
+  expect(unit2).toHaveLength(9);
+  expect([...new Set(unit2.map((a) => a.topicId))]).toEqual([
+    '2.1',
+    '2.2',
+    '2.3',
+    '2.4',
+    '2.5',
+  ]);
+  for (const a of unit2)
+    for (const w of [a.guided, a.independent]) {
+      expect(w.files.filter((f) => !f.readOnly).map((f) => f.name)).toEqual(
+        editableFiles(w.id),
+      );
+      expect(w.expectedOutput).toBeUndefined();
+      for (const f of [...w.files, ...(w.helpers ?? a.helpers)].filter((f) =>
+        f.name.endsWith('.java'),
+      )) {
+        expect(f.code).toContain(`public class ${f.name.replace('.java', '')}`);
+      }
+    }
+  const get = (id: string) => unit2.find((a) => a.id === id)!;
+  expect(get('c1').guided.entryPoint).toBeNull();
+  expect(get('c1').independent.files[0].name).toBe('Algorithm.txt');
+  expect(get('c3').guided.entryPoint).toBe('BillRunner');
+  expect(get('c3').guided.helpers?.[1]).toMatchObject({
+    name: 'BillBoundaryRunner.java',
+    readOnly: true,
+  });
+  expect(get('c3').guided.steps.en.join(' ')).toContain(
+    'java BillBoundaryRunner',
+  );
+  expect(get('c3').guided.files[0].code).toContain('private double mealCost;');
+  expect(get('c3').guided.helpers?.[0]).toMatchObject({
+    name: 'BillRunner.java',
+    readOnly: true,
+  });
+  expect(get('c3').independent.helpers ?? get('c3').helpers).toHaveLength(0);
+  expect(get('c5').guided.helpers?.[0].code).toContain(
+    'Your smoothie improves digestive health!',
+  );
+  expect(get('c5').independent.helpers ?? get('c5').helpers).toHaveLength(0);
+  expect(get('c9').guided.files[0].code).toContain(
+    'public static int findMedian(int a, int b, int c)',
+  );
+});
+
+it('adds all twelve late Unit 1 workbook activities without altering existing worksheet identities', async () => {
+  const { editableFiles } =
+    await import('../src/features/extra-practice/validation');
+  const late = extraActivities.filter((a) => a.group === '1.10–1.15');
+  expect(late).toHaveLength(12);
+  expect([...new Set(late.map((a) => a.topicId))]).toEqual([
+    '1.10',
+    '1.11',
+    '1.12',
+    '1.13',
+    '1.14',
+    '1.15',
+  ]);
+  for (const a of late)
+    for (const w of [a.guided, a.independent]) {
+      expect(w.files.filter((f) => !f.readOnly).map((f) => f.name)).toEqual(
+        editableFiles(w.id),
+      );
+      expect(w.expectedOutput).toBeUndefined();
+      for (const f of [...w.files, ...(w.helpers ?? a.helpers)])
+        expect(f.code).toContain(`public class ${f.name.replace('.java', '')}`);
+    }
+  const balloon = late.find((a) => a.id === 'd10')!;
+  expect(balloon.guided.files.map((f) => f.name)).toEqual([
+    'BalloonRunner.java',
+    'Balloon.java',
+  ]);
+  expect(balloon.independent.files.map((f) => f.name)).toEqual([
+    'DecorationRunner.java',
+    'Balloon.java',
+  ]);
+  for (const w of [balloon.guided, balloon.independent])
+    expect(w.files.find((f) => f.name === 'Balloon.java')?.code).toContain(
+      '// TODO: add amount to radius.',
+    );
 });
