@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { unit1 } from '../src/features/curriculum/unit-1.ts';
 import { unit2 } from '../src/features/curriculum/unit-2.ts';
 import { unit3 } from '../src/features/curriculum/unit-3.ts';
+import { unit1Exam } from '../src/features/exams/unit-1-v1.ts';
 import { extraActivities } from '../src/features/extra-practice/content.ts';
 import { unit4 } from '../src/features/curriculum/unit-4.ts';
 async function files(directory) {
@@ -34,6 +35,11 @@ markers.push(
       ...activity.guide.guided[locale].map((text) => text.slice(0, 64)),
       ...activity.guide.independent[locale].map((text) => text.slice(0, 64)),
     ]),
+  ),
+);
+markers.push(
+  ...unit1Exam.questions.flatMap((q) =>
+    ['en', 'es'].map((locale) => q.prompt[locale].slice(0, 64)),
   ),
 );
 const chunks = (await files('.next/static')).filter((path) =>

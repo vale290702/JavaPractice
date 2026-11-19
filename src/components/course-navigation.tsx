@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { examMessages } from '../i18n/exam';
 import { extraPracticeMessages } from '../i18n/extra-practice';
 import { Check, ChevronRight, FileText } from 'lucide-react';
 import { useCurriculum } from '../features/curriculum/provider';
@@ -67,6 +69,14 @@ export function CourseNavigation({
           {extraOpen && <ChevronRight size={16} />}
         </button>
       )}
+      <Link href="/exam/unit-1" className="topic-button unit-button">
+        <span className="topic-number">
+          <FileText size={15} />
+        </span>
+        <span>
+          <strong>{examMessages[locale].title}</strong>
+        </span>
+      </Link>
     </nav>
   );
 }

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ThemeToggle } from './theme-toggle';
 import { Braces } from 'lucide-react';
 import type { SessionUser } from '../features/auth/types';
+import { examMessages } from '../i18n/exam';
 import type { ExtraStudentProgress } from '../features/extra-practice/types';
 import { worksheetIds } from '../features/extra-practice/metadata';
 import type { StudentProgress } from '../features/learning/types';
@@ -49,6 +50,9 @@ export function TeacherOverview({
           <span className="brand-dot" />
         </Link>
         <div className="teacher-actions">
+          <Link href="/teacher/exams/unit-1">
+            {examMessages[locale].review}
+          </Link>
           <AccountControls user={user} />
           <ThemeToggle locale={locale} />
           <label className="auth-language">
