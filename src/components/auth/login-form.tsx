@@ -15,7 +15,10 @@ const locationReason = () => {
 export function LoginForm() {
   const { locale, setLocale, t } = useAuthLocale();
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<AuthErrorCode | null>(null);
+  const [error, setError] = useState<Exclude<
+    AuthErrorCode,
+    'curriculum_locked'
+  > | null>(null);
   const reason = useSyncExternalStore(
     subscribeLocation,
     locationReason,

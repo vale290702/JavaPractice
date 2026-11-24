@@ -1,7 +1,6 @@
 import 'server-only';
-import { createHash } from 'node:crypto';
-import { cookies } from 'next/headers';
-import { AuthError, cookieName, rpc } from '../auth/server';
+import { AuthError, requireSessionHash, rpc } from '../auth/server';
+import { assertCurriculumUnlocked } from '../curriculum/access-server';
 import { isAccountId, exactKeys } from '../extra-practice/validation';
 import { validExamAnswers } from './validation';
 import { examVersion } from './metadata';
@@ -20,12 +19,6 @@ export class ExamConflict extends Error {
   ) {
     super(code);
   }
-}
-async function sessionHash() {
-  const token = (await cookies()).get(cookieName())?.value;
-  if (!token || !/^[\w-]{43}$/.test(token))
-    throw new AuthError('invalid_credentials');
-  return createHash('sha256').update(token).digest('hex');
 }
 function account(id: string) {
   if (!isAccountId(id)) throw new AuthError('invalid_request');
@@ -59,6 +52,7 @@ function parseSummary(value: unknown): ExamSummary {
 }
 function attemptEnvelope(value: unknown): ExamAttempt | null {
   if (value === null) throw new AuthError('invalid_credentials');
+  assertCurriculumUnlocked(value);
   const result = value as { ok?: boolean; code?: string; attempt?: unknown };
   if (
     result?.ok === false &&
@@ -76,7 +70,7 @@ export async function getExamAttempt(expectedUserId: string) {
   account(expectedUserId);
   return attemptEnvelope(
     await rpc('app_read_unit1_exam', {
-      p_token_hash: await sessionHash(),
+      p_token_hash: await requireSessionHash(),
       p_expected_user_id: expectedUserId,
     }),
   );
@@ -102,7 +96,7 @@ export async function saveExamAttempt(
     throw new AuthError('invalid_request');
   const result = attemptEnvelope(
     await rpc('app_save_unit1_exam', {
-      p_token_hash: await sessionHash(),
+      p_token_hash: await requireSessionHash(),
       p_expected_user_id: expectedUserId,
       p_version: version,
       p_answers: answers,
@@ -119,7 +113,7 @@ export async function getExamSubmissions(
 ): Promise<ExamSummary[]> {
   account(expectedUserId);
   const value = await rpc('app_list_unit1_submissions', {
-    p_token_hash: await sessionHash(),
+    p_token_hash: await requireSessionHash(),
     p_expected_user_id: expectedUserId,
   });
   if (value === null) throw new AuthError('invalid_credentials');
@@ -133,7 +127,7 @@ export async function getExamSubmission(
   account(expectedUserId);
   account(studentId);
   const value = await rpc('app_get_unit1_submission', {
-    p_token_hash: await sessionHash(),
+    p_token_hash: await requireSessionHash(),
     p_expected_user_id: expectedUserId,
     p_student_id: studentId,
   });

@@ -54,10 +54,15 @@ test('progress follows the account and stale sessions cannot change it', async (
 test('teacher can open student progress in both languages', async ({
   page,
 }) => {
+  const email = await signIn(page);
+  await page.getByRole('button', { name: 'Sign out' }).click();
+  await expect(page).toHaveURL('/login');
   await signIn(page, `teacher-${randomUUID()}@example.test`);
   await page.goto('/teacher');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.getByText('Test learner').first()).toBeVisible();
+  await expect(
+    page.getByRole('rowheader').filter({ hasText: email }),
+  ).toBeVisible();
   await page.getByLabel('Language').selectOption('es');
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
 });

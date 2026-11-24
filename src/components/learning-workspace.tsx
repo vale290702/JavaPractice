@@ -19,6 +19,7 @@ import {
   Globe2,
   Lightbulb,
   ListChecks,
+  Lock,
   RotateCcw,
 } from 'lucide-react';
 import {
@@ -30,6 +31,12 @@ import {
 } from '../i18n/content';
 import { useProgress } from '../features/learning/use-progress';
 import { useCurriculum } from '../features/curriculum/provider';
+import {
+  canAccessTopic,
+  type CurriculumThrough,
+} from '../features/curriculum/access';
+import { unit1ExamLastTopic } from '../features/exams/metadata';
+import { curriculumAccessMessages } from '../i18n/curriculum-access';
 import type { SessionUser } from '../features/auth/types';
 import { AccountControls } from './auth/account-controls';
 import { CourseNavigation } from './course-navigation';
@@ -46,32 +53,51 @@ export function LearningWorkspace({
   user,
   initialCompleted,
   extraActivities = [],
+  curriculumThrough = null,
 }: {
   user: SessionUser;
   initialCompleted: string[];
   extraActivities?: ExtraActivity[];
+  curriculumThrough?: CurriculumThrough;
 }) {
   const { getTopic, getUnitForTopic, topicIds, totalActivities } =
     useCurriculum();
   const localeStore = useLocalStorage('java-practice:locale');
   const locale: Locale = localeStore.raw === 'es' ? 'es' : 'en';
   const progress = useProgress(initialCompleted);
-  const [topic, setTopic] = useState('1.1');
+  const [selectedTopic, setTopic] = useState('1.1');
   const [mode, setMode] = useState<Mode>('learn');
-  const [extraOpen, setExtraOpen] = useState(false);
+  const [extraRequested, setExtraOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [answer, setAnswer] = useState('');
   const [choice, setChoice] = useState<number | null>(null);
   const [checked, setChecked] = useState(false);
   const [hintCount, setHintCount] = useState(0);
   const [showSolution, setShowSolution] = useState(false);
-  const { completed } = progress;
+  const completed =
+    curriculumThrough === null
+      ? progress.completed
+      : progress.completed.filter((activity) =>
+          canAccessTopic(curriculumThrough, activity.split(':')[0]),
+        );
+  const failedActivity =
+    progress.failed &&
+    canAccessTopic(curriculumThrough, progress.failed.split(':')[0])
+      ? progress.failed
+      : null;
   const storageError = localeStore.failed;
   const [code, setCode] = useState<Record<string, string>>({});
-  const currentTopic = getTopic(topic);
-  const currentUnit = getUnitForTopic(topic);
+  const topic = topicIds.includes(selectedTopic)
+    ? selectedTopic
+    : (topicIds[0] ?? '1.1');
+  const extraAvailable =
+    curriculumThrough === null || extraActivities.length > 0;
+  const extraOpen = extraRequested && extraAvailable;
+  const currentTopic = topicIds.length ? getTopic(topic) : null;
+  const currentUnit = currentTopic && getUnitForTopic(topic);
   const t = messages[locale],
-    lesson = currentTopic.content[locale],
+    access = curriculumAccessMessages[locale],
+    lesson = currentTopic?.content[locale],
     activity = `${topic}:${mode}`;
   useEffect(() => {
     document.documentElement.lang = locale;
@@ -81,6 +107,9 @@ export function LearningWorkspace({
   }
   function changeActivity(nextTopic: string, nextMode: Mode) {
     setExtraOpen(false);
+    selectActivity(nextTopic, nextMode);
+  }
+  function selectActivity(nextTopic: string, nextMode: Mode) {
     setTopic(nextTopic);
     setMode(nextMode);
     setStep(0);
@@ -90,28 +119,29 @@ export function LearningWorkspace({
     setHintCount(0);
     setShowSolution(false);
   }
+  if (topic !== selectedTopic) selectActivity(topic, 'learn');
   function finish() {
     void progress.complete(activity);
   }
   const correct =
     mode === 'quiz'
-      ? choice === lesson.correct
-      : answer.trim().toLowerCase() === lesson.practiceAnswer;
-  const activeHints = mode === 'practice' ? lesson.practiceHints : lesson.hints;
+      ? choice === lesson?.correct
+      : answer.trim().toLowerCase() === lesson?.practiceAnswer;
+  const activeHints =
+    (mode === 'practice' ? lesson?.practiceHints : lesson?.hints) ?? [];
   const canComplete =
     mode === 'practice' || mode === 'quiz' ? checked && correct : true;
   const percentage = new Intl.NumberFormat(locale, {
     style: 'percent',
     maximumFractionDigits: 1,
-  }).format(completed.length / totalActivities);
+  }).format(totalActivities ? completed.length / totalActivities : 0);
+  const followingTopic =
+    topicIds[topicIds.indexOf(topic) + 1] ??
+    (curriculumThrough === null ? topicIds[0] : undefined);
   function nextActivity() {
     const index = modes.indexOf(mode);
     if (index < modes.length - 1) changeActivity(topic, modes[index + 1]);
-    else
-      changeActivity(
-        topicIds[(topicIds.indexOf(topic) + 1) % topicIds.length],
-        'learn',
-      );
+    else if (followingTopic) changeActivity(followingTopic, 'learn');
   }
   return (
     <div className="app-shell">
@@ -136,9 +166,10 @@ export function LearningWorkspace({
         <h2 className="nav-title">{t.units}</h2>
         <CourseNavigation
           locale={locale}
-          currentUnit={extraOpen ? undefined : currentUnit.id}
+          currentUnit={extraOpen ? undefined : currentUnit?.id}
           extraOpen={extraOpen}
-          onExtraSelect={() => setExtraOpen(true)}
+          onExtraSelect={extraAvailable ? () => setExtraOpen(true) : undefined}
+          examAvailable={canAccessTopic(curriculumThrough, unit1ExamLastTopic)}
           completed={completed}
           onSelect={(id) => changeActivity(id, 'learn')}
           t={t}
@@ -149,7 +180,7 @@ export function LearningWorkspace({
             <strong>{percentage}</strong>
           </div>
           <progress
-            max={totalActivities}
+            max={totalActivities || 1}
             value={completed.length}
             aria-label={t.progress}
           />
@@ -191,7 +222,7 @@ export function LearningWorkspace({
               <strong>{percentage}</strong>
             </div>
             <progress
-              max={totalActivities}
+              max={totalActivities || 1}
               value={completed.length}
               aria-label={t.progress}
             />
@@ -213,7 +244,15 @@ export function LearningWorkspace({
             <BookOpen size={16} />
             <span>{t.curriculumNote}</span>
           </div>
-          {!extraOpen && (
+          {curriculumThrough !== null && (
+            <p className="course-access-notice">
+              <Lock size={16} aria-hidden="true" />
+              {curriculumThrough === 'none'
+                ? access.waiting
+                : access.available(curriculumThrough)}
+            </p>
+          )}
+          {!extraOpen && lesson && (
             <>
               <TopicPicker
                 locale={locale}
@@ -263,7 +302,7 @@ export function LearningWorkspace({
                 locale={locale}
                 userId={user.id}
               />
-            ) : (
+            ) : currentTopic && lesson ? (
               <>
                 {(mode === 'learn' || mode === 'example') && (
                   <div className="lesson-grid">
@@ -489,9 +528,9 @@ export function LearningWorkspace({
                   </div>
                 )}
               </>
-            )}
+            ) : null}
           </div>
-          {!extraOpen && (
+          {!extraOpen && currentTopic && (
             <>
               <footer className="activity-footer">
                 <button
@@ -513,18 +552,19 @@ export function LearningWorkspace({
                 <button
                   className="text-button next-activity"
                   onClick={nextActivity}
+                  disabled={mode === 'code' && !followingTopic}
                 >
                   {t.continue}
                   <ArrowRight size={17} />
                 </button>
               </footer>
-              {progress.failed && (
+              {failedActivity && (
                 <div className="progress-error" role="alert">
                   <p>{t.saveError}</p>
                   <button
                     className="secondary-button"
                     disabled={progress.pending !== null}
-                    onClick={() => void progress.complete(progress.failed!)}
+                    onClick={() => void progress.complete(failedActivity)}
                   >
                     {t.saveRetry}
                   </button>
@@ -532,7 +572,9 @@ export function LearningWorkspace({
               )}
               {completed.length === totalActivities && (
                 <p role="status" className="all-done">
-                  {t.allDone}
+                  {curriculumThrough === null
+                    ? t.allDone
+                    : access.allAvailableDone}
                 </p>
               )}
             </>

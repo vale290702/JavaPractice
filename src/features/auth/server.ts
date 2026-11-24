@@ -1,6 +1,7 @@
 import 'server-only';
 import { createHash, randomBytes } from 'node:crypto';
 import { cookies } from 'next/headers';
+import { isCurriculumThrough } from '../curriculum/access';
 import type { AppSession, AuthErrorCode } from './types';
 
 export class AuthError extends Error {
@@ -20,6 +21,12 @@ export const cookieOptions = () => ({
 });
 const digest = (token: string) =>
   createHash('sha256').update(token).digest('hex');
+export async function requireSessionHash() {
+  const token = (await cookies()).get(cookieName())?.value;
+  if (!token || !/^[\w-]{43}$/.test(token))
+    throw new AuthError('invalid_credentials');
+  return digest(token);
+}
 async function service(
   path: string,
   body: unknown,
@@ -71,6 +78,8 @@ function parseSession(value: unknown): AppSession | null {
     typeof session.user.email !== 'string' ||
     typeof session.user.displayName !== 'string' ||
     !['teacher', 'student'].includes(session.user.role) ||
+    (session.curriculumThrough !== undefined &&
+      !isCurriculumThrough(session.curriculumThrough)) ||
     typeof session.expiresAt !== 'string' ||
     !Number.isFinite(Date.parse(session.expiresAt))
   )
@@ -84,6 +93,9 @@ function parseSession(value: unknown): AppSession | null {
           displayName: session.user.displayName,
         },
         expiresAt: session.expiresAt,
+        ...(session.curriculumThrough !== undefined && {
+          curriculumThrough: session.curriculumThrough,
+        }),
       }
     : null;
 }

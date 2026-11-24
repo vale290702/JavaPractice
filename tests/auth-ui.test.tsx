@@ -13,6 +13,10 @@ import { AccountControls } from '../src/components/auth/account-controls';
 import { SessionBoundary } from '../src/components/auth/session-boundary';
 import { navigate } from '../src/components/auth/navigation';
 vi.mock('../src/components/auth/navigation', () => ({ navigate: vi.fn() }));
+vi.mock('next/navigation', () => {
+  const router = { refresh: vi.fn() };
+  return { useRouter: () => router };
+});
 const session = {
   user: {
     id: 'one',
