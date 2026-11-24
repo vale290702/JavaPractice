@@ -1,7 +1,6 @@
 import 'server-only';
-import { createHash } from 'node:crypto';
-import { cookies } from 'next/headers';
-import { AuthError, cookieName, rpc } from '../auth/server';
+import { AuthError, requireSessionHash, rpc } from '../auth/server';
+import { assertCurriculumUnlocked } from '../curriculum/access-server';
 import { isWorksheetId, validWork, exactKeys, isAccountId } from './validation';
 import type {
   SavedWorksheet,
@@ -9,12 +8,6 @@ import type {
   ExtraStudentProgress,
 } from './types';
 export class WorksheetConflict extends Error {}
-async function sessionHash() {
-  const token = (await cookies()).get(cookieName())?.value;
-  if (!token || !/^[\w-]{43}$/.test(token))
-    throw new AuthError('invalid_credentials');
-  return createHash('sha256').update(token).digest('hex');
-}
 function saved(value: unknown): SavedWorksheet {
   const row = value as SavedWorksheet;
   if (
@@ -32,6 +25,7 @@ function saved(value: unknown): SavedWorksheet {
 }
 function envelope(value: unknown): SavedWorksheet | null {
   if (value === null) throw new AuthError('invalid_credentials');
+  assertCurriculumUnlocked(value);
   const result = value as { ok?: boolean; code?: string; worksheet?: unknown };
   if (result?.ok === false && result.code === 'conflict')
     throw new WorksheetConflict();
@@ -47,7 +41,7 @@ export async function getExtraWorksheet(
     throw new AuthError('invalid_request');
   return envelope(
     await rpc('app_read_extra_worksheet', {
-      p_token_hash: await sessionHash(),
+      p_token_hash: await requireSessionHash(),
       p_id: id,
       p_expected_user_id: expectedUserId,
     }),
@@ -72,7 +66,7 @@ export async function saveExtraWorksheet(
     throw new AuthError('invalid_request');
   const result = envelope(
     await rpc('app_save_extra_worksheet', {
-      p_token_hash: await sessionHash(),
+      p_token_hash: await requireSessionHash(),
       p_id: id,
       p_expected_user_id: expectedUserId,
       p_version: version,
@@ -87,7 +81,7 @@ export async function getExtraTeacherProgress(): Promise<
   ExtraStudentProgress[]
 > {
   const value = await rpc('app_extra_teacher_progress', {
-    p_token_hash: await sessionHash(),
+    p_token_hash: await requireSessionHash(),
   });
   if (value === null) throw new AuthError('invalid_credentials');
   if (!Array.isArray(value)) throw new AuthError('unavailable');

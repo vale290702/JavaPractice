@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { getCurrentSession } from '../../../features/auth/server';
 import { SessionBoundary } from '../../../components/auth/session-boundary';
 import { StudentExam } from '../../../components/exam/student-exam';
+import { canAccessTopic } from '../../../features/curriculum/access';
+import { unit1ExamLastTopic } from '../../../features/exams/metadata';
 export const dynamic = 'force-dynamic';
 export default async function Unit1ExamPage() {
   let session;
@@ -12,6 +14,8 @@ export default async function Unit1ExamPage() {
   }
   if (!session) redirect('/login');
   if (session.user.role !== 'student') redirect('/teacher/exams/unit-1');
+  if (!canAccessTopic(session.curriculumThrough ?? null, unit1ExamLastTopic))
+    redirect('/');
   const { unit1Exam } = await import('../../../features/exams/unit-1-v1');
   return (
     <SessionBoundary session={session}>

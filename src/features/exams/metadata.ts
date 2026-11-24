@@ -40,3 +40,4 @@ export const answerLimit = (id: string) =>
       ? 1
       : 8000;
 export const maxExamBytes = 262144;
+export const unit1ExamLastTopic = '1.15';

@@ -40,21 +40,23 @@ export function errorResponse(error: unknown) {
     {
       invalid_request: 400,
       invalid_credentials: 401,
+      curriculum_locked: 403,
       rate_limited: 429,
       unavailable: 503,
     }[code],
   );
 }
-export async function credentials(
+export async function readJson(
   request: Request,
-): Promise<{ email: string; password: string }> {
+  maxBytes: number,
+): Promise<unknown> {
   if (
     request.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !==
     'application/json'
   )
     throw new AuthError('invalid_request');
   // Bound bytes even when Content-Length is absent or dishonest.
-  if (Number(request.headers.get('content-length')) > 8192 || !request.body)
+  if (Number(request.headers.get('content-length')) > maxBytes || !request.body)
     throw new AuthError('invalid_request');
   const reader = request.body.getReader();
   let size = 0;
@@ -64,18 +66,30 @@ export async function credentials(
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > 8192) {
+      if (size > maxBytes) {
         await reader.cancel();
         throw new AuthError('invalid_request');
       }
       chunks.push(value);
     }
     const bytes = Buffer.concat(chunks);
-    const body = JSON.parse(bytes.toString('utf8'));
-    if (typeof body?.email !== 'string' || typeof body?.password !== 'string')
-      throw new Error();
-    return { email: body.email, password: body.password };
+    return JSON.parse(bytes.toString('utf8'));
   } catch {
     throw new AuthError('invalid_request');
   }
+}
+export async function credentials(
+  request: Request,
+): Promise<{ email: string; password: string }> {
+  const body = await readJson(request, 8192);
+  if (
+    !body ||
+    typeof body !== 'object' ||
+    !('email' in body) ||
+    !('password' in body) ||
+    typeof body.email !== 'string' ||
+    typeof body.password !== 'string'
+  )
+    throw new AuthError('invalid_request');
+  return { email: body.email, password: body.password };
 }

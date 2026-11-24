@@ -1,3 +1,5 @@
+import type { CurriculumThrough } from '../curriculum/access';
+
 export interface StudentProgress {
   id: string;
   email: string;
@@ -5,4 +7,5 @@ export interface StudentProgress {
   enabled: boolean;
   completed: string[];
   lastActivity: string | null;
+  curriculumThrough?: CurriculumThrough;
 }

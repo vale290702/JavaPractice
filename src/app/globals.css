@@ -282,6 +282,10 @@ button:hover:not(:disabled) {
 .topic-button.selected {
   background: var(--selected);
 }
+.topic-button:disabled {
+  opacity: 1;
+  color: var(--muted);
+}
 .topic-button strong {
   font-size: 13px;
   font-weight: 600;
@@ -447,6 +451,20 @@ main {
   padding: 12px 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+}
+.course-access-notice {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 24px;
+  padding: 12px 14px;
+  border-radius: 7px;
+  background: var(--selected);
+  color: var(--ink);
+  font-size: 13px;
+}
+.course-access-notice svg {
+  flex-shrink: 0;
 }
 .lesson-header {
   display: flex;

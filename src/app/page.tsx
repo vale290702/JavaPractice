@@ -4,6 +4,7 @@ import { getCurrentSession } from '../features/auth/server';
 import { CurriculumProvider } from '../features/curriculum/provider';
 import { LearningWorkspace } from '../components/learning-workspace';
 import { SessionBoundary } from '../components/auth/session-boundary';
+import { canAccessTopic } from '../features/curriculum/access';
 
 export const dynamic = 'force-dynamic';
 export default async function Home() {
@@ -24,12 +25,28 @@ export default async function Home() {
   const { units } = await import('../features/curriculum/server');
   const { extraActivities } =
     await import('../features/extra-practice/content-server');
+  const through =
+    session.user.role === 'student'
+      ? (session.curriculumThrough ?? null)
+      : null;
+  const availableUnits =
+    through === null
+      ? units
+      : units.map((unit) => ({
+          ...unit,
+          topics: unit.topics.filter((topic) =>
+            canAccessTopic(through, topic.id),
+          ),
+        }));
   return (
     <SessionBoundary session={session}>
-      <CurriculumProvider units={units}>
+      <CurriculumProvider units={availableUnits}>
         <LearningWorkspace
           user={session.user}
-          extraActivities={extraActivities}
+          curriculumThrough={through}
+          extraActivities={extraActivities.filter((activity) =>
+            canAccessTopic(through, activity.topicId),
+          )}
           initialCompleted={initialCompleted}
         />
       </CurriculumProvider>

@@ -1,8 +1,12 @@
 /** Test-only Supabase protocol fixture. Never imported by application code. */
 import { createServer } from 'node:http';
 import { randomUUID } from 'node:crypto';
+import { activityTopics } from '../../src/features/extra-practice/metadata.ts';
+import { topicIds } from '../../src/features/curriculum/metadata.ts';
 export const fixtureKey = 'test-only-service-key-not-a-production-secret';
 export const fixturePassword = 'test-only-password-123';
+const canAccessTopic = (through, topic) =>
+  through === null || topicIds.indexOf(topic) <= topicIds.indexOf(through);
 export async function startFixture(port = 54339) {
   if (process.env.NODE_ENV === 'production')
     throw new Error('Test fixture cannot run in production');
@@ -26,6 +30,7 @@ export async function startFixture(port = 54339) {
         lastActivity: null,
         enabled: true,
         version: 0,
+        curriculumThrough: null,
       });
     return accounts.get(email);
   };
@@ -37,6 +42,7 @@ export async function startFixture(port = 54339) {
       role: row.account.role,
     },
     expiresAt: row.expiresAt,
+    curriculumThrough: row.account.curriculumThrough,
   });
   const server = createServer(async (req, res) => {
     const reply = (status, body) => {
@@ -117,6 +123,7 @@ export async function startFixture(port = 54339) {
         'app_read_progress',
         'app_complete_activity',
         'app_teacher_progress',
+        'app_set_curriculum_access',
       ].some((name) => path === `/rest/v1/rpc/${name}`)
     ) {
       const row = [...sessions.values()].find(
@@ -128,6 +135,24 @@ export async function startFixture(port = 54339) {
         Date.parse(row.expiresAt) <= Date.now()
       )
         return reply(200, null);
+      if (path.endsWith('/app_set_curriculum_access')) {
+        if (row.account.role !== 'teacher') return reply(200, null);
+        const student = [...accounts.values()].find(
+          (a) => a.id === body.p_student_id && a.role === 'student',
+        );
+        if (
+          !student ||
+          (body.p_through !== null &&
+            body.p_through !== 'none' &&
+            !topicIds.includes(body.p_through))
+        )
+          return reply(200, { ok: false, code: 'invalid_request' });
+        student.curriculumThrough = body.p_through;
+        return reply(200, {
+          ok: true,
+          curriculumThrough: student.curriculumThrough,
+        });
+      }
       if (path.endsWith('/app_teacher_progress')) {
         if (row.account.role !== 'teacher') return reply(200, null);
         return reply(
@@ -141,6 +166,7 @@ export async function startFixture(port = 54339) {
               enabled: a.enabled,
               completed: a.completed,
               lastActivity: a.lastActivity,
+              curriculumThrough: a.curriculumThrough,
             })),
         );
       }
@@ -155,6 +181,13 @@ export async function startFixture(port = 54339) {
           Number(match[2]) > [0, 15, 12, 9, 17][Number(match[1])]
         )
           return reply(400, {});
+        if (
+          !canAccessTopic(
+            row.account.curriculumThrough,
+            `${match[1]}.${match[2]}`,
+          )
+        )
+          return reply(200, { ok: false, code: 'curriculum_locked' });
         row.account.completed = [
           ...new Set([...row.account.completed, body.p_activity]),
         ];
@@ -199,6 +232,13 @@ export async function startFixture(port = 54339) {
         );
       }
       if (account.id !== body.p_expected_user_id) return reply(200, null);
+      if (
+        !canAccessTopic(
+          account.curriculumThrough,
+          activityTopics[body.p_id.split('-')[0]],
+        )
+      )
+        return reply(200, { ok: false, code: 'curriculum_locked' });
       const current = account.worksheets.get(body.p_id) ?? null;
       if (path.endsWith('/app_read_extra_worksheet'))
         return reply(200, { ok: true, worksheet: current });
@@ -263,6 +303,8 @@ export async function startFixture(port = 54339) {
         });
       }
       if (account.role !== 'student') return reply(200, null);
+      if (!canAccessTopic(account.curriculumThrough, '1.15'))
+        return reply(200, { ok: false, code: 'curriculum_locked' });
       const current = account.exam ?? null;
       if (path.endsWith('/app_read_unit1_exam'))
         return reply(200, { ok: true, attempt: current });

@@ -6,6 +6,7 @@ import { getTeacherProgress } from '../../features/learning/server';
 import type { StudentProgress } from '../../features/learning/types';
 import { SessionBoundary } from '../../components/auth/session-boundary';
 import { TeacherOverview } from '../../components/teacher-overview';
+import { units } from '../../features/curriculum/server';
 export const dynamic = 'force-dynamic';
 export default async function TeacherPage() {
   let session;
@@ -40,6 +41,14 @@ export default async function TeacherPage() {
         unavailable={unavailable}
         extraProgress={extraProgress}
         extraUnavailable={extraUnavailable}
+        accessOptions={units.map((unit) => ({
+          number: unit.number,
+          title: unit.title,
+          topics: unit.topics.map(({ id, content }) => ({
+            id,
+            title: { en: content.en.title, es: content.es.title },
+          })),
+        }))}
       />
     </SessionBoundary>
   );

@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import {
   useCallback,
   useEffect,
@@ -19,12 +20,14 @@ export function SessionBoundary({
   children: ReactNode;
 }) {
   const { t } = useAuthLocale();
+  const router = useRouter();
   const [state, setState] = useState<
     'checking' | 'healthy' | 'blocked' | 'ended'
   >('checking');
   const active = useRef(false);
   const alive = useRef(false);
   const ended = useRef(false);
+  const through = session.curriculumThrough ?? null;
   const verify = useCallback(async () => {
     if (active.current || ended.current) return;
     active.current = true;
@@ -50,13 +53,18 @@ export function SessionBoundary({
         navigate('/login?reason=ended');
         return;
       }
+      if ((current.curriculumThrough ?? null) !== through) {
+        setState('checking');
+        router.refresh();
+        return;
+      }
       setState('healthy');
     } catch {
       if (alive.current) setState('blocked');
     } finally {
       active.current = false;
     }
-  }, [session.user.id]);
+  }, [router, session.user.id, through]);
   useEffect(() => {
     alive.current = true;
     void Promise.resolve().then(() => {

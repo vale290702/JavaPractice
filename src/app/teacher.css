@@ -40,6 +40,47 @@
   margin-top: 16px;
   color: var(--muted);
 }
+.teacher-curriculum-access {
+  margin-top: 30px;
+  padding-block: 22px;
+  border-block: 1px solid var(--line);
+}
+.teacher-curriculum-access h2 {
+  font: 500 27px/1.2 var(--serif);
+}
+.teacher-curriculum-access p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.teacher-curriculum-access form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+  align-items: end;
+  gap: 12px;
+  max-width: 860px;
+  margin-top: 18px;
+}
+.teacher-curriculum-access label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.teacher-curriculum-access select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--control-border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  text-overflow: ellipsis;
+}
+.teacher-curriculum-access .auth-primary {
+  min-height: 44px;
+}
 .teacher-scroll-hint {
   display: none;
 }
@@ -117,6 +158,12 @@
   text-underline-offset: 4px;
 }
 @media (max-width: 650px) {
+  .teacher-curriculum-access form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .teacher-curriculum-access .auth-primary {
+    justify-self: start;
+  }
   .teacher-scroll-hint {
     display: block;
     margin-top: 28px;

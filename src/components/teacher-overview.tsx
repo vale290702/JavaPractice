@@ -12,6 +12,10 @@ import { languageNames, modes } from '../i18n/content';
 import { teacherMessages } from '../i18n/teacher';
 import { useAuthLocale } from './auth/use-auth-locale';
 import { AccountControls } from './auth/account-controls';
+import {
+  TeacherCurriculumAccess,
+  type AccessOptionGroup,
+} from './teacher-curriculum-access';
 import '../app/teacher.css';
 const unitNumbers = [1, 2, 3, 4];
 const total = topicIds.length * modes.length;
@@ -21,12 +25,14 @@ export function TeacherOverview({
   unavailable = false,
   extraProgress = [],
   extraUnavailable = false,
+  accessOptions = [],
 }: {
   user: SessionUser;
   students: StudentProgress[];
   unavailable?: boolean;
   extraProgress?: ExtraStudentProgress[];
   extraUnavailable?: boolean;
+  accessOptions?: AccessOptionGroup[];
 }) {
   const { locale, setLocale, t: auth } = useAuthLocale();
   const t = teacherMessages[locale === 'es' ? 'es' : 'en'];
@@ -87,6 +93,13 @@ export function TeacherOverview({
           </section>
         ) : (
           <>
+            {accessOptions.length > 0 && (
+              <TeacherCurriculumAccess
+                students={students}
+                units={accessOptions}
+                locale={locale}
+              />
+            )}
             <p className="teacher-scroll-hint" id="teacher-scroll-hint">
               {t.scrollHint}
             </p>
